@@ -148,3 +148,5 @@
 	DB sanpshots to be purged prematurely.
 2013-11-18 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.5.
+2014-07-16 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a typo in 'INSTALL'.

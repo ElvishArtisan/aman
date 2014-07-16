@@ -43,7 +43,7 @@ From a root shell, do:
      ssh-keygen -t dsa -f /var/aman/keys/id_dsa
 
 Leave the passphrase blank.  After the command completes, copy the file
-'/var/lib/aman/keys/id_dsa.pub' to the '/root/.ssh/authorized_keys' file
+'/var/aman/keys/id_dsa.pub' to the '/root/.ssh/authorized_keys' file
 on the other server.
 
 2) Edit /etc/aman.conf.
