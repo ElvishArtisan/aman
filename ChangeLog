@@ -1,0 +1,150 @@
+2012-06-13 Fred Gleason <fredg@paravelsystems.com>
+	* Initial package creation.
+2012-06-13 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'Profile' class in 'amand/profile.cpp' and
+	'amand/profile.h'.
+	* Added a 'CmdSwitch' class in 'amand/cmdswitch.cpp' and
+	'amand/cmdswitch.h'.
+	* Added a 'Config' class in 'amand/config.cpp' and
+	'amand/config.h'.
+	* Added a 'PingMonitor' class in 'amand/pingmonitor.cpp' and
+	'amand/pingmonitor.h'.
+2012-06-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added check for valid hostnames in 'amand/config.cpp'.
+2012-06-15 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented PingMonitor functionality in 'amand/pingmonitor.cpp'
+	and 'amand/pingmonitor.h'.
+2012-06-18 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'amand/cmdserver.cpp' and 'amand/cmdserver.h'.
+2012-06-18 Fred Gleason <fredg@paravelsystems.com>
+	* Removed 'amand/cmdserver.cpp' and 'amand/cmdserver.h'.
+	* Added a 'StreamCmdServer' class in 'amand/streamcmdserver.cpp'
+	and 'amand/streamcmdserver.h'.
+2012-06-18 Fred Gleason <fredg@paravelsystems.com>
+	* Created 'docs/'.
+	* Moved 'conf/command_protocol.txt' to 'docs/command_protocol.txt'.
+2012-06-18 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented basic MySQL instance monitoring.
+2012-06-19 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented MySQL replication monitoring.
+2012-06-21 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented snapshot generation.
+2012-06-21 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented snapshot loading.
+2012-12-11 Fred Gleason <fredg@paravelsystems.com>
+	* Moved 'amand/am.cpp', 'amand/am.h', 'amand/cmdswitch.cpp',
+	'amand/cmdswitch.h', 'amand/profile.cpp' and 'amand/profile.h' to
+	'lib/'.
+	* Stubbed out aman(1) in 'aman/'.
+2012-12-18 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'StatusLight' widget in 'aman/statuslight.cpp' and
+	'aman/statuslight.h'.
+2013-06-11 Fred Gleason <fredg@paravelsystems.com>
+	* Added a MySQL state diagram in 'docs/mysql_states.gxd'.
+	* Added 'Generate Snapshot' and 'Load Snapshot' buttons
+	to aman(8).
+2013-06-13 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'PingMonitor::dbState()' and 'PingMonitor::setThisDbState()'
+	methods in 'amand/pingmonitor.cpp' and 'amand/pingmonitor.h'.
+2013-06-14 Fred Gleason <fredg@paravelsystems.com>
+	* Got basic replication control working.
+2013-06-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'AlertAddress=' parameter to the [Global] section
+	of aman.conf(5).
+	* Implemented e-mail alerts in 'amand/amand.cpp'.
+2013-06-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'Make Idle' buttons to aman(8) in 'aman/aman.cpp',
+	'aman/aman.h', 'aman/connection.cpp' and 'aman/connection.h'.
+2013-06-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added a progress bar for state change operations in
+	'aman/aman.cpp' and 'aman/aman.h'.
+2013-06-14 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented auto-purging of snapshot data in 'lib/state.cpp'
+	and 'lib/state.h'.
+2013-06-14 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'Profile::timeValue()' method in 'lib/profile.cpp'
+	and 'lib/profile.h'.
+	* Implemented snapshot autorotation'.
+2013-06-17 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented binlog autorotation and autopurging.
+2013-06-17 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'conf/rsyncd.conf-sample'.
+	* Added 'xdg/aman-aman.desktop', 'xdg/aman-root-consolehelper'
+	and 'xdg/aman-root-pam'.
+	* Added 'aman.spec.in'.
+2013-06-17 Fred Gleason <fredg@paravelsystems.com>
+	* Updated icons in 'icons/'.
+2013-06-17 Fred Gleason <fredg@paravelsystems.com>
+	* Added icon to title bar in 'aman/aman.cpp'.
+2013-06-18 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented audio store replication.
+2013-06-18 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'MirrorDeleteAudio=' parameter to the '[Global]'
+	section of aman.conf(5).
+2013-06-24 Fred Gleason <fredg@paravelsystems.com>
+	* Added the capability to set state changes from any client to
+	any host.
+2013-06-24 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'MysqlReplicationTimeout' parameter to aman(5).
+2013-06-24 Fred Gleason <fredg@paravelsystems.com>
+	* Added e-mail alerts for audio replication state changes in
+	'amand/audiostore.cpp'.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Removed the 'Config::ttyDevice()' method from 'lib/config.cpp'
+	and 'lib/config.h'.
+	* Added comments to 'conf/aman.conf-sample'.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'mysql-server' and 'rsync' dependencies in 'aman.spec.in'.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Implemented an init script for amand(8) in 'rc.amand.in'.
+	* Added a check for root permissions for aman(8) in 'aman/aman.cpp'.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.0.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Updated 'INSTALL'.
+	* Added 'INSTALL' to the documentation list in 'aman.spec.in'.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'max_connections=250' entry to 'conf/my.cnf-SystemA-sample'
+	and 'conf/my.cnf-SystemB-sample'.
+	* Added a 'open-files-limit=32000' entry to
+	'conf/my.cnf-SystemA-sample' and 'conf/my.cnf-SystemB-sample'.
+	* Added 'conf/aman-mysql-limits.conf'.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'scripts/aman_add_rivendell_user.pl'.
+	* Added 'scripts/aman_add_replication_users.pl'.
+	* Updated 'INSTALL'.
+2013-06-25 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.1.
+2013-07-02 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 30 second hold-off between normal invocations of
+	rsync(1) in 'amand/audiostore.cpp'.
+	* Added a 'NiceLevel=' parameter to aman.conf(5).
+2013-07-02 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.2.
+2013-07-02 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'Makefile.am' that broke the 'make rpm'
+	target on CentOS 6.0.
+2013-07-02 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.3.
+2013-07-02 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'conf/rsync.xinetd-sample'.
+	* Updated 'INSTALL'.
+2013-07-02 Fred Gleason <fredg@paravelsystems.com>
+	* Moved the 'Service Running' indicators to the header
+	section of aman(8) in 'aman/aman.cpp'.
+	* Updated 'INSTALL'.
+	* Updated 'README'.
+2013-07-09 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'FromAddress=' directive to the [Global] section
+	of aman.conf(5) in 'lib/config.cpp' and 'lib/config.h'.
+	* Fixed a bug in 'amand/amand.cpp' that caused false positive
+	detections of database replication failure.
+2013-07-09 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.4.
+2013-11-18 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'amand/auto_rotate.cpp' that caused log
+	autorotation to occur at incorrect times.
+	* Fixed a bug in 'amand/pingmonitor.cpp' that caused current
+	DB sanpshots to be purged prematurely.
+2013-11-18 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.5.

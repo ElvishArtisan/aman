@@ -1,0 +1,131 @@
+                           Aman Command Protocol
+
+-----------------------------------------------------------------------------
+Request Database State Update
+
+	ST!
+
+System responds with:
+
+    ST <hostname-a> <ping-state-a> <db-running-a> <db-accessible-a> <db-repl-state> <replicating-a> <audio-repl-state-a> <audio_replicating-a>
+       <hostname-b> <ping-state-a> <db-running-b> <db-accessible-b> <db-repl-state> <replicating-b> <audio-repl-state-b> <audio-replicating-b>!
+
+Where:
+	<hostname-*> - Hostname of system
+	<ping-state-*> amand(8) running status
+	<db-running-*> - MySQL running status
+	<db-accessible-*> MySQL accessibility status
+	<db-repl-state-*> MySQL Replication State.
+                              0 - OFFLINE
+                              1 - IDLE
+                              2 - MASTER
+                              3 - SLAVE
+	<db-replicating-*> MySQL replication time, in mS.
+                              0 = replication offline
+        <audio-repl-state-*> Audio replication slave state.
+                              1 - IDLE
+                              3 - SLAVE
+	<audio-replicating-*> Audio replication status
+                              0 - Inactive
+                              1 - Active
+
+-----------------------------------------------------------------------------
+Generate Database Snapshot
+
+	 GS!
+
+System responds with:
+
+       GS <snapshot-name>!
+
+where:
+
+	<snapshot-name> - The name of the snapshot, or "-" if generation
+			  failed.
+
+
+-----------------------------------------------------------------------------
+Load Database Snapshot
+
+	 LS <snapshot-name>!
+
+System responds with:
+
+       LS <snapshot-name> <binlog-name> <binlog-pos>!
+
+where:
+
+	<snapshot-name> - The name of the snapshot, or "-" if loading
+			  failed.
+
+          <binlog-name> - Name of the binary log to sync to, or "-" if
+                          loading failed.
+
+           <binlog-pos> - Binary log position, or 0 if loading failed.
+-----------------------------------------------------------------------------
+Set Database Replication Metadata
+
+    	SM <binlog-name> <binlog-pos>!
+
+System responds with:
+
+    	SM <binlog-name> <binlog-pos>!
+
+where:
+          <binlog-name> - Name of the binary log to sync to, or "-" if
+                          update failed.
+
+           <binlog-pos> - Binary log position, or 0 if update failed.
+
+-----------------------------------------------------------------------------
+Set Database Replication to Idle
+
+    	MI!
+
+System responds with:
+
+    	MI!
+
+-----------------------------------------------------------------------------
+Set Database Replication to Master
+
+    	MM!
+
+System responds with:
+
+    	MM <snapshot-name>!
+
+where:
+	<snapshot-name> - The name of the initially generated snapshot,
+                          or "-" if the operation failed.
+
+-----------------------------------------------------------------------------
+Set Database Replication to Slave
+
+    	MS!
+
+System responds with:
+
+    	MS <snapshot-name>!
+
+where:
+	<snapshot-name> - The name of the snapshot used, or "-" if the
+			  operation failed.
+
+-----------------------------------------------------------------------------
+Set Audio Replication to Idle
+
+        AI!
+
+System responds with:
+
+       AI!
+
+-----------------------------------------------------------------------------
+Set Audio Replication to Slave
+
+        AS!
+
+System responds with:
+
+       AS!

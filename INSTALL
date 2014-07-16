@@ -1,0 +1,97 @@
+This is the installation file for the Aman package.
+
+MANDATORY PREREQUISITES
+You will need the following installed and configured properly on your 
+system before building Aman:
+
+MySQL Database Server, v5.0 or better.  (http://www.mysql.org)
+Because of the way the Aman generates and installs database snapshots,
+it is crucial that the version of MySQL employed on each server be
+compatible at the binary level.  Ideally, an identical version of MySQL
+should be employed on each.
+
+Open SSH Secure Shell Connectivity Tool (http://www.openssh.org/).
+
+Qt4 Toolkit, v4.6 or better (http://www.trolltech.com/).
+
+Perl Interpreter, along with the DBI and Term::ReadKey modules.
+(http://www.cpan.org/).
+
+RSync File Transfer Utility (rsync.samba.org).
+
+X11 Window System
+Virtually all Linux distros should include this.
+
+
+INSTALLATION
+Once the prerequisites are set up, building and installation of the code is
+done by cd'ing to the top of the source tree and typing './configure
+[options]', 'make', followed (as root) by 'make install'.  Those who
+obtained the source via CVS will need to do './autogen.sh' first.  There
+are a number of options for the 'configure' script; do './configure --help'
+for a detailed list.
+
+
+CONFIGURATION
+Once the software is installed, you will need to configure the various
+components on each server to work properly together.  The steps below
+will need to be performed on each server.
+
+1) Generate ssh(1) keys.
+From a root shell, do:
+
+     ssh-keygen -t dsa -f /var/aman/keys/id_dsa
+
+Leave the passphrase blank.  After the command completes, copy the file
+'/var/lib/aman/keys/id_dsa.pub' to the '/root/.ssh/authorized_keys' file
+on the other server.
+
+2) Edit /etc/aman.conf.
+Start with the commented sample configuration file 'aman.conf-sample'
+provided with this package.  The exact same configuration file should be
+used on both servers.
+
+3) Configure MySQL.
+Copy the appropriate sample configuration file ('my.cnf-SystemA-sample'
+or 'my.cnf-SystemB-sample') to '/etc/my.cnf', then restart the MySQL
+service.
+
+Create a 'repl' user in MySQL with rights to connect from both the
+private and public IP addresses of each server and with the following
+privileges on the 'Rivendell' database:
+
+     Select
+     Insert
+     Update
+     Create
+     Delete
+     Reload
+     Super
+     Replication Slave
+     Replication Client
+
+Once the '/etc/aman.conf' file has been created, the
+'aman_add_replication_users.pl' script can be used to add these users
+with the appropriate privileges semi-automatically.
+
+4) RSync Configuration.
+Create an RSync mountpoint named 'rivendell' that provides read-only
+access to the '/var/snd' directory from the other server.  A sample
+snippet for the '/etc/rsyncd.conf' file can be found in 'rsyncd.conf-sample'
+as well as a sample rsync service configuration for xinetd(8) in
+'rsync.xinetd-sample'.  Ensure that the rsyncd service is started.
+
+5) Audio Replication Check File.
+Create the check file by doing the following commands from a root shell:
+
+       touch /var/snd/repl.chk
+       chown rivendell:rivendell /var/snd/repl.chk
+       chmod 660 /var/snd/repl.chk
+
+6) Start the amand(8) Daemon.
+Start the amand(8) daemon by doing:
+
+      /etc/init.d/amand start
+
+from a root shell.  You should now be able to run the aman(8) applet
+from the 'System Tools' menu to configure and monitor replication.

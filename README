@@ -1,0 +1,180 @@
+This is the README file for the Aman package, a system for managing and
+monitoring a pair of shared-nothing redundant server systems for the
+Rivendell Radio Automation System.  Information about Rivendell can be found
+at http://www.rivendellaudio.org/.
+
+This software comes with ABSOLUTELY NO WARRANTY.  See the file COPYING for
+details.  For information on building, installing and configuring Aman,
+see the 'INSTALL' file.
+
+
+INTRODUCTION
+------------
+Rivendell has long had the capability to be operated with both its
+database and audio store housed in a pair of centralized, redundant
+servers, thereby providing 'hot standby' fallover capability in the event
+of a failure of one of the servers.  However, configuring and, above all,
+maintaining such a setup has always been a challenging and labor-intensive
+task that involved becoming intimately familiar with the operational minutae
+of various middleware software packages such as MySQL and RSync.  Aman
+is an attempt to alleviate this 'learning cliff' by providing a simple,
+easy-to-understand GUI control panel from which the replication states of
+both the Rivendell database and audio store can be monitored and modified
+while providing facilities for alerts to be sent to administrators when
+changes in these states occur.
+
+
+CONCEPTUAL OVERVIEW
+-------------------
+Aman is designed to operate on a pair of essentially identical servers,
+each of which is equipped with a pair of gigabit Ethernet interfaces,
+networked together as shown below:
+
+                Ethernet "Criss-Cross" Cable
+        ---------------------------------------------
+        |                                           |
+        |                                           |
+        |           "Private" Interfaces            |
+|--------------|                            |--------------|
+|              |                            |              |
+|    Server    |                            |    Server    |
+|   System A   |                            |   System B   |
+|              |                            |              |
+|--------------|                            |--------------|
+        |            "Public" Interfaces            |
+        |                                           |
+        |                                           |
+|----------------------------------------------------------|
+|                                                          |
+|                     Ethernet Switch                      |
+|                                                          |
+|----------------------------------------------------------|
+        |         |           |         |           |
+        |         |           |         |           |
+|--------------|  |   |--------------|  |   |--------------|
+|              |  |   |              |  |   |              |
+|  Rivendell   |  |   |  Rivendell   |  |   |  Rivendell   |
+| Workstation  |  |   | Workstation  |  |   | Workstation  |
+|              |  |   |              |  |   |              |
+|--------------|  |   |--------------|  |   |--------------|
+                  |                     |
+                  |                     |
+           |--------------|      |--------------|
+           |              |      |              |
+           |  Rivendell   |      |  Rivendell   |
+           | Workstation  |      | Workstation  |
+           |              |      |              |
+           |--------------|      |--------------|
+
+Each server in this setup hosts both a Rivendell database (MySQL)
+and a Rivendell audio store ('/var/snd', shared via NFS), with one
+or the other being designated as the 'Master' and the other the 'Slave'.
+[NOTE: The designation of 'Master' or 'Slave' is by no means set in stone;
+either server system can assume either role with the click of a few buttons
+in the Aman control panel.]
+
+During normal operation, the Master system is the one that the Rivendell
+workstations connect to and work with, while the Slave system merely keeps
+a continual backup copy of the contents of the Master.  In the event
+of a failure or other need to take the Master system offline, the Rivendell
+workstations can be switched (e.g. by means of the RDSelect applet) to
+operate with the Slave system.  Optionally, the Slave system can then be
+"promoted" to become the new Master, thus allowing any changes made while
+the original Master was offline to be easily copied back when that system
+finally comes back online.
+
+The Aman package itself consists of two software components: a system
+daemon [amand(8)] that runs continuously in the background, and a GUI
+applet [aman(8)] that is run when a system adminstrator wants to inspect
+the current state of replication or make changes in replication state.
+Actual data replication for the database and audio store is done by means
+of MySQL's native data replication facility and the rsync(1) file-copying
+tool respectively, with Aman providing an easy-to-use 'front-end' for those
+facilities.  Optionally, Aman also provides facilities for managing
+and automatically purging MySQL binary and relay log data; see the
+'AutoRotateBinlogs=' directive in the sample aman(5) configuration file
+for details.
+
+
+INSTALLATION
+------------
+See the 'INSTALL' file for details on building, installing and configuration
+of Aman.
+
+
+OPERATION
+---------
+When first started on a properly configured new system, both the DB and the
+AudioStore will show as being in a state of 'IDLE' in the aman(8) applet.
+'IDLE' here merely means that the respective subsystem is acting neither as
+a source of replication data [a 'MASTER'] nor as a recipient of such data [a
+'SLAVE']; it in no way reflects the availability of those resources to the
+Rivendell network in general.
+
+A number of 'Status Lights' will also be shown for each server in the applet,
+as follows [GREEN means 'active', while RED means 'inactive']:
+
+Service Running -- Indicates that the amand(8) daemon is running on the
+                   respective system.
+
+DB Server Running -- Indicates that the Rivendell database on the respective
+                     system is accessible.
+
+DB Accessible -- Indicates that the Rivendell database on the opposite server
+                 is accessible from the respective server.
+
+DB Replicating -- Indicates that data written to the MASTER MySQL server is
+                  being received by the SLAVE.
+
+Audio Replicating -- Indicates that audio store replication is active.
+
+
+DATABASE MANAGEMENT
+-------------------
+To start database replication, it is first necessary to designate one
+of the servers as the Master by clicking its respective 'Make Master' button,
+thereby causing it to generate a database snapshot and transfer it to
+the opposite system automatically.  It will then be possible to start
+replication by clicking the 'Make Slave' button on the other system,
+following which the 'DB Replicating' light for that system will go GREEN.
+To reverse the direction of replication (e.g. in order to recover from
+a failure of the Master), simply put both servers into the IDLE state
+by clicking the respective 'Make Idle' button and repeat the above
+procedure with the Master and Slave roles reversed.  [IMPORTANT NOTE:
+putting a server into 'Slave' mode will DESTROY any data that currently
+exists in that MySQL instance by overwriting it with data from the Master!]
+
+
+AUDIO STORE MANAGEMENT
+----------------------
+Starting audio replication is merely a matter of clicking the 'Start Slave'
+button on the system which is desired to be the audio replication slave;
+no special preparation of the Master system is required as when setting
+up database replication.  Reversing the direction of replication is merely
+a matter of stopping the slave on one system and then starting it on the
+other.  [IMPORTANT NOTE: putting an audio store in 'Slave' mode will cause
+the overwrite of audio data in that store by more recent data from the
+Master.  This effect can be especially pronounced if the 'MirrorDeleteAudio='
+directive in '/etc/aman.conf' has been set to 'yes'].
+
+
+DATABASE SNAPSHOTS
+------------------
+When first putting a database server into Master mode (and, optionally,
+every twenty-four hours if the 'AutoRotateBinlogs=' directive is set
+in '/etc/aman.conf'), the system will generate a full backup of the
+Rivendell database in the '/var/aman/snapshots/' directory, thus providing
+an easy way to produce off-system database backups by means of a cron(8)
+job to copy the data.  See the 'AutoRotateBinlogs=' directive in the sample
+configuration file for details.
+
+
+IF SOMETHING GOES WRONG
+-----------------------
+There are a number of moving parts in an Aman installation, on multiple
+servers, that must all work smoothly together for a successful outcome.
+Hence, it's not uncommon to encounter problems when bringing up a new
+cluster.  The amand(8) daemon makes heavy use of the 'syslog' facility for
+reporting problems; thus, a careful look at the system logs should be the
+first stop when attempting to troubleshoot problems.
+

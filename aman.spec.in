@@ -1,0 +1,170 @@
+## aman.spec.in
+##
+##    The Aman Rivendell Server Manager
+##    Copyright (C) 2012-2013  Fred Gleason <fredg@paravelsystems.com>
+##
+##      $Id: aman.spec.in,v 1.9 2013/07/02 21:27:28 cvs Exp $
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of version 2 of the GNU General Public License as
+##    published by the Free Software Foundation;
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place, Suite 330, 
+##    Boston, MA  02111-1307  USA
+##
+
+Summary: Rivendell Server Manager System
+Name: aman
+Version: @VERSION@
+Release: @RPM_RELEASE@%{?dist}
+License: GPL
+Packager: Fred Gleason <fredg@paravelsystems.com>
+Group: Productivity/Multimedia/Other
+Source: %{name}-@VERSION@.tar.gz
+Requires: mysql-server @QT4_MYSQL_PKG@ xinetd rsync perl-TermReadKey perl-DBD-MySQL
+BuildRoot: /var/tmp/%{name}-@VERSION@
+
+%description
+Aman is a package for managing a redundant pair of servers for the
+Rivendell Radio Automation System.  It includes facilities for monitoring
+the status of each server and managing data replication between them for
+both the database and audio stores.
+
+
+%prep
+
+
+%setup
+
+
+%build
+./configure --prefix=/usr
+make
+
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{_libdir}
+cp lib/.libs/libaman-@VERSION@.so $RPM_BUILD_ROOT%{_libdir}/
+ln -s %{_libdir}/libaman-@VERSION@.so $RPM_BUILD_ROOT/%{_libdir}/libaman.so
+mkdir -p $RPM_BUILD_ROOT/usr/bin
+cp aman/.libs/aman $RPM_BUILD_ROOT/usr/bin/
+ln -s /usr/bin/consolehelper $RPM_BUILD_ROOT/usr/bin/aman-root
+cp scripts/aman_add_rivendell_user.pl $RPM_BUILD_ROOT/usr/bin/
+cp scripts/aman_add_replication_users.pl $RPM_BUILD_ROOT/usr/bin/
+mkdir -p $RPM_BUILD_ROOT/etc/pam.d
+cp xdg/aman-root-pam $RPM_BUILD_ROOT/etc/pam.d/aman-root
+mkdir -p $RPM_BUILD_ROOT/etc/security/console.apps
+cp xdg/aman-root-consolehelper $RPM_BUILD_ROOT/etc/security/console.apps/aman-root
+mkdir -p $RPM_BUILD_ROOT/etc/security/limits.d
+cp conf/aman-mysql-limits.conf $RPM_BUILD_ROOT/etc/security/limits.d/
+mkdir -p $RPM_BUILD_ROOT/usr/sbin
+cp amand/.libs/amand $RPM_BUILD_ROOT/usr/sbin/
+mkdir -p $RPM_BUILD_ROOT/etc/init.d
+cp rc.amand $RPM_BUILD_ROOT/etc/init.d/amand
+mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/16x16/apps
+cp icons/aman-16x16.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/16x16/apps/aman.png
+mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/22x22/apps
+cp icons/aman-22x22.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/22x22/apps/aman.png
+mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/32x32/apps
+cp icons/aman-32x32.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/32x32/apps/aman.png
+mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/48x48/apps
+cp icons/aman-48x48.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/48x48/apps/aman.png
+mkdir -p $RPM_BUILD_ROOT/usr/share/applications
+cp xdg/aman-aman.desktop $RPM_BUILD_ROOT/usr/share/applications/
+mkdir -p $RPM_BUILD_ROOT/var/aman/keys
+mkdir -p $RPM_BUILD_ROOT/var/aman/snapshots
+
+%post
+ldconfig
+if test "@DISTRO@" = "suse" ; then
+  PACKAGE_DOC_DIR=%_docdir/%{name}
+fi
+if test "@DISTRO@" = "redhat" ; then
+  PACKAGE_DOC_DIR=%_docdir/%{name}-@VERSION@
+fi
+if test ! -e /etc/aman.conf ; then
+  cp $PACKAGE_DOC_DIR/aman.conf-sample /etc/aman.conf
+fi
+if test ! -e /etc/rsyncd.conf ; then
+  cp $PACKAGE_DOC_DIR/rsyncd.conf-sample /etc/rsyncd.conf
+fi
+/etc/init.d/amand restart
+if test "@DISTRO@" = "suse" ; then
+  insserv -d -f /etc/init.d/amand
+fi
+if test "@DISTRO@" = "redhat" ; then
+  chkconfig --add amand
+  chkconfig --levels 235 amand on
+fi
+exit 0
+
+%preun
+if test "$1" = "0" ; then
+  /etc/init.d/amand stop
+  if test "@DISTRO@" = "suse" ; then
+    insserv -r -d -f /etc/init.d/amand
+  fi
+  if test "@DISTRO@" = "redhat" ; then
+    chkconfig --levels 2345 amand off
+    chkconfig --del amand
+  fi
+fi
+exit 0
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{_libdir}/libaman-@VERSION@.so
+%{_libdir}/libaman.so
+/usr/bin/aman
+/usr/bin/aman-root
+/usr/bin/aman_add_rivendell_user.pl
+/usr/bin/aman_add_replication_users.pl
+/usr/sbin/amand
+/etc/init.d/amand
+/etc/pam.d/aman-root
+/etc/security/console.apps/aman-root
+/etc/security/limits.d/aman-mysql-limits.conf
+/usr/share/icons/hicolor/16x16/apps/aman.png
+/usr/share/icons/hicolor/22x22/apps/aman.png
+/usr/share/icons/hicolor/32x32/apps/aman.png
+/usr/share/icons/hicolor/48x48/apps/aman.png
+/usr/share/applications/aman-aman.desktop
+%dir /var/aman/keys
+%dir /var/aman/snapshots
+%doc AUTHORS
+%doc ChangeLog
+%doc COPYING 
+%doc INSTALL
+%doc NEWS 
+%doc README 
+%doc conf/aman.conf-sample
+%doc conf/my.cnf-SystemA-sample
+%doc conf/my.cnf-SystemB-sample
+%doc conf/rsync.xinetd-sample
+%doc conf/rsyncd.conf-sample
+%doc docs/command_protocol.txt
+%doc docs/mysql_states.gxd
+
+%changelog
+* Tue Jul  2 2013 Fred Gleason <fredg@paravelsystems.com>
+-- Added 'rsync.xinetd-sample'.
+* Tue Jun 25 2013 Fred Gleason <fredg@paravelsystems.com>
+-- Added 'mysql-server' and 'rsync' dependencies.
+-- Added 'INSTALL' to the documentation directory.
+-- Added 'aman-mysql-limits.conf'.
+-- Added 'perl-TermReadKey' dependency.
+-- Added 'perl-DBD-MySQL' dependency.
+-- Added 'aman_add_rivendell_user.pl'.
+* Mon Jun 17 2013 Fred Gleason <fredg@paravelsystems.com>
+-- Initial package.

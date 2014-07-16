@@ -1,0 +1,16 @@
+; rsyncd.conf
+;
+; This is a sample configuration file for the rsyncd(8) daemon, showing
+; how to configure a Rivendell audio store for use with the Aman 
+; Rivendell Server Manager.
+;
+
+[rivendell]
+comment = Rivendell Audio Store
+path = /var/snd
+; hosts allow = 192.168.201.101
+; hosts deny = *
+list = true
+uid = root
+gid = root
+read only = true

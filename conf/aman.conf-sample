@@ -1,0 +1,160 @@
+; aman.conf
+;
+; This is the sample configuration file for the Aman system.
+;
+
+;
+; Global Settings
+; These settings apply to the overall operation of the server management
+; system.
+;
+[Global]
+;
+; The name of the MySQL database to replicate.
+;
+MysqlDatabase=Rivendell
+
+;
+; The Qt SQL Driver to use.
+;
+MysqlDriver=QMYSQL3
+
+;
+; The number of milliseconds to wait for a response to a replication
+; test before signaling a failure of replication.
+;
+MysqlReplicationTimeout=5000
+
+;
+; Generate a new DB snapshot and binary log on the master every 24 hours.
+; This must be set to 'yes' in order for the 'AutoPurgeBinlogs' and
+; ' AutoRotateTime' parameters to have any effect.
+;
+AutoRotateBinlogs=Yes
+
+;
+; Automatically delete MySQL binary and relay logs that are no longer
+; required for replication.  The 'AutoRotateBinlogs' parameter must be
+; set to 'yes' for this option to have any effect.
+;
+AutoPurgeBinlogs=Yes
+
+;
+; The time of day at which to rotate and purge binary logs. The
+; 'AutoRotateBinlogs' parameter must be set to 'yes' for this option to
+; have any effect.
+;
+AutoRotateTime=03:32:00
+
+;
+; When replicating audio, delete files on the slave that have been deleted
+; on the master.
+;
+MirrorDeleteAudio=No
+
+;
+; Send system status alerts to an e-mail address.
+; 
+; AlertAddress=someone@example.com
+
+;
+; Address that alert messages originate from.
+; 
+FromAddress=noreply@example.com
+
+;
+; The nice(1) level to use for the amand(8) daemon.
+;
+NiceLevel=10
+
+;
+; System-specific sections.
+; There are two of these, one for each server.
+;
+[SystemA]
+
+;
+; The hostname of SystemA.  Do not add the domain here!
+;
+Hostname=system-a
+
+;
+; The name of the MySQL user configured for replication.
+;
+MysqlUsername=repl
+
+;
+; The password of the MySQL user configured for replication.
+;
+MysqlPassword=letmein
+
+;
+; The directory that contains the binary and relay logs.
+;
+MysqlDataDirectory=/var/lib/mysql
+
+;
+; IP address of the network interface to which Rivendell workstations
+; are attached.
+;
+PublicAddress=192.168.1.2
+
+;
+; IP address of the network interface attached directly to SystemB.
+;
+PrivateAddress=192.168.2.2
+
+;
+; The name of the DB table to use for replication tests.
+;
+PingTablename=AMAN_SYSTEMA_PINGS
+
+;
+; The location of the ssh(1) private key to use when transferring
+; DB snapshots to SystemB.
+;
+SecureShellIdentity=/var/aman/keys/id_dsa
+
+[SystemB]
+
+;
+; The hostname of SystemB.  Do not add the domain here!
+;
+Hostname=system-b
+
+;
+; The name of the MySQL user configured for replication.
+;
+MysqlUsername=repl
+
+;
+; The password of the MySQL user configured for replication.
+;
+MysqlPassword=letmein
+
+;
+; The directory that contains the binary and relay logs.
+;
+MysqlDataDirectory=/var/lib/mysql
+
+;
+; IP address of the network interface to which Rivendell workstations
+; are attached.
+;
+PublicAddress=192.168.1.3
+
+;
+; IP address of the network interface attached directly to SystemB.
+;
+PrivateAddress=192.168.2.3
+
+;
+; The name of the DB table to use for replication tests.
+;
+PingTablename=AMAN_SYSTEMB_PINGS
+
+;
+; The location of the ssh(1) private key to use when transferring
+; DB snapshots to SystemA.
+;
+SecureShellIdentity=/var/aman/keys/id_dsa
