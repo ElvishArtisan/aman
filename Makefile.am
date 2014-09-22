@@ -31,6 +31,11 @@ SUBDIRS = lib\
           scripts\
           xdg
 
+ACLOCAL_AMFLAGS = -I m4
+
+maintainer-clean-local:	
+	rm -rf m4
+
 install-exec-local:	
 	cp rc.amand /etc/init.d/amand
 

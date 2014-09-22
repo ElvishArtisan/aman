@@ -159,3 +159,7 @@
 	segfault when attempting to reuse a stale client connection.
 2014-09-22 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.6.
+2014-09-22 Fred Gleason <fredg@paravelsystems.com>
+	* Renamed 'configure.in' 'configure.ac'.
+	* Modernized invocation of AC_INIT() and AM_INIT() in
+	'configure.ac'.
