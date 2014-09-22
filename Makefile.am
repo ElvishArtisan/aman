@@ -43,12 +43,12 @@ uninstall-local:
 	rm -f /etc/init.d/amand
 
 rpm:	dist
-	cp aman-$(VERSION).tar.gz $(RPM_ROOT)/SOURCES/
+	cp aman-$(VERSION).tar.gz $(HOME)/rpmbuild/SOURCES/
 	$(RPMBUILD) -ba --target $(ARCH)-$(VENDOR)-linux aman.spec
-	mv $(RPM_ROOT)/RPMS/$(ARCH)/aman-*.rpm $(top_srcdir)/
-	mv $(RPM_ROOT)/SRPMS/aman-*.src.rpm $(top_srcdir)/
-	rm $(RPM_ROOT)/SOURCES/aman-$(VERSION).tar.gz
-	rm -rf $(RPM_ROOT)/BUILD/aman-$(VERSION)
+	mv $(HOME)/rpmbuild/RPMS/$(ARCH)/aman-*.rpm $(top_srcdir)/
+	mv $(HOME)/rpmbuild/SRPMS/aman-*.src.rpm $(top_srcdir)/
+	rm $(HOME)/rpmbuild/SOURCES/aman-$(VERSION).tar.gz
+	rm -rf $(HOME)/rpmbuild/BUILD/aman-$(VERSION)
 
 EXTRA_DIST = aman.spec.in\
              autogen.sh\
