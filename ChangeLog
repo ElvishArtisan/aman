@@ -166,3 +166,5 @@
 2014-09-22 Fred Gleason <fredg@paravelsystems.com>
 	* Modified the 'make rpm' to use home directory based build
 	tree in 'Makefile.am'.
+2014-09-22 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.7.
