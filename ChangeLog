@@ -150,3 +150,7 @@
 	* Incremented the package version to 0.9.5.
 2014-07-16 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a typo in 'INSTALL'.
+2014-09-2 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'amand/amand.cpp' that caused syslog to report
+	successful DB mode switch even when the operation was actually
+	unsuccessful.
