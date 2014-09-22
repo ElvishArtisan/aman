@@ -80,11 +80,13 @@ void StreamCmdServer::sendCommand(int cmd,const QStringList &args)
 {
   for(std::map<int,QTcpSocket *>::iterator it=cmd_sockets.begin();
       it!=cmd_sockets.end();it++) {
-    if(it->second->state()==QAbstractSocket::ConnectedState) {
-      sendCommand(it->first,cmd,args);
-    }
-    else {
-      closeConnection(it->first);
+    if(it->second!=NULL) {
+      if(it->second->state()==QAbstractSocket::ConnectedState) {
+	sendCommand(it->first,cmd,args);
+      }
+      else {
+	closeConnection(it->first);
+      }
     }
   }
 }
