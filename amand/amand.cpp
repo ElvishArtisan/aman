@@ -377,7 +377,6 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       main_monitor->setThisDbState(State::StateMaster);
       main_state->setCurrentSnapshot(Am::This,filename);
       main_monitor->setThisSnapshotName(filename);
-      main_cmd_server->sendCommand(id,Am::MakeMasterCommand,outargs);
       SendAlert("Database Replication State changed to MASTER on server \""+
 		main_config->hostname(Am::This)+"\".");
       syslog(LOG_INFO,"state changed to MASTER");
@@ -385,6 +384,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     else {
       outargs.push_back("-");
     }
+    main_cmd_server->sendCommand(id,Am::MakeMasterCommand,outargs);
     break;
 
   case Am::MakeSlaveCommand:
@@ -394,7 +394,6 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       main_state->setDbState(State::StateSlave);
       main_monitor->setThisDbState(State::StateSlave);
       outargs.push_back(main_state->currentSnapshot(Am::That));
-      main_cmd_server->sendCommand(id,Am::MakeSlaveCommand,outargs);
       SendAlert("Database Replication State changed to SLAVE on server \""+
 		main_config->hostname(Am::This)+"\".");
       syslog(LOG_INFO,"state changed to SLAVE");
@@ -402,6 +401,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     else {
       outargs.push_back("-");
     }
+    main_cmd_server->sendCommand(id,Am::MakeSlaveCommand,outargs);
     break;
 
   case Am::MakeIdleCommand:

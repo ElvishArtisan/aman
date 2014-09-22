@@ -156,4 +156,4 @@
 	unsuccessful.
 2014-09-22 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'amand/streamcmdserver.cpp' that caused a
-	segfault when attempting to refuse a stale client connection.
+	segfault when attempting to reuse a stale client connection.
