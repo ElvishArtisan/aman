@@ -157,3 +157,5 @@
 2014-09-22 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'amand/streamcmdserver.cpp' that caused a
 	segfault when attempting to reuse a stale client connection.
+2014-09-22 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.6.
