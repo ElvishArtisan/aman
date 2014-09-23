@@ -104,6 +104,9 @@ if test "@DISTRO@" = "redhat" ; then
   chkconfig --add amand
   chkconfig --levels 235 amand on
 fi
+if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
+  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+fi
 exit 0
 
 %preun
@@ -118,6 +121,14 @@ if test "$1" = "0" ; then
   fi
 fi
 exit 0
+
+
+%postun
+if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
+  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+fi
+exit 0
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
