@@ -1,8 +1,8 @@
 #!/bin/sh
 ##
-##    (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
+##    (C) Copyright 2002-2003 Fred Gleason <fredg@paravelsystems.com>
 ##
-##      $Id: autogen.sh,v 1.1.1.1 2012/06/13 22:28:09 cvs Exp $
+##      $Id: autogen.sh,v 1.5 2010/07/29 19:32:30 cvs Exp $
 ##
 ##    Adapted from './autogen.sh' in the Jack Audio Connection Kit.
 ##    Copyright (C) 2001-2003 Paul Davis, et al.

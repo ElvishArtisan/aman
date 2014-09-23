@@ -7,7 +7,7 @@
 #
 #   (C) Copyright 2012 Fred Gleason <fredg@salemradiolabs.com>
 #
-#    $Id: get_target.sh,v 1.1.1.1 2012/06/13 22:28:09 cvs Exp $
+#    $Id: get_target.sh,v 1.1.1.1 2014/02/17 13:26:17 cvs Exp $
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as
