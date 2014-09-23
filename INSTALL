@@ -46,12 +46,26 @@ Leave the passphrase blank.  After the command completes, copy the file
 '/var/aman/keys/id_dsa.pub' to the '/root/.ssh/authorized_keys' file
 on the other server.
 
-2) Edit /etc/aman.conf.
+2) Populate the host key.
+From a root shell, test that you can access the remote system by doing:
+
+     ssh -i /var/amdn/keys/id_dsa <rmt-server-ip>
+
+You may be prompted to confirm the remote system's identity with a message like:
+
+    The authenticity of host '<rmt-server-ip> (<rmt-server-ip>)' can't be
+    established.  RSA key fingerprint is <rsa-key-fingerprint>.
+    Are you sure you want to continue connecting (yes/no)?
+
+Enter 'yes' and confirm that you are logged into the remote system, then
+enter 'exit'.
+
+3) Edit /etc/aman.conf.
 Start with the commented sample configuration file 'aman.conf-sample'
 provided with this package.  The exact same configuration file should be
 used on both servers.
 
-3) Configure MySQL.
+4) Configure MySQL.
 Copy the appropriate sample configuration file ('my.cnf-SystemA-sample'
 or 'my.cnf-SystemB-sample') to '/etc/my.cnf', then restart the MySQL
 service.
@@ -74,21 +88,21 @@ Once the '/etc/aman.conf' file has been created, the
 'aman_add_replication_users.pl' script can be used to add these users
 with the appropriate privileges semi-automatically.
 
-4) RSync Configuration.
+5) RSync Configuration.
 Create an RSync mountpoint named 'rivendell' that provides read-only
 access to the '/var/snd' directory from the other server.  A sample
 snippet for the '/etc/rsyncd.conf' file can be found in 'rsyncd.conf-sample'
 as well as a sample rsync service configuration for xinetd(8) in
 'rsync.xinetd-sample'.  Ensure that the rsyncd service is started.
 
-5) Audio Replication Check File.
+6) Audio Replication Check File.
 Create the check file by doing the following commands from a root shell:
 
        touch /var/snd/repl.chk
        chown rivendell:rivendell /var/snd/repl.chk
        chmod 660 /var/snd/repl.chk
 
-6) Start the amand(8) Daemon.
+7) Start the amand(8) Daemon.
 Start the amand(8) daemon by doing:
 
       /etc/init.d/amand start
