@@ -167,7 +167,7 @@ void MainObject::PurgeBinlogs()
 	  if(f1.size()) {
 	    v1=f1[1].toUInt(&ok1);
 	    if(ok1) {
-	      DeleteBinlogSequence(f1[0],v1-1);
+	      DeleteBinlogSequence(f1[0],v1-2);
 	    }
 	  }
 	}
