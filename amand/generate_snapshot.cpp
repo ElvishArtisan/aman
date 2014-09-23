@@ -20,8 +20,9 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#include <syslog.h>
 #include <errno.h>
+#include <syslog.h>
+#include <unistd.h>
 
 #include <QtCore/QProcess>
 #include <QtSql/QSqlQuery>

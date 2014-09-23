@@ -175,3 +175,15 @@
 	'amand/auto_rotate.cpp'.
 2014-09-23 Fred Gleason <fredg@paravelsystems.com>
 	* Added instructions for populating the host key in 'INSTALL'.
+2014-09-23 Fred Gleason <fredg@paravelsystems.com>
+	* Added include for 'unistd.h' in 'lib/config.cpp' to fix broken
+	compilation under RHEL 7.
+	* Added includes for 'sys/types.h' and 'unistd.h' in 'aman/aman.cpp'
+	to fix broken compilation under RHEL 7.
+	* Added include for 'unistd.h' in 'lib/connection.cpp' to fix broken
+	compilation under RHEL 7.
+	* Added include for 'unistd.h' in 'amand/generate_snapshot.cpp' to
+	fix broken compilation under RHEL 7.
+	* Fixed a buffer overflow error in 'amand/pingmonitor.cpp'.
+	* Added include for 'unistd.h' in 'amand/restore_snapshot.cpp' to
+	fix broken compilation under RHEL 7.

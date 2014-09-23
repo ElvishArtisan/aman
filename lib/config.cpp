@@ -21,6 +21,7 @@
 //
 
 #include <syslog.h>
+#include <unistd.h>
 
 #include <QtCore/QStringList>
 

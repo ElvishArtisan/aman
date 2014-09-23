@@ -79,7 +79,7 @@ PingMonitor::~PingMonitor()
 {
   for(int i=0;i<2;i++) {
     delete ping_watchdog_timer[i];
-    delete ping_sockets[2];
+    delete ping_sockets[i];
   }
   delete ping_send_timer;
   delete ping_ready_mapper;
