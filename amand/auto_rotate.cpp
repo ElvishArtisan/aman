@@ -25,6 +25,7 @@
 
 #include <QtCore/QDir>
 #include <QtSql/QSqlQuery>
+#include <QtCore/QVariant>
 
 #include "amand.h"
 

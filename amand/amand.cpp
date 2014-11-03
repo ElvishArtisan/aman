@@ -34,6 +34,8 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 #include <QtCore/QProcess>
+#include <QtCore/QVariant>
+#include <QtGui/QApplication>
 #include <QtNetwork/QTcpServer>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>

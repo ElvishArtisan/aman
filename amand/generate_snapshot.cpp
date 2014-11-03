@@ -25,6 +25,7 @@
 #include <unistd.h>
 
 #include <QtCore/QProcess>
+#include <QtCore/QVariant>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 

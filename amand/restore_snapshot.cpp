@@ -25,6 +25,7 @@
 
 #include <QtCore/QProcess>
 #include <QtCore/QStringList>
+#include <QtCore/QVariant>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
