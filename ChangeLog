@@ -209,3 +209,5 @@
 2017-02-12 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'configure.ac' that caused an incorrect dependency
 	to be generated for RHEL 7.
+2017-02-12 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.9.
