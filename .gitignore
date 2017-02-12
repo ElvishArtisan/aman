@@ -2,7 +2,9 @@
 *.la
 *.lo
 *.o
+*.rpm
 *.spec
+*.tar.gz
 .deps
 .libs
 aclocal.m4
@@ -16,6 +18,7 @@ depcomp
 install-sh
 libtool
 ltmain.sh
+m4
 Makefile
 Makefile.in
 missing
