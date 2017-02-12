@@ -206,3 +206,6 @@
 	to fix broken compilation on RHEL 5.
 	* Added include for 'vector' in 'amand/streamcmdserver.cpp' to fix
 	broken compilation on RHEL 5.
+2017-02-12 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'configure.ac' that caused an incorrect dependency
+	to be generated for RHEL 7.
