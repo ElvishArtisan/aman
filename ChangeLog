@@ -223,3 +223,6 @@
 2017-02-18 Fred Gleason <fredg@paravelsystems.com>
 	* Added a 'MysqlServiceName=' directive to the [Global] section
 	of aman.conf(5).
+2017-02-18 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'aman/restore_snapshot.cpp' that used the
+	incorrect service name for MySQL.

@@ -98,12 +98,13 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   proc=new QProcess(this);
   args.clear();
-  args.push_back("mysqld");
+  args.push_back(main_config->globalMysqlServiceName());
   args.push_back("stop");
   proc->start("service",args);
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
-    syslog(LOG_ERR,"mysqld(8) shutdown failed [%s]",
+    syslog(LOG_ERR,"%s(8) shutdown failed [%s]",
+	   (const char *)main_config->globalMysqlServiceName().toUtf8(),
 	   (const char *)proc->readAllStandardError());
     delete proc;
     return false;
@@ -146,12 +147,13 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   proc=new QProcess(this);
   args.clear();
-  args.push_back("mysqld");
+  args.push_back(main_config->globalMysqlServiceName());
   args.push_back("start");
   proc->start("service",args);
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
-    syslog(LOG_ERR,"mysqld(8) restart failed [%s]",
+    syslog(LOG_ERR,"%s(8) restart failed [%s]",
+	   (const char *)main_config->globalMysqlServiceName().toUtf8(),
 	   (const char *)proc->readAllStandardError());
     delete proc;
     return false;
