@@ -94,6 +94,12 @@ int Config::globalNiceLevel() const
 }
 
 
+QString Config::globalMysqlServiceName() const
+{
+  return conf_global_mysql_service_name;
+}
+
+
 QString Config::hostname(Am::Instance inst) const
 {
   return conf_hostname[inst];
@@ -191,6 +197,8 @@ bool Config::load()
     p->stringValue("Global","FromAddress",conf_global_from_address);
   conf_global_nice_level=
     p->intValue("Global","NiceLevel",10);
+  conf_global_mysql_service_name=
+    p->stringValue("Global","MysqlServiceName","mysqld");
   LoadHost(p,"SystemA");
   LoadHost(p,"SystemB");
 
@@ -213,6 +221,7 @@ void Config::clear()
   conf_global_auto_purge_binlogs=false;
   conf_global_auto_rotate_time=QTime(3,32,0);
   conf_global_nice_level=10;
+  conf_global_mysql_service_name="mysqld";
   for(int i=0;i<2;i++) {
     conf_hostname[i]="";
     conf_mysql_username[i]="";

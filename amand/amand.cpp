@@ -599,7 +599,10 @@ bool MainObject::CheckLocalState()
 
 bool MainObject::IsMysqlRunning() const
 {
-  int code=system("service mysqld status > /dev/null 2> /dev/null");
+  QString cmd=QString("service ")+
+    main_config->globalMysqlServiceName()+
+    " status > /dev/null 2> /dev/null";
+  int code=system(cmd.toUtf8());
   return code==0;
 }
 

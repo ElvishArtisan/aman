@@ -220,3 +220,6 @@
 	* Added 'conf/aman.cnf-SystemB-rhel7-sample'.
 	* Fixed a typo in 'INSTALL'.
 	* Cleaned up warnings in 'scripts/aman_add_replication_users.pl'.
+2017-02-18 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'MysqlServiceName=' directive to the [Global] section
+	of aman.conf(5).

@@ -48,6 +48,7 @@ class Config
   QString globalAlertAddress() const;
   QString globalFromAddress() const;
   int globalNiceLevel() const;
+  QString globalMysqlServiceName() const;
   QString hostname(Am::Instance inst) const;
   QString mysqlUsername(Am::Instance inst) const;
   QString mysqlPassword(Am::Instance inst) const;
@@ -75,6 +76,7 @@ class Config
   bool conf_global_auto_purge_binlogs;
   QTime conf_global_auto_rotate_time;
   int conf_global_nice_level;
+  QString conf_global_mysql_service_name;
   QString conf_hostname[Am::LastInstance];
   QString conf_mysql_username[Am::LastInstance];
   QString conf_mysql_password[Am::LastInstance];
