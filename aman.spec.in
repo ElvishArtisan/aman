@@ -160,14 +160,18 @@ rm -rf $RPM_BUILD_ROOT
 %doc NEWS 
 %doc README 
 %doc conf/aman.conf-sample
-%doc conf/my.cnf-SystemA-sample
-%doc conf/my.cnf-SystemB-sample
+%doc conf/my.cnf-SystemA-rhel6-sample
+%doc conf/my.cnf-SystemB-rhel6-sample
+%doc conf/aman.cnf-SystemA-rhel7-sample
+%doc conf/aman.cnf-SystemB-rhel7-sample
 %doc conf/rsync.xinetd-sample
 %doc conf/rsyncd.conf-sample
 %doc docs/command_protocol.txt
 %doc docs/mysql_states.gxd
 
 %changelog
+* Sat Feb 18 2017 Fred Gleason <fredg@paravelsystems.com>
+-- Added 'Added sample configs for MariaDB on CentOS 7.
 * Tue Jul  2 2013 Fred Gleason <fredg@paravelsystems.com>
 -- Added 'rsync.xinetd-sample'.
 * Tue Jun 25 2013 Fred Gleason <fredg@paravelsystems.com>

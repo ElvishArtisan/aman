@@ -45,20 +45,22 @@ sub ReadAmanConfig
 	}
 	else {
 	    @fields=split "=",$line;
-	    if(lc($section) eq "systema"){
-		if(lc($fields[0]) eq "publicaddress") {
-		    $addresses[0]=$fields[1];
+	    if(scalar @fields != 0) {
+		if(lc($section) eq "systema"){
+		    if(lc($fields[0]) eq "publicaddress") {
+			$addresses[0]=$fields[1];
+		    }
+		    if(lc($fields[0]) eq "privateaddress") {
+			$addresses[1]=$fields[1];
+		    }
 		}
-		if(lc($fields[0]) eq "privateaddress") {
-		    $addresses[1]=$fields[1];
-		}
-	    }
-	    if(lc($section) eq "systemb"){
-		if(lc($fields[0]) eq "publicaddress") {
-		    $addresses[2]=$fields[1];
-		}
-		if(lc($fields[0]) eq "privateaddress") {
-		    $addresses[3]=$fields[1];
+		if(lc($section) eq "systemb"){
+		    if(lc($fields[0]) eq "publicaddress") {
+			$addresses[2]=$fields[1];
+		    }
+		    if(lc($fields[0]) eq "privateaddress") {
+			$addresses[3]=$fields[1];
+		    }
 		}
 	    }
 	}

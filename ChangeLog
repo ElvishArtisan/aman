@@ -211,3 +211,12 @@
 	to be generated for RHEL 7.
 2017-02-12 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.9.
+2017-02-18 Fred Gleason <fredg@paravelsystems.com>
+	* Renamed 'conf/aman.cnf-SystemA-sample' to
+	'conf/aman.cnf-SystemA-rhel6-sample'.
+	* Renamed 'conf/aman.cnf-SystemB-sample' to
+	'conf/aman.cnf-SystemB-rhel6-sample'.
+	* Added 'conf/aman.cnf-SystemA-rhel7-sample'.
+	* Added 'conf/aman.cnf-SystemB-rhel7-sample'.
+	* Fixed a typo in 'INSTALL'.
+	* Cleaned up warnings in 'scripts/aman_add_replication_users.pl'.

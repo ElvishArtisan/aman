@@ -23,9 +23,11 @@
 ## Use automake to process this into a Makefile.in
 
 EXTRA_DIST = aman.conf-sample\
+             aman.cnf-SystemA-rhel7-sample\
+             aman.cnf-SystemB-rhel7-sample\
              aman-mysql-limits.conf\
-             my.cnf-SystemA-sample\
-             my.cnf-SystemB-sample\
+             my.cnf-SystemA-rhel6-sample\
+             my.cnf-SystemB-rhel6-sample\
              rsync.xinetd-sample\
              rsyncd.conf-sample
 
