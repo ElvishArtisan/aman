@@ -226,3 +226,7 @@
 2017-02-18 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'aman/restore_snapshot.cpp' that used the
 	incorrect service name for MySQL.
+2017-02-18 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'binlog-do-db=' parameter to
+	'conf/aman.cnf-SystemA-rhel7-sample' and
+	'conf/aman.cnf-SystemB-rhel7-sample'.
