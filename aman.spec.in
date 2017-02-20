@@ -28,7 +28,7 @@ License: GPL
 Packager: Fred Gleason <fredg@paravelsystems.com>
 Group: Productivity/Multimedia/Other
 Source: %{name}-@VERSION@.tar.gz
-Requires: @MYSQL_PKG@ @QT4_MYSQL_PKG@ xinetd rsync perl-TermReadKey perl-DBD-MySQL
+Requires: @MYSQL_PKG@ @QT4_MYSQL_PKG@ @XINETD_PKG@ rsync perl-TermReadKey perl-DBD-MySQL
 BuildRoot: /var/tmp/%{name}-@VERSION@
 
 %description

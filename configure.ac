@@ -88,10 +88,12 @@ else
     AC_SUBST(MYSQL_PKG,"mariadb-server")
     AC_SUBST(DIST_VER,".el$DISTRO_MAJOR_VER")
     AC_SUBST(DEBUG_RPM,"yes")
+    AC_SUBST(XINETD_PKG,"")
   else
     AC_SUBST(MYSQL_PKG,"mysql-server")
     AC_SUBST(DIST_VER,"")
     AC_SUBST(DEBUG_RPM,"no")
+    AC_SUBST(XINETD_PKG,"xinetd")
   fi
 fi
 
