@@ -29,7 +29,7 @@ MysqlReplicationTimeout=5000
 ; The name of the Service that runs MySQL on this system. If you're
 ; using MariaDB, you may have to change this to 'mariadb'.
 ;
-MysqlServiceName="mysqld"
+MysqlServiceName=mysqld
 
 ;
 ; Generate a new DB snapshot and binary log on the master every 24 hours.
