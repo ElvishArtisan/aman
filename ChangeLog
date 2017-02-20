@@ -237,3 +237,5 @@
 	the target image.
 2017-02-20 Fred Gleason <fredg@paravelsystems.com>
 	* Removed the xinetd(8) dependency for RHEL 7 installs.
+2017-02-20 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.10.
