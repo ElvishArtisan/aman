@@ -2,7 +2,7 @@
 ##
 ## conf/ automake.am for Aman
 ##
-## (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##      $Id: Makefile.am,v 1.7 2013/07/02 21:27:28 cvs Exp $
 ##
@@ -21,6 +21,13 @@
 ##
 ##
 ## Use automake to process this into a Makefile.in
+
+install-exec-local:	
+	mkdir -p $(DESTDIR)/etc/security/limits.d
+	cp aman-mysql-limits.conf $(DESTDIR)/etc/security/limits.d/
+
+uninstall-local:	
+	rm -f $(DESTDIR)/etc/security/limits.d/aman-mysql-limits.conf
 
 EXTRA_DIST = aman.conf-sample\
              aman.cnf-SystemA-rhel7-sample\

@@ -45,42 +45,18 @@ both the database and audio stores.
 
 
 %build
-./configure --prefix=/usr
+%configure
 make
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{_libdir}
-cp lib/.libs/libaman-@VERSION@.so $RPM_BUILD_ROOT%{_libdir}/
-ln -s %{_libdir}/libaman-@VERSION@.so $RPM_BUILD_ROOT/%{_libdir}/libaman.so
-mkdir -p $RPM_BUILD_ROOT/usr/bin
-cp aman/.libs/aman $RPM_BUILD_ROOT/usr/bin/
-ln -s /usr/bin/consolehelper $RPM_BUILD_ROOT/usr/bin/aman-root
-cp scripts/aman_add_rivendell_user.pl $RPM_BUILD_ROOT/usr/bin/
-cp scripts/aman_add_replication_users.pl $RPM_BUILD_ROOT/usr/bin/
-mkdir -p $RPM_BUILD_ROOT/etc/pam.d
-cp xdg/aman-root-pam $RPM_BUILD_ROOT/etc/pam.d/aman-root
-mkdir -p $RPM_BUILD_ROOT/etc/security/console.apps
-cp xdg/aman-root-consolehelper $RPM_BUILD_ROOT/etc/security/console.apps/aman-root
-mkdir -p $RPM_BUILD_ROOT/etc/security/limits.d
-cp conf/aman-mysql-limits.conf $RPM_BUILD_ROOT/etc/security/limits.d/
-mkdir -p $RPM_BUILD_ROOT/usr/sbin
-cp amand/.libs/amand $RPM_BUILD_ROOT/usr/sbin/
-mkdir -p $RPM_BUILD_ROOT/etc/init.d
-cp rc.amand $RPM_BUILD_ROOT/etc/init.d/amand
-mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/16x16/apps
-cp icons/aman-16x16.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/16x16/apps/aman.png
-mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/22x22/apps
-cp icons/aman-22x22.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/22x22/apps/aman.png
-mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/32x32/apps
-cp icons/aman-32x32.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/32x32/apps/aman.png
-mkdir -p $RPM_BUILD_ROOT/usr/share/icons/hicolor/48x48/apps
-cp icons/aman-48x48.png $RPM_BUILD_ROOT/usr/share/icons/hicolor/48x48/apps/aman.png
-mkdir -p $RPM_BUILD_ROOT/usr/share/applications
-cp xdg/aman-aman.desktop $RPM_BUILD_ROOT/usr/share/applications/
+make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/var/aman/keys
 mkdir -p $RPM_BUILD_ROOT/var/aman/snapshots
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+
 
 %post
 ldconfig

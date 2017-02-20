@@ -23,21 +23,21 @@
 ## Use automake to process this into a Makefile.in
 
 install-exec-am:	
-	mkdir -p @prefix@/share/icons/hicolor/16x16/apps
-	cp aman-16x16.png @prefix@/share/icons/hicolor/16x16/apps/aman.png
-	mkdir -p @prefix@/share/icons/hicolor/22x22/apps
-	cp aman-22x22.png @prefix@/share/icons/hicolor/22x22/apps/aman.png
-	mkdir -p @prefix@/share/icons/hicolor/32x32/apps
-	cp aman-32x32.png @prefix@/share/icons/hicolor/32x32/apps/aman.png
-	mkdir -p @prefix@/share/icons/hicolor/48x48/apps
-	cp aman-48x48.png @prefix@/share/icons/hicolor/48x48/apps/aman.png
-	mkdir -p @prefix@/share/icons/hicolor/64x64/apps
+	mkdir -p $(DESTDIR)@prefix@/share/icons/hicolor/16x16/apps
+	cp aman-16x16.png $(DESTDIR)@prefix@/share/icons/hicolor/16x16/apps/aman.png
+	mkdir -p $(DESTDIR)@prefix@/share/icons/hicolor/22x22/apps
+	cp aman-22x22.png $(DESTDIR)@prefix@/share/icons/hicolor/22x22/apps/aman.png
+	mkdir -p $(DESTDIR)@prefix@/share/icons/hicolor/32x32/apps
+	cp aman-32x32.png $(DESTDIR)@prefix@/share/icons/hicolor/32x32/apps/aman.png
+	mkdir -p $(DESTDIR)@prefix@/share/icons/hicolor/48x48/apps
+	cp aman-48x48.png $(DESTDIR)@prefix@/share/icons/hicolor/48x48/apps/aman.png
+	mkdir -p $(DESTDIR)@prefix@/share/icons/hicolor/64x64/apps
 
 uninstall:	
-	rm -f @prefix@/share/icons/hicolor/16x16/apps/aman.png
-	rm -f @prefix@/share/icons/hicolor/22x22/apps/aman.png
-	rm -f @prefix@/share/icons/hicolor/32x32/apps/aman.png
-	rm -f @prefix@/share/icons/hicolor/48x48/apps/aman.png
+	rm -f $(DESTDIR)@prefix@/share/icons/hicolor/16x16/apps/aman.png
+	rm -f $(DESTDIR)@prefix@/share/icons/hicolor/22x22/apps/aman.png
+	rm -f $(DESTDIR)@prefix@/share/icons/hicolor/32x32/apps/aman.png
+	rm -f $(DESTDIR)@prefix@/share/icons/hicolor/48x48/apps/aman.png
 
 EXTRA_DIST = aman-16x16.png\
              aman-16x16.xpm\

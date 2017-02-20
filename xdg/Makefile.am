@@ -22,18 +22,20 @@
 ## Use automake to process this into a Makefile.in
 
 install-exec-local:	
-	mkdir -p @prefix@/share/applications
-	cp aman-aman.desktop @prefix@/share/applications/
-	cp aman-root-pam /etc/pam.d/aman-root
-	cp aman-root-consolehelper /etc/security/console.apps/aman-root
-	rm -f $(prefix)/bin/aman-root
-	ln -s /usr/bin/consolehelper $(prefix)/bin/aman-root
+	mkdir -p $(DESTDIR)@prefix@/share/applications
+	cp aman-aman.desktop $(DESTDIR)@prefix@/share/applications/
+	mkdir -p $(DESTDIR)/etc/pam.d
+	cp aman-root-pam $(DESTDIR)/etc/pam.d/aman-root
+	mkdir -p $(DESTDIR)/etc/security/console.apps
+	cp aman-root-consolehelper $(DESTDIR)/etc/security/console.apps/aman-root
+	rm -f $(DESTDIR)@prefix@/bin/aman-root
+	ln -s /usr/bin/consolehelper $(DESTDIR)@prefix@/bin/aman-root
 
 uninstall-local:	
-	rm -f /usr/share/applications/aman-aman.desktop
-	rm -f /etc/pam.d/aman-root
-	rm -f /etc/security/console.apps/aman-root
-	rm -f $(prefix)/sbin/aman-root
+	rm -f $(DESTDIR)@prefix@/share/applications/aman-aman.desktop
+	rm -f $(DESTDIR)/etc/pam.d/aman-root
+	rm -f $(DESTDIR)/etc/security/console.apps/aman-root
+	rm -f $(DESTDIR)@prefix@/sbin/aman-root
 
 EXTRA_DIST = aman-aman.desktop\
              aman-root-consolehelper\

@@ -34,7 +34,7 @@ moc_%.cpp:	%.h
 clean-local:	
 	rm -rf debug release
 
-instdir = @LOCAL_PREFIX@/lib
+#instdir = @LOCAL_PREFIX@/lib
 
 lib_LTLIBRARIES = libaman.la
 dist_libaman_la_SOURCES = am.cpp am.h\

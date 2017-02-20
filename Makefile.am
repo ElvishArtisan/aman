@@ -37,10 +37,11 @@ maintainer-clean-local:
 	rm -rf m4
 
 install-exec-local:	
-	cp rc.amand /etc/init.d/amand
+	mkdir -p $(DESTDIR)/etc/init.d
+	cp rc.amand $(DESTDIR)/etc/init.d/amand
 
 uninstall-local:
-	rm -f /etc/init.d/amand
+	rm -f $(DESTDIR)/etc/init.d/amand
 
 rpm:	dist
 	cp aman-$(VERSION).tar.gz $(HOME)/rpmbuild/SOURCES/

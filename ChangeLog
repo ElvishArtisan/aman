@@ -232,3 +232,6 @@
 	'conf/aman.cnf-SystemB-rhel7-sample'.
 2017-02-20 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a typo in 'conf/aman.conf-sample'.
+2017-02-20 Fred Gleason <fredg@paravelsystems.com>
+	* Refactored 'aman.spec.in' to use 'make install' to populate
+	the target image.
