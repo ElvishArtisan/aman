@@ -252,3 +252,5 @@
 2017-04-05 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'amand/audiostore.cpp' that broke mirror deletion
 	of audio.
+2017-04-05 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.11.
