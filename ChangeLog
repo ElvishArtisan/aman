@@ -249,3 +249,6 @@
 	* Modified the DB snapshot generation code to attempt snapshot
 	transfer via the Public interface before attempting the Private.
 	* Added RHEL-7 specific information to 'INSTALL'.
+2017-04-05 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'amand/audiostore.cpp' that broke mirror deletion
+	of audio.

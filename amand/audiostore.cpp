@@ -138,7 +138,7 @@ void MainObject::startAudioCopy()
     args.push_back("--delete");
   }
   args.push_back(main_config->address(Am::That,Config::PrivateAddress).
-		 toString()+"::rivendell/*.wav");
+		 toString()+"::rivendell/");
   args.push_back("/var/snd/");
   main_audio_process->start("rsync",args);
 }
