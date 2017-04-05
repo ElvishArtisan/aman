@@ -239,3 +239,13 @@
 	* Removed the xinetd(8) dependency for RHEL 7 installs.
 2017-02-20 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.10.
+2017-04-05 Fred Gleason <fredg@paravelsystems.com>
+	* Modified the RestoreMysqlSnapshot() function in
+	'amand/restore_snapshot.cpp' and 'amand/set_metadata.cpp' to
+	configure DB replication to occur via the Public interface rather
+	than the Private one.
+	* Modified DB replication testing to use the Public interface rather
+	than the Private one.
+	* Modified the DB snapshot generation code to attempt snapshot
+	transfer via the Public interface before attempting the Private.
+	* Added RHEL-7 specific information to 'INSTALL'.

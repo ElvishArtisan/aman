@@ -83,9 +83,12 @@ provided with this package.  The exact same configuration file should be
 used on both servers.
 
 4) Configure MySQL.
-Copy the appropriate sample configuration file ('my.cnf-SystemA-sample'
-or 'my.cnf-SystemB-sample') to '/etc/my.cnf', then restart the MySQL
-service.
+On a RHEL-6 system, this is a matter of copying the appropriate sample
+configuration file ('my.cnf-SystemA-rhel6-sample' or
+'my.cnf-SystemB-rhel6-sample') to '/etc/my.cnf'. For an RHEL-7 system,
+copy the 'aman.cnf-SystemA-rhel7-sample' or 'aman.cnf-SystemB-rhel7-sample'
+file to '/etc/my.cnf.d/aman.cnf'. After copying the config files restart
+the MySQL service.
 
 Create a 'repl' user in MySQL with rights to connect from both the
 private and public IP addresses of each server and with the following
@@ -108,8 +111,9 @@ with the appropriate privileges semi-automatically.
 5) RSync Configuration.
 Create an RSync mountpoint named 'rivendell' that provides read-only
 access to the '/var/snd' directory from the other server.  A sample
-snippet for the '/etc/rsyncd.conf' file can be found in 'rsyncd.conf-sample'
-as well as a sample rsync service configuration for xinetd(8) in
+snippet for the '/etc/rsyncd.conf' file can be found in 'rsyncd.conf-sample'.
+For systems such as RHEL-6 which start rsyncd(8) by means of xinetd(8), a
+sample rsync service configuration for xinetd(8) is also provided in
 'rsync.xinetd-sample'.  Ensure that the rsyncd service is started.
 
 6) Audio Replication Check File.
@@ -122,7 +126,7 @@ Create the check file by doing the following commands from a root shell:
 7) Start the amand(8) Daemon.
 Start the amand(8) daemon by doing:
 
-      /etc/init.d/amand start
+      service amand start
 
 from a root shell.  You should now be able to run the aman(8) applet
 from the 'System Tools' menu to configure and monitor replication.

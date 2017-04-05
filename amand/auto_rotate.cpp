@@ -2,7 +2,7 @@
 //
 // Autorotation Routines for amand(8).
 //
-//   (C) Copyright 2012-2013 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //      $Id: auto_rotate.cpp,v 1.2 2013/11/19 00:14:40 cvs Exp $
 //

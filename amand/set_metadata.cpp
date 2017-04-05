@@ -58,7 +58,7 @@ bool MainObject::SetMysqlMetadata(const QString &binlog_name,int binlog_pos)
   q=new QSqlQuery(sql,Db());
   delete q;
   sql=QString("change master to MASTER_HOST=\"")+
-    main_config->address(Am::That,Config::PrivateAddress).toString()+"\","+
+    main_config->address(Am::That,Config::PublicAddress).toString()+"\","+
     "MASTER_USER=\""+main_config->mysqlUsername(Am::This)+"\","+
     "MASTER_PASSWORD=\""+main_config->mysqlPassword(Am::This)+"\","+
     "MASTER_LOG_FILE=\""+binlog_name+"\","+

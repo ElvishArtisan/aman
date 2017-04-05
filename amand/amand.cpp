@@ -2,7 +2,7 @@
 //
 // amand(8) Monitoring Daemon.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //      $Id: amand.cpp,v 1.19 2013/11/19 00:14:40 cvs Exp $
 //
@@ -240,7 +240,7 @@ MainObject::MainObject(QObject *parent)
   //
   // Replication Tester
   //
-  main_repl_test=new ReplicationTest(Config::PrivateAddress,main_config,this);
+  main_repl_test=new ReplicationTest(Config::PublicAddress,main_config,this);
   connect(main_repl_test,SIGNAL(testComplete(bool,int)),
 	  this,SLOT(replicationTestCompleteData(bool,int)));
 
@@ -522,7 +522,7 @@ void MainObject::replicationTestCompleteData(bool success,int msecs)
 		  main_config->hostname(Am::That)+"\".");
 	syslog(LOG_INFO,"replication restored for mysql at %s",
 	       (const char *)main_config->
-	       address(Am::That,Config::PrivateAddress).toString().
+	       address(Am::That,Config::PublicAddress).toString().
 	       toAscii());
       }
       main_replication_test_state=true;
@@ -540,7 +540,7 @@ void MainObject::replicationTestCompleteData(bool success,int msecs)
 		  main_config->hostname(Am::That)+"\".");	  
 	syslog(LOG_WARNING,"replication failed for mysql at %s",
 	       (const char *)main_config->
-	       address(Am::That,Config::PrivateAddress).toString().
+	       address(Am::That,Config::PublicAddress).toString().
 	       toAscii());
       }
       main_replication_test_state=false;

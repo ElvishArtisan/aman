@@ -182,9 +182,9 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   //
   // Push Snapshot to Remote Systems
   //
-  if(!PushFile(filename,main_config->address(Am::That,Config::PrivateAddress).
+  if(!PushFile(filename,main_config->address(Am::That,Config::PublicAddress).
 	       toString(),filename)) {
-    if(!PushFile(filename,main_config->address(Am::That,Config::PublicAddress).
+    if(!PushFile(filename,main_config->address(Am::That,Config::PrivateAddress).
 		 toString(),filename)) {
       syslog(LOG_ERR,"unable to push snapshot to \"%s\"",
 	     (const char *)main_config->hostname(Am::That).toAscii());
