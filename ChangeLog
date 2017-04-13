@@ -257,3 +257,5 @@
 2017-04-12 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'configure.ac' that caused incorrect RPM dependencies
 	to be generated on RHEL-6.
+2017-04-12 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.12.
