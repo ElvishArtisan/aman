@@ -2,9 +2,7 @@
 //
 // amand(8) System-Wide Defines.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: am.h,v 1.9 2013/07/02 19:19:27 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -92,7 +90,7 @@ class Am
   enum Command {DisconnectCommand=0,StateCommand=1,GenerateSnapshotCommand=2,
 		LoadSnapshotCommand=3,SetMetadataCommand=4,MakeMasterCommand=5,
 		MakeSlaveCommand=6,MakeIdleCommand=7,StartAudioSlaveCommand=8,
-		StopAudioSlaveCommand=9};
+		StopAudioSlaveCommand=9,PurgeBinLogsCommand=10};
   static QString instanceText(Am::Instance inst);
 };
 

@@ -67,7 +67,7 @@ class MainObject : public QObject
   void SetAudioStatus(bool status);
   void AutoRotate();
   void PurgeBinlogs();
-  void DeleteBinlogSequence(const QString &basename,unsigned last) const;
+  void DeleteBinlogSequence(const QString &basename,unsigned last);
   QStringList StateUpdateArgs() const;
   bool CheckLocalState();
   bool IsMysqlRunning() const;

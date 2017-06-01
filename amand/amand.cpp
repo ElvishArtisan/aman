@@ -204,6 +204,10 @@ MainObject::MainObject(QObject *parent)
   upper_limits[Am::GenerateSnapshotCommand]=0;
   lower_limits[Am::GenerateSnapshotCommand]=0;
 
+  cmds[Am::PurgeBinLogsCommand]="PG";
+  upper_limits[Am::StopAudioSlaveCommand]=0;
+  lower_limits[Am::StopAudioSlaveCommand]=0;
+
   cmds[Am::LoadSnapshotCommand]="LS";
   upper_limits[Am::LoadSnapshotCommand]=1;
   lower_limits[Am::LoadSnapshotCommand]=1;
@@ -352,6 +356,10 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       outargs.push_back("-");
     }
     main_cmd_server->sendCommand(id,Am::GenerateSnapshotCommand,outargs);
+    break;
+
+  case Am::PurgeBinLogsCommand:
+    PurgeBinlogs();
     break;
 
   case Am::LoadSnapshotCommand:

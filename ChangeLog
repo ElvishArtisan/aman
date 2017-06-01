@@ -259,3 +259,7 @@
 	to be generated on RHEL-6.
 2017-04-12 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.12.
+2017-06-01 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'Purge Bin Logs' ['PG'] command to amand(8).
+	* Rewrote the 'DeleteBinlogSequence()' method in 'amand/auto_rotate.cpp'
+	to use the 'PURGE BINARY LOGS' SQL statement.

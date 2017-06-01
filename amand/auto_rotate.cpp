@@ -107,6 +107,7 @@ void MainObject::PurgeBinlogs()
   unsigned v1=0;
   unsigned v2=0;
 
+  printf("PurgeBinlogs()\n");
   if((main_monitor->dbState(Am::This)==State::StateMaster)&&
      (main_monitor->dbState(Am::That)==State::StateSlave)) {
     if(OpenMysql(Am::This,Config::PrivateAddress)) {
@@ -129,10 +130,12 @@ void MainObject::PurgeBinlogs()
 	    v2=f2[1].toUInt(&ok2);
 	    if(ok1&&ok2) {
 	      if(v1<=v2) {
-		DeleteBinlogSequence(f1[0],v1-1);
+		DeleteBinlogSequence(f1[0],v1);
+		//		DeleteBinlogSequence(f1[0],v1-1);
 	      }
 	      else {
-		DeleteBinlogSequence(f2[0],v2-1);
+		DeleteBinlogSequence(f2[0],v2);
+		//		DeleteBinlogSequence(f2[0],v2-1);
 	      }
 	    }
 	  }
@@ -181,26 +184,18 @@ void MainObject::PurgeBinlogs()
 
 
 void MainObject::DeleteBinlogSequence(const QString &basename,
-				      unsigned last) const
+				      unsigned last)
 {
-  //printf("delete up to %s.%06u\n",(const char *)basename.toUtf8(),last);
+  //  printf("delete up to %s.%06u\n",(const char *)basename.toUtf8(),last);
 
-  QStringList f1;
-  bool ok=false;
-  unsigned n;
-  QDir *dir=new QDir(AM_MYSQL_DATADIR,basename+".*");
-  QStringList binlogs=dir->entryList();
+  QString sql;
+  QSqlQuery *q;
 
-  for(int i=0;i<binlogs.size();i++) {
-    f1=binlogs[i].split(".");
-    if(f1.size()==2) {
-      n=f1[1].toUInt(&ok);
-      if(ok&&n<=last) {
-	dir->remove(binlogs[i]);
-	syslog(LOG_INFO,"purged mysql binlog \"%s\"",
-	       (const char *)binlogs[i].toUtf8());
-      }
-    }
+  if(OpenMysql(Am::This,Config::PublicAddress)) {
+    sql=QString("purge binary logs to ")+
+      "\""+basename+QString().sprintf(".%06u\"",last);
+    q=new QSqlQuery(sql,Db());
+    delete q;
+    CloseMysql();
   }
-  delete dir;
 }

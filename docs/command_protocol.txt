@@ -63,6 +63,17 @@ where:
 
            <binlog-pos> - Binary log position, or 0 if loading failed.
 -----------------------------------------------------------------------------
+Purge Bin Logs
+
+	 PG!
+
+System responds with:
+
+       PG!
+
+Purges all unused binary and relay logs on local host.
+
+-----------------------------------------------------------------------------
 Set Database Replication Metadata
 
     	SM <binlog-name> <binlog-pos>!
