@@ -263,3 +263,6 @@
 	* Added a 'Purge Bin Logs' ['PG'] command to amand(8).
 	* Rewrote the 'DeleteBinlogSequence()' method in 'amand/auto_rotate.cpp'
 	to use the 'PURGE BINARY LOGS' SQL statement.
+2017-06-02 Fred Gleason <fredg@paravelsystems.com>
+	* Modified log rotation algorithm in amand(8) to do snapshot
+	generation and log purging in a single pass.

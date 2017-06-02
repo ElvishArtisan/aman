@@ -41,24 +41,16 @@ void MainObject::ScheduleAutoRotation()
 
   if(main_config->globalAutoRotateBinlogs()) {
     QDateTime now=QDateTime(QDate::currentDate(),QTime::currentTime());
-    if(!main_auto_rotate_state) {
-      if(now.time()>main_config->globalAutoRotateTime()) {
-	msecs=1000*now.secsTo(QDateTime(now.addDays(1).date(),
-					main_config->globalAutoRotateTime()));
-      }
-      else {
-	msecs=1000*now.secsTo(QDateTime(now.date(),
-					main_config->globalAutoRotateTime()));
-      }
-      main_auto_rotate_state=true;
+    if(now.time()<main_config->globalAutoRotateTime()) {
+      msecs=now.time().msecsTo(main_config->globalAutoRotateTime());
     }
     else {
-      msecs=3600000;
-      main_auto_rotate_state=false;
+      msecs=now.time().msecsTo(QTime(23,59,59))+1000+
+	QTime().msecsTo(main_config->globalAutoRotateTime());
     }
     main_auto_rotate_timer->start(msecs);
     syslog(LOG_DEBUG,"next auto rotation scheduled for %s",
-	   (const char *)now.addSecs(msecs/1000).
+	   (const char *)now.time().addMSecs(msecs).
 	   toString("hh:mm:ss").toAscii());
   }
 }
@@ -66,30 +58,28 @@ void MainObject::ScheduleAutoRotation()
 
 void MainObject::AutoRotate()
 {
-  if(main_auto_rotate_state) {
-    //
-    // Generate Snapshot
-    //
-    QString snapshot=MakeSnapshotName();
+  //
+  // Generate Snapshot
+  //
+  QString snapshot=MakeSnapshotName();
 
-    if(GenerateMysqlSnapshot(QString(AM_SNAPSHOT_DIR)+"/"+snapshot)) {
-      main_state->setCurrentSnapshot(Am::This,snapshot);
-      main_monitor->setThisSnapshotName(snapshot);
-    }
+  if(GenerateMysqlSnapshot(QString(AM_SNAPSHOT_DIR)+"/"+snapshot)) {
+    main_state->setCurrentSnapshot(Am::This,snapshot);
+    main_monitor->setThisSnapshotName(snapshot);
   }
-  else {
-    //
-    // Purge Snapshots
-    //
-    main_state->purgeSnapshots();
 
-    //
-    // Purge Bin Logs
-    //
-    if(main_config->globalAutoPurgeBinlogs()) {
-      PurgeBinlogs();
-    }
+  //
+  // Purge Snapshots
+  //
+  main_state->purgeSnapshots();
+
+  //
+  // Purge Bin Logs
+  //
+  if(main_config->globalAutoPurgeBinlogs()) {
+    PurgeBinlogs();
   }
+
   ScheduleAutoRotation();
 }
 
@@ -107,7 +97,6 @@ void MainObject::PurgeBinlogs()
   unsigned v1=0;
   unsigned v2=0;
 
-  printf("PurgeBinlogs()\n");
   if((main_monitor->dbState(Am::This)==State::StateMaster)&&
      (main_monitor->dbState(Am::That)==State::StateSlave)) {
     if(OpenMysql(Am::This,Config::PrivateAddress)) {
@@ -123,6 +112,7 @@ void MainObject::PurgeBinlogs()
 	  if(q->first()) {
 	    log2=q->value(5).toString();   // Field: 'Master_Log_File'
 	  }
+	  CloseMysql();
 	  f1=log1.split(".");
 	  f2=log2.split(".");
 	  if((f1.size()==2)&&(f2.size()==2)) {
@@ -131,18 +121,18 @@ void MainObject::PurgeBinlogs()
 	    if(ok1&&ok2) {
 	      if(v1<=v2) {
 		DeleteBinlogSequence(f1[0],v1);
-		//		DeleteBinlogSequence(f1[0],v1-1);
 	      }
 	      else {
 		DeleteBinlogSequence(f2[0],v2);
-		//		DeleteBinlogSequence(f2[0],v2-1);
 	      }
 	    }
 	  }
 	}
       }
-      delete q;
-      CloseMysql();
+      else {
+	delete q;
+	CloseMysql();
+      }
     }
   }
   if((main_monitor->dbState(Am::This)==State::StateSlave)&&
@@ -167,6 +157,8 @@ void MainObject::PurgeBinlogs()
 	  if(q->first()) {
 	    log1=q->value(7).toString();   // Field: 'Relay_Log_File'
 	  }
+	  delete q;
+	  CloseMysql();
 	  f1=log1.split(".");
 	  if(f1.size()) {
 	    v1=f1[1].toUInt(&ok1);
