@@ -266,3 +266,6 @@
 2017-06-02 Fred Gleason <fredg@paravelsystems.com>
 	* Modified log rotation algorithm in amand(8) to do snapshot
 	generation and log purging in a single pass.
+2017-06-02 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'amand/auto_rotate.cpp' that caused a segfault
+	when rotating relay-bin logs.
