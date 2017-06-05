@@ -271,3 +271,5 @@
 	when rotating relay-bin logs.
 2017-06-05 Fred Gleason <fredg@paravelsystems.com>
 	* Added sqltorture(1) in 'tests/'.
+2017-06-05 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.13.
