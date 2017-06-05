@@ -29,6 +29,7 @@ SUBDIRS = lib\
           docs\
           icons\
           scripts\
+          tests\
           xdg
 
 ACLOCAL_AMFLAGS = -I m4

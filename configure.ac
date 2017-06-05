@@ -154,6 +154,7 @@ AC_CONFIG_FILES([aman.spec \
     icons/Makefile \
     lib/Makefile \
     scripts/Makefile \
+    tests/Makefile \
     xdg/Makefile \
     Makefile ])
 AC_OUTPUT()
