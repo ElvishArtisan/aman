@@ -24,4 +24,6 @@ Makefile.in
 missing
 moc_*
 rc.amand
+aman/aman
+amand/amand
 tests/sqltorture
