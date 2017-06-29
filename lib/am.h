@@ -1,6 +1,6 @@
 // am.h
 //
-// amand(8) System-Wide Defines.
+// Aman System-Wide Defines.
 //
 //   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
@@ -23,6 +23,11 @@
 
 #define AM_PING_UDP_PORT 7456
 #define AM_CMD_TCP_PORT 4342
+
+/*
+ * Configuration File
+ */
+#define AM_CONF_FILE "/etc/aman.conf"
 
 /*
  * Location of the MySQL Bin Logs

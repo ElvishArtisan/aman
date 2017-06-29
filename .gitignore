@@ -25,5 +25,6 @@ missing
 moc_*
 rc.amand
 aman/aman
+amanctl/amanctl
 amand/amand
 tests/sqltorture

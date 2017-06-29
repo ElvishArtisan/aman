@@ -275,3 +275,5 @@
 	* Incremented the package version to 0.9.13.
 2017-06-29 Fred Gleason <fredg@paravelsystems.com>
 	* Added more specific descriptions for rsync(1) error states.
+2017-06-29 Fred Gleason <fredg@paravelsystems.com>
+	* Added amanctl(8) in 'amanctl/'.

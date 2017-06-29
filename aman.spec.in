@@ -117,6 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/aman-root
 /usr/bin/aman_add_rivendell_user.pl
 /usr/bin/aman_add_replication_users.pl
+/usr/sbin/amanctl
 /usr/sbin/amand
 /etc/init.d/amand
 /etc/pam.d/aman-root
@@ -146,6 +147,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/mysql_states.gxd
 
 %changelog
+* Thu Jun 29 2017 Fred Gleason <fredg@paravelsystems.com>
+-- Added amanctl(8).
 * Sat Feb 18 2017 Fred Gleason <fredg@paravelsystems.com>
 -- Added 'Added sample configs for MariaDB on CentOS 7.
 * Tue Jul  2 2013 Fred Gleason <fredg@paravelsystems.com>

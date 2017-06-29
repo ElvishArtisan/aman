@@ -24,6 +24,7 @@
 
 SUBDIRS = lib\
           aman\
+          amanctl\
           amand\
           conf\
           docs\

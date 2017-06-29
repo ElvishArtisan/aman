@@ -148,6 +148,7 @@ fi
 AC_CONFIG_FILES([aman.spec \
     rc.amand
     aman/Makefile \
+    amanctl/Makefile \
     amand/Makefile \
     conf/Makefile \
     docs/Makefile \

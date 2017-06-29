@@ -87,7 +87,7 @@ MainObject::MainObject(QObject *parent)
   //
   // Load Configuration
   //
-  main_config=new Config("/etc/aman.conf");
+  main_config=new Config(AM_CONF_FILE);
   if(!main_config->load()) {
     syslog(LOG_ERR,"exiting due to configuration errors");
     exit(256);
