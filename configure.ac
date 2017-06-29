@@ -55,16 +55,23 @@ case ${host} in
   ;;
 esac
 
+AC_ARG_ENABLE(docbook,[  --disable-docbook       disable building of documentation],[DOCBOOK_DISABLED=yes],[])
+
 #
 # Check for Qt
-#
-#
-# Check for Qt4 (Mandatory)
 #
 PKG_CHECK_MODULES(QT4_GUI,QtGui QtCore QtNetwork,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
 PKG_CHECK_MODULES(QT4_CLI,QtCore QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
 AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
 AC_SUBST(MOC,$MOC_NAME)
+
+#
+# Build DocBook Items?
+#
+if test -z $DOCBOOK_DISABLED ; then
+  USING_DOCBOOK=yes
+fi
+AM_CONDITIONAL([DOCBOOK_AM], [test "$USING_DOCBOOK" = yes])
 
 #
 # Determine the target architecture

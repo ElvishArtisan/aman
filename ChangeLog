@@ -281,3 +281,5 @@
 	* Modified 'configure.ac' to allow use of non-category paths for
 	include	statements for Qt4.
 	* Removed CVS Id tags.
+2017-06-29 Fred Gleason <fredg@paravelsystems.com>
+	* Added a amanctl(8) man page.

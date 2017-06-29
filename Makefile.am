@@ -20,13 +20,16 @@
 ##   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ##
 
+if DOCBOOK_AM
+  DOCBOOK_AM_OPT = docs
+endif
+
 SUBDIRS = lib\
           aman\
           amanctl\
           amand\
           conf\
-          docs\
-          icons\
+          $(DOCBOOK_AM_OPT) icons\
           scripts\
           tests\
           xdg

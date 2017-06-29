@@ -111,12 +111,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_libdir}/libaman-@VERSION@.so
 %{_libdir}/libaman.so
-/usr/bin/aman
-/usr/bin/aman-root
-/usr/bin/aman_add_rivendell_user.pl
-/usr/bin/aman_add_replication_users.pl
-/usr/sbin/amanctl
-/usr/sbin/amand
+%{_bindir}/aman
+%{_bindir}/aman-root
+%{_bindir}/aman_add_rivendell_user.pl
+%{_bindir}/aman_add_replication_users.pl
+%{_sbindir}/amanctl
+%{_sbindir}/amand
 /etc/init.d/amand
 /etc/pam.d/aman-root
 /etc/security/console.apps/aman-root
@@ -126,6 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/icons/hicolor/32x32/apps/aman.png
 /usr/share/icons/hicolor/48x48/apps/aman.png
 /usr/share/applications/aman-aman.desktop
+%{_mandir}/man8/amanctl.8.gz
 %dir /var/aman/keys
 %dir /var/aman/snapshots
 %doc AUTHORS

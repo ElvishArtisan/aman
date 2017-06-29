@@ -2,9 +2,7 @@
 ##
 ## docs/ automake.am for Aman
 ##
-## (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-##
-##      $Id: Makefile.am,v 1.2 2013/06/17 19:14:23 cvs Exp $
+## (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -22,9 +20,27 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-EXTRA_DIST = command_protocol.txt\
+##
+## DocBook Build Dependencies
+##
+%.html:	%.xml
+	xsltproc -o $@ $(DOCBOOK_STYLESHEETS)/xhtml/docbook.xsl $<
+%.pdf:	%.xml
+	xsltproc $(DOCBOOK_STYLESHEETS)/fo/docbook.xsl $< | fop - -pdf $@
+%.1:	%.xml
+	xsltproc $(DOCBOOK_STYLESHEETS)/manpages/docbook.xsl $<
+%.8:	%.xml
+	xsltproc $(DOCBOOK_STYLESHEETS)/manpages/docbook.xsl $<
+
+all-local:	amanctl.8
+
+man_MANS = amanctl.8
+
+EXTRA_DIST = amanctl.8\
+             amanctl.xml\
+             command_protocol.txt\
              mysql_states.gxd
 
 CLEANFILES = *~
-DISTCLEANFILES = 
+DISTCLEANFILES = *.8
 MAINTAINERCLEANFILES = *~ Makefile.in configure aclocal.m4
