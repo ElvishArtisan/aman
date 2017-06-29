@@ -4,8 +4,6 @@ dnl Local Autoconf macro definitions for Aman
 dnl
 dnl   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
 dnl
-dnl      $Id: acinclude.m4,v 1.1.1.1 2012/06/13 22:28:09 cvs Exp $
-dnl
 dnl   This program is free software; you can redistribute it and/or modify
 dnl   it under the terms of the GNU General Public License version 2 as
 dnl   published by the Free Software Foundation.

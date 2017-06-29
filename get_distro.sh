@@ -7,8 +7,6 @@
 #
 #   (C) Copyright 2012 Fred Gleason <fredg@salemradiolabs.com>
 #
-#    $Id: get_distro.sh,v 1.1.1.1 2014/02/17 13:26:17 cvs Exp $
-#
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as
 #   published by the Free Software Foundation; either version 2 of

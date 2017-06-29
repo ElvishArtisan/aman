@@ -2,9 +2,7 @@
 //
 // Generate a MySQL Snapshot
 //
-//   (C) Copyright 2012-2013 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: generate_snapshot.cpp,v 1.5 2013/11/19 00:14:40 cvs Exp $
+//   (C) Copyright 2012-2013,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -24,10 +22,10 @@
 #include <syslog.h>
 #include <unistd.h>
 
-#include <QtCore/QProcess>
-#include <QtCore/QVariant>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+#include <QProcess>
+#include <QVariant>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "amand.h"
 

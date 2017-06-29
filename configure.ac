@@ -4,9 +4,7 @@ dnl Autoconf configuration for Aman.
 dnl
 dnl Use autoconf to process this into a configure script
 dnl
-dnl   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-dnl
-dnl      $Id: configure.in,v 1.6 2013/06/26 00:50:12 cvs Exp $
+dnl   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 dnl
 dnl   This program is free software; you can redistribute it and/or modify
 dnl   it under the terms of the GNU General Public License version 2 as
@@ -60,7 +58,11 @@ esac
 #
 # Check for Qt
 #
-AC_CHECK_HEADER(QtCore/QtCore,[],[AC_MSG_ERROR([*** Qt4 not found, unable to continue ***])])
+#
+# Check for Qt4 (Mandatory)
+#
+PKG_CHECK_MODULES(QT4_GUI,QtGui QtCore QtNetwork,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
+PKG_CHECK_MODULES(QT4_CLI,QtCore QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
 AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
 AC_SUBST(MOC,$MOC_NAME)
 
@@ -113,7 +115,8 @@ if test $ar_gcc_os = "darwin10" ; then
   AC_SUBST(INSTALL_INIT,"install-init-osx.sh")
   AC_DEFINE(OSX)
 else
-  AC_SUBST(LIB_ALIBS,"-laman -lQtCore -lQtGui -lQtNetwork -lQtSql")
+#  AC_SUBST(LIB_ALIBS,"-laman -lQtCore -lQtGui -lQtNetwork -lQtSql")
+  AC_SUBST(LIB_ALIBS,"-laman")
   AC_SUBST(LIB_AFLAGS,"")
   AC_SUBST(INSTALL_INIT,"install-init-linux.sh")
   AC_DEFINE(LINUX)

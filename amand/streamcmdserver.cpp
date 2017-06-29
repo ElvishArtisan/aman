@@ -2,9 +2,7 @@
 //
 // Parse commands on connection-oriented protocols.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: streamcmdserver.cpp,v 1.1 2012/06/18 13:34:01 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as

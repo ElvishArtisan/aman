@@ -2,9 +2,7 @@
 //
 // Client connection to an Aman monitor instance.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: connection.cpp,v 1.5 2013/06/18 23:09:53 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -22,7 +20,7 @@
 
 #include <unistd.h>
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 #include "connection.h"
 

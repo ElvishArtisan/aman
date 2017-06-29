@@ -277,3 +277,7 @@
 	* Added more specific descriptions for rsync(1) error states.
 2017-06-29 Fred Gleason <fredg@paravelsystems.com>
 	* Added amanctl(8) in 'amanctl/'.
+2017-06-29 Fred Gleason <fredg@paravelsystems.com>
+	* Modified 'configure.ac' to allow use of non-category paths for
+	include	statements for Qt4.
+	* Removed CVS Id tags.

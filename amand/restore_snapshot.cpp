@@ -2,9 +2,7 @@
 //
 // Restore a MySQL Snapshot
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: restore_snapshot.cpp,v 1.2 2013/06/15 00:23:36 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -23,11 +21,11 @@
 #include <syslog.h>
 #include <unistd.h>
 
-#include <QtCore/QProcess>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+#include <QProcess>
+#include <QStringList>
+#include <QVariant>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "profile.h"
 #include "amand.h"

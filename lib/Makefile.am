@@ -4,9 +4,7 @@
 ##
 ## by Fred Gleason <fredg@paravelsystems.com>
 ##
-## (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-##
-##      $Id: Makefile.am,v 1.3 2013/06/24 19:51:06 cvs Exp $
+## (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -24,7 +22,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall
+AM_CPPFLAGS = -Wall @QT4_CLI_CFLAGS@
 MOC = @MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)

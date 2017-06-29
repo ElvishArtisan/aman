@@ -2,9 +2,7 @@
 //
 // aman(1) Monitoring Client.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: aman.h,v 1.8 2013/06/24 19:51:05 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -25,11 +23,11 @@
 
 #define AMAN_USAGE "\n"
 
-#include <QtGui/QWidget>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QProgressDialog>
+#include <QWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QProgressDialog>
 
 #include <config.h>
 

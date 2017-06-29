@@ -2,9 +2,7 @@
 //
 // Test MySQL Replication
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: replicationtest.h,v 1.2 2013/06/24 19:51:06 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -23,8 +21,8 @@
 #ifndef REPLICATIONTEST_H
 #define REPLICATIONTEST_H
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#include <QObject>
+#include <QTimer>
 
 #include <config.h>
 

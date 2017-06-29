@@ -1,9 +1,7 @@
 ## aman.spec.in
 ##
 ##    The Aman Rivendell Server Manager
-##    Copyright (C) 2012-2013  Fred Gleason <fredg@paravelsystems.com>
-##
-##      $Id: aman.spec.in,v 1.9 2013/07/02 21:27:28 cvs Exp $
+##    Copyright (C) 2012-2013,2017  Fred Gleason <fredg@paravelsystems.com>
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of version 2 of the GNU General Public License as

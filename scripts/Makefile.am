@@ -4,8 +4,6 @@
 ##
 ## (C) Copyright 2013 Fred Gleason <fredg@paravelsystems.com>
 ##
-##      $Id: Makefile.am,v 1.1 2013/06/26 00:50:12 cvs Exp $
-##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
 ##   published by the Free Software Foundation.

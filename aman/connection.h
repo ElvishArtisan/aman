@@ -2,9 +2,7 @@
 //
 // Client connection to an Aman monitor instance.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: connection.h,v 1.5 2013/06/18 23:09:54 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -25,9 +23,9 @@
 
 #include <stdint.h>
 
-#include <QtCore/QTimer>
-#include <QtCore/QObject>
-#include <QtNetwork/QTcpSocket>
+#include <QTimer>
+#include <QObject>
+#include <QTcpSocket>
 
 #include <state.h>
 

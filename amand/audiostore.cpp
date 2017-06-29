@@ -2,9 +2,7 @@
 //
 // Audio Store routines for Aman
 //
-//   (C) Copyright 2012-2013 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: audiostore.cpp,v 1.6 2013/07/09 15:22:28 cvs Exp $
+//   (C) Copyright 2012-2013,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -25,8 +23,8 @@
 #include <sys/types.h>
 #include <signal.h>
 
-#include <QtCore/QProcess>
-#include <QtCore/QStringList>
+#include <QProcess>
+#include <QStringList>
 
 #include "amand.h"
 

@@ -23,8 +23,8 @@
 
 #define AMANCTL_USAGE "\n"
 
-#include <QtCore/QObject>
-#include <QtNetwork/QTcpSocket>
+#include <QObject>
+#include <QTcpSocket>
 
 #include <config.h>
 

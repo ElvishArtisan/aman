@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -DPREFIX=\"$(prefix)\"
+AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -DPREFIX=\"$(prefix)\" @QT4_CLI_CFLAGS@
 LIBS = -L$(top_srcdir)/lib
 
 # The dependency for qt's Meta Object Compiler (moc)
@@ -34,7 +34,7 @@ dist_amanctl_SOURCES = amanctl.cpp amanctl.h
 
 nodist_amanctl_SOURCES = moc_amanctl.cpp
 
-amanctl_LDADD = @LIB_ALIBS@
+amanctl_LDADD = @LIB_ALIBS@ @QT4_CLI_LIBS@
 amanctl_LDFLAGS = @LIB_AFLAGS@
 
 CLEANFILES = *~\

@@ -2,9 +2,7 @@
 //
 // aman(8) Monitoring Client.
 //
-//   (C) Copyright 2012-2013 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: aman.cpp,v 1.11 2013/07/02 22:18:57 cvs Exp $
+//   (C) Copyright 2012-2013,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -23,11 +21,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <QtCore/QSignalMapper>
-#include <QtGui/QApplication>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QPainter>
+#include <QSignalMapper>
+#include <QApplication>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QPainter>
 
 #include "aman.h"
 

@@ -2,9 +2,7 @@
 //
 // Set MySQL Replication Metadata
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: set_metadata.cpp,v 1.1 2012/06/22 19:55:27 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -22,10 +20,10 @@
 
 #include <syslog.h>
 
-#include <QtCore/QProcess>
-#include <QtCore/QStringList>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+#include <QProcess>
+#include <QStringList>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "profile.h"
 #include "amand.h"

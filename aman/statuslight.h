@@ -2,9 +2,7 @@
 //
 // Status Light Widget
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: statuslight.h,v 1.1 2012/12/19 00:09:11 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -25,8 +23,8 @@
 
 #define AMAN_USAGE "\n"
 
-#include <QtCore/QEvent>
-#include <QtGui/QWidget>
+#include <QEvent>
+#include <QWidget>
 
 class StatusLight : public QWidget
 {

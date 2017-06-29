@@ -18,9 +18,9 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#include <QtCore/QByteArray>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QStringList>
+#include <QByteArray>
+#include <QCoreApplication>
+#include <QStringList>
 
 #include <am.h>
 

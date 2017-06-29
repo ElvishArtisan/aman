@@ -4,8 +4,6 @@
 //
 //   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
-//      $Id: amand.cpp,v 1.19 2013/11/19 00:14:40 cvs Exp $
-//
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
 //   published by the Free Software Foundation.
@@ -29,16 +27,15 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QProcess>
-#include <QtCore/QDateTime>
-#include <QtCore/QFile>
-#include <QtCore/QProcess>
-#include <QtCore/QVariant>
-#include <QtGui/QApplication>
-#include <QtNetwork/QTcpServer>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+#include <QCoreApplication>
+#include <QProcess>
+#include <QDateTime>
+#include <QFile>
+#include <QProcess>
+#include <QVariant>
+#include <QTcpServer>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "cmdswitch.h"
 #include "amand.h"

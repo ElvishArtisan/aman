@@ -2,9 +2,7 @@
 //
 // amand(8) Monitoring Daemon.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: amand.h,v 1.17 2013/11/19 00:14:40 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -26,12 +24,12 @@
 #define AMAND_USAGE "-d\n"
 #define AMAND_PID_FILE "/var/run/amand.pid"
 
-#include <QtCore/QObject>
-#include <QtCore/QDir>
-#include <QtCore/QTimer>
-#include <QtCore/QProcess>
-#include <QtCore/QDateTime>
-#include <QtSql/QSqlDatabase>
+#include <QObject>
+#include <QDir>
+#include <QTimer>
+#include <QProcess>
+#include <QDateTime>
+#include <QSqlDatabase>
 
 #include <config.h>
 #include <state.h>

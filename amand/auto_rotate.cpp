@@ -4,8 +4,6 @@
 //
 //   (C) Copyright 2012-2017 Fred Gleason <fredg@paravelsystems.com>
 //
-//      $Id: auto_rotate.cpp,v 1.2 2013/11/19 00:14:40 cvs Exp $
-//
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
 //   published by the Free Software Foundation.
@@ -23,9 +21,9 @@
 #include <syslog.h>
 #include <errno.h>
 
-#include <QtCore/QDir>
-#include <QtSql/QSqlQuery>
-#include <QtCore/QVariant>
+#include <QDir>
+#include <QSqlQuery>
+#include <QVariant>
 
 #include "amand.h"
 

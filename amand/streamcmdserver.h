@@ -2,9 +2,7 @@
 //
 // Parse commands on connection-oriented protocols.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: streamcmdserver.h,v 1.2 2013/06/18 23:09:54 cvs Exp $
+//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -25,12 +23,12 @@
 
 #include <map>
 
-#include <QtCore/QObject>
-#include <QtCore/QSignalMapper>
-#include <QtCore/QStringList>
-#include <QtCore/QTimer>
-#include <QtNetwork/QTcpServer>
-#include <QtNetwork/QTcpSocket>
+#include <QObject>
+#include <QSignalMapper>
+#include <QStringList>
+#include <QTimer>
+#include <QTcpServer>
+#include <QTcpSocket>
 
 class StreamCmdServer : public QObject
 {
