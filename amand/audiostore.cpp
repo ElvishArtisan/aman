@@ -111,15 +111,27 @@ void MainObject::startAudioCopy()
     SetAudioStatus(true);
     break;
 
-  case 23:   // Check file not found
-  case 30:   // Data timeout
-  case 35:   // Connection timeout
-    syslog(LOG_NOTICE,"master audio store not available, deferring sync");
+  case 23:
+    syslog(LOG_NOTICE,"check file not found, deferring sync");
     delete p;
     SetAudioStatus(false);
     ScheduleAudioCopy(AM_RSYNC_ERROR_PAUSE_INTERVAL);
     return;
-    
+
+  case 30:
+    syslog(LOG_NOTICE,"rsync service timed out, deferring sync");
+    delete p;
+    SetAudioStatus(false);
+    ScheduleAudioCopy(AM_RSYNC_ERROR_PAUSE_INTERVAL);
+    return;
+
+  case 35:   // Connection timeout
+    syslog(LOG_NOTICE,"rsync connection timed out, deferring sync");
+    delete p;
+    SetAudioStatus(false);
+    ScheduleAudioCopy(AM_RSYNC_ERROR_PAUSE_INTERVAL);
+    return;
+
   default:
     syslog(LOG_WARNING,"rsync(1) process returned an error, exit code %d",
 	   p->exitCode());
