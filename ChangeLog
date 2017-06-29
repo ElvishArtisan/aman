@@ -283,3 +283,5 @@
 	* Removed CVS Id tags.
 2017-06-29 Fred Gleason <fredg@paravelsystems.com>
 	* Added a amanctl(8) man page.
+2017-06-29 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.14.
