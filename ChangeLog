@@ -287,3 +287,5 @@
 	* Incremented the package version to 0.9.14.
 2017-07-21 Fred Gleason <fredg@paravelsystems.com>
 	* Added a 'bzip2' dependency in 'aman.spec.in'.
+2017-07-21 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.15.
