@@ -26,7 +26,7 @@ License: GPL
 Packager: Fred Gleason <fredg@paravelsystems.com>
 Group: Productivity/Multimedia/Other
 Source: %{name}-@VERSION@.tar.gz
-Requires: @MYSQL_PKG@ @QT4_MYSQL_PKG@ @XINETD_PKG@ rsync perl-TermReadKey perl-DBD-MySQL
+Requires: @MYSQL_PKG@ @QT4_MYSQL_PKG@ @XINETD_PKG@ rsync perl-TermReadKey perl-DBD-MySQL bzip2
 BuildRoot: /var/tmp/%{name}-@VERSION@
 
 %description
@@ -146,6 +146,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/mysql_states.gxd
 
 %changelog
+* Fri Jul 21 2017 Fred Gleason <fredg@paravelsystems.com>
+-- Added a 'bzip2' dependency.
 * Thu Jun 29 2017 Fred Gleason <fredg@paravelsystems.com>
 -- Added amanctl(8).
 * Sat Feb 18 2017 Fred Gleason <fredg@paravelsystems.com>
