@@ -292,3 +292,5 @@
 2017-08-08 Fred Gleason <fredg@paravelsystems.com>
 	* Added logging to report the snapshot used when setting DB MASTER and
 	DB SLAVE states.
+2017-08-08 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.16.
