@@ -386,7 +386,8 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       main_monitor->setThisSnapshotName(filename);
       SendAlert("Database Replication State changed to MASTER on server \""+
 		main_config->hostname(Am::This)+"\".");
-      syslog(LOG_INFO,"state changed to MASTER");
+      syslog(LOG_INFO,"DB state changed to MASTER using snapshot \"%s\"",
+	     (const char *)filename.toUtf8());
     }
     else {
       outargs.push_back("-");
@@ -403,7 +404,8 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       outargs.push_back(main_state->currentSnapshot(Am::That));
       SendAlert("Database Replication State changed to SLAVE on server \""+
 		main_config->hostname(Am::This)+"\".");
-      syslog(LOG_INFO,"state changed to SLAVE");
+      syslog(LOG_INFO,"DB state changed to SLAVE using snapshot \"%s\"",
+	     (const char *)main_state->currentSnapshot(Am::That).toUtf8());
     }
     else {
       outargs.push_back("-");

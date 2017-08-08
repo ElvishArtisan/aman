@@ -289,3 +289,6 @@
 	* Added a 'bzip2' dependency in 'aman.spec.in'.
 2017-07-21 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.15.
+2017-08-08 Fred Gleason <fredg@paravelsystems.com>
+	* Added logging to report the snapshot used when setting DB MASTER and
+	DB SLAVE states.
