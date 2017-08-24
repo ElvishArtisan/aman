@@ -178,7 +178,41 @@ void MainObject::PurgeBinlogs()
 void MainObject::DeleteBinlogSequence(const QString &basename,
 				      unsigned last)
 {
-  //  printf("delete up to %s.%06u\n",(const char *)basename.toUtf8(),last);
+  printf("delete up to %s.%06u\n",(const char *)basename.toUtf8(),last);
+
+  if(!main_config->archiveDirectory(Am::This).isEmpty()) {
+    FILE *f=NULL;
+    QString indexfile=
+      main_config->mysqlDataDirectory(Am::This)+"/"+basename+".index";
+    if((f=fopen(indexfile.toUtf8(),"r"))==NULL) {
+      syslog(LOG_WARNING,"unable to open MySQL binlog index at \"%s\"",
+	     (const char *)indexfile.toUtf8());
+    }
+    else {
+      QString lastfile=basename+QString().sprintf(".%06u",last);
+      QStringList lines=QTextStream(f,QIODevice::ReadOnly).
+	readAll().split("\n",QString::SkipEmptyParts);
+      for(int i=0;i<lines.size();i++) {
+	QStringList f0=lines.at(i).split("/",QString::SkipEmptyParts);
+	QString logfile=f0.at(f0.size()-1);
+	if(logfile!=basename+QString().sprintf(".%06u",last)) {
+	  QString err_msg;
+	  QString src_file=
+	    main_config->mysqlDataDirectory(Am::This)+"/"+logfile;
+	  QString dst_file=main_config->archiveDirectory(Am::This)+"/"+logfile;
+	  if(Config::copyFile(src_file,dst_file,&err_msg)) {
+	    syslog(LOG_DEBUG,"archived binlog to \"%s\"",
+		   (const char *)dst_file.toUtf8());
+	  }
+	  else {
+	    syslog(LOG_WARNING,"unable to archive binlog to \"%s\" [%s]",
+		   (const char *)dst_file.toUtf8(),
+		   (const char *)err_msg.toUtf8());
+	  }
+	}
+      }
+    }
+  }
 
   QString sql;
   QSqlQuery *q;

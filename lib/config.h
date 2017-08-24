@@ -2,9 +2,7 @@
 //
 // A container class for an Aman Configuration
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: config.h,v 1.5 2013/07/09 15:22:29 cvs Exp $
+//   (C) Copyright 2012-2017 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -53,6 +51,7 @@ class Config
   QString mysqlUsername(Am::Instance inst) const;
   QString mysqlPassword(Am::Instance inst) const;
   QString mysqlDataDirectory(Am::Instance inst) const;
+  QString archiveDirectory(Am::Instance inst) const;
   QHostAddress address(Am::Instance inst,Address addr) const;
   QString pingTablename(Am::Instance inst) const;
   QString secureShellIdentity(Am::Instance inst) const;
@@ -61,6 +60,8 @@ class Config
   Am::Instance instance(const QString &letter) const;
   bool load();
   void clear();
+  static bool copyFile(const QString &srcfile,const QString &dstfile,
+		       QString *err_msg);
 
  private:
   void LoadHost(Profile *p,const QString &section);
@@ -81,6 +82,7 @@ class Config
   QString conf_mysql_username[Am::LastInstance];
   QString conf_mysql_password[Am::LastInstance];
   QString conf_mysql_data_directory[Am::LastInstance];
+  QString conf_archive_directory[Am::LastInstance];
   QHostAddress conf_address[Am::LastInstance][Config::LastAddress];
   QString conf_ping_tablename[Am::LastInstance];
   QString conf_secure_shell_identity[Am::LastInstance];

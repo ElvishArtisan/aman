@@ -20,8 +20,11 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <errno.h>
 #include <syslog.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <QtCore/QStringList>
 
@@ -121,6 +124,12 @@ QString Config::mysqlPassword(Am::Instance inst) const
 QString Config::mysqlDataDirectory(Am::Instance inst) const
 {
   return conf_mysql_data_directory[inst];
+}
+
+
+QString Config::archiveDirectory(Am::Instance inst) const
+{
+  return conf_archive_directory[inst];
 }
 
 
@@ -226,6 +235,7 @@ void Config::clear()
     conf_hostname[i]="";
     conf_mysql_username[i]="";
     conf_mysql_password[i]="";
+    conf_archive_directory[i]="";
     conf_mysql_data_directory[i]="";
     conf_ping_tablename[i]="";
     conf_secure_shell_identity[i]="";
@@ -235,6 +245,41 @@ void Config::clear()
   }
   conf_instance_table[0]=Am::This;
   conf_instance_table[1]=Am::That;
+}
+
+
+bool Config::copyFile(const QString &srcfile,const QString &dstfile,
+		      QString *err_msg)
+{
+  FILE *src=NULL;
+  FILE *dst=NULL;
+  struct stat st;
+  char *data=NULL;
+  size_t n;
+
+  if(stat(srcfile.toUtf8(),&st)!=0) {
+    *err_msg=strerror(errno);
+    return false;
+  }
+  if((src=fopen(srcfile.toUtf8(),"r"))==NULL) {
+    *err_msg=strerror(errno);
+    return false;
+  }
+  if((dst=fopen(dstfile.toUtf8(),"w"))==NULL) {
+    *err_msg=strerror(errno);
+    fclose(src);
+    return false;
+  }
+  data=new char[st.st_blksize];
+  while((n=fread(data,1,st.st_blksize,src))>0) {
+    fwrite(data,1,n,dst);
+  }
+  delete data;
+  fclose(dst);
+  fclose(src);
+  *err_msg="ok";
+
+  return true;
 }
 
 
@@ -261,6 +306,7 @@ void Config::LoadHost(Profile *p,const QString &section)
   conf_mysql_password[host]=p->stringValue(section,"MysqlPassword","repl");
   conf_mysql_data_directory[host]=
     p->stringValue(section,"MysqlDataDirectory","/var/lib/mysql");
+  conf_archive_directory[host]=p->stringValue(section,"ArchiveDirectory");
   conf_address[host][Config::PublicAddress].
     setAddress(p->stringValue(section,"PublicAddress"));
   conf_address[host][Config::PrivateAddress].

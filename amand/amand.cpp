@@ -386,7 +386,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       main_monitor->setThisSnapshotName(filename);
       SendAlert("Database Replication State changed to MASTER on server \""+
 		main_config->hostname(Am::This)+"\".");
-      syslog(LOG_INFO,"DB state changed to MASTER using snapshot \"%s\"",
+      syslog(LOG_INFO,"DB state changed to MASTER, yielding snapshot \"%s\"",
 	     (const char *)filename.toUtf8());
     }
     else {

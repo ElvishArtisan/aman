@@ -190,6 +190,21 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   }
 
   //
+  // Archive Snapshot
+  //
+  if(!main_config->archiveDirectory(Am::This).isEmpty()) {
+    QStringList f0=filename.split("/",QString::SkipEmptyParts);
+    QString dst_filename=
+      main_config->archiveDirectory(Am::This)+"/"+f0.at(f0.size()-1);
+    QString err_msg;
+    if(!Config::copyFile(filename,dst_filename,&err_msg)) {
+      syslog(LOG_WARNING,"unable to archive DB snapshot to \"%s\" [%s]",
+	     (const char *)dst_filename.toUtf8(),
+	     (const char *)err_msg.toUtf8());
+    }
+  }
+
+  //
   // Clean Up
   //
   unlink((tempdir+"/sql.tar").toAscii());

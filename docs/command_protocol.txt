@@ -1,5 +1,7 @@
                            Aman Command Protocol
 
+Commands are sent to TCP port 4342.
+
 -----------------------------------------------------------------------------
 Request Database State Update
 
