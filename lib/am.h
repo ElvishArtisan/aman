@@ -57,7 +57,7 @@
 /*
  * Timeout After This Many Ticks
  */
-#define AM_DEFAULT_REPLICATION_TICK_TIMEOUT 500
+#define AM_DEFAULT_REPLICATION_TICK_TIMEOUT 60000
 
 /*
  * Location for Cluster State File

@@ -294,3 +294,5 @@
 	DB SLAVE states.
 2017-08-08 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.16.
+2017-08-24 Fred Gleason <fredg@paravelsystems.com>
+	* Changed AM_DEFAULT_REPLICATION_TICK_TIMEOUT to 60000.

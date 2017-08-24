@@ -23,7 +23,7 @@ MysqlDriver=QMYSQL3
 ; The number of milliseconds to wait for a response to a replication
 ; test before signaling a failure of replication.
 ;
-MysqlReplicationTimeout=5000
+MysqlReplicationTimeout=60000
 
 ;
 ; The name of the Service that runs MySQL on this system. If you're
