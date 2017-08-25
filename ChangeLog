@@ -299,3 +299,5 @@
 2017-08-24 Fred Gleason <fredg@paravelsystems.com>
 	* Added an 'ArchiveDirectory=' directive to the [System<n>] sections
 	of aman.conf(5).
+2017-08-25 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.17.
