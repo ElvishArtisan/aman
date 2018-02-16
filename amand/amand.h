@@ -2,7 +2,7 @@
 //
 // amand(8) Monitoring Daemon.
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012,2017-2018 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -83,6 +83,7 @@ class MainObject : public QObject
   QString MakeTempDir() const;
   QString MakeSnapshotName() const;
   void SendAlert(const QString &msg);
+  void InitializePingTable();
   bool debug;
   StreamCmdServer *main_cmd_server;
   PingMonitor *main_monitor;
@@ -93,6 +94,7 @@ class MainObject : public QObject
   bool main_auto_rotate_state;
   State *main_state;
   bool main_replication_test_state;
+  bool main_ping_table_initialized;
   QProcess *main_audio_process;
   QTimer *main_audio_holdoff_timer;
 };

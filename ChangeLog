@@ -301,3 +301,6 @@
 	of aman.conf(5).
 2017-08-25 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.17.
+2018-02-16 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in amand(8) that caused the service to abort at
+	startup if local MySQL instance was not yet started.

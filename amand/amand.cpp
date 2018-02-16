@@ -2,7 +2,7 @@
 //
 // amand(8) Monitoring Daemon.
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012,2017-2018 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -58,6 +58,7 @@ MainObject::MainObject(QObject *parent)
 
   debug=false;
   main_replication_test_state=true;
+  main_ping_table_initialized=false;
 
   //
   // Read Command Options
@@ -129,56 +130,6 @@ MainObject::MainObject(QObject *parent)
 	   (const char *)main_config->secureShellIdentity(Am::This).toAscii());
     exit(256);
   }
-
-  //
-  // Create Ping Tables
-  //
-  if(!OpenMysql(Am::This,Config::PublicAddress)) {
-    exit(256);
-  }
-  for(int i=0;i<Am::LastInstance;i++) {
-    QString sql="create table if not exists "+
-      main_config->pingTablename((Am::Instance)i)+" (VALUE int not null primary key)";
-    QSqlQuery *q=new QSqlQuery(sql,Db());
-    if(!q->isActive()) {
-      syslog(LOG_ERR,"unable to create MySQL table %s at %s [%s]",
-	     (const char *)main_config->pingTablename((Am::Instance)i).
-	     toAscii(),
-	     (const char *)main_config->address((Am::Instance)i,
-						Config::PublicAddress).
-	     toString().toAscii(),
-	     (const char *)q->lastError().text().toAscii());
-    }
-    delete q;
-
-    sql="delete from "+main_config->pingTablename((Am::Instance)i);
-    q=new QSqlQuery(sql,Db());
-    if(!q->isActive()) {
-      syslog(LOG_ERR,"unable to delete from MySQL table %s at %s [%s]",
-	     (const char *)main_config->pingTablename((Am::Instance)i).
-	     toAscii(),
-	     (const char *)main_config->address((Am::Instance)i,
-						Config::PublicAddress).
-	     toString().toAscii(),
-	     (const char *)q->lastError().text().toAscii());
-    }
-    delete q;
-
-    sql="insert into "+main_config->pingTablename((Am::Instance)i)+
-      " set VALUE=0";
-    q=new QSqlQuery(sql,Db());
-    if(!q->isActive()) {
-      syslog(LOG_ERR,"unable to insert into MySQL table %s at %s [%s]",
-	     (const char *)main_config->pingTablename((Am::Instance)i).
-	     toAscii(),
-	     (const char *)main_config->address((Am::Instance)i,
-						Config::PublicAddress).
-	     toString().toAscii(),
-	     (const char *)q->lastError().text().toAscii());
-    }
-    delete q;
-  }
-  CloseMysql();
 
   //
   // Command Server
@@ -623,6 +574,10 @@ bool MainObject::IsMysqlAccessible(int testval)
   if(!OpenMysql(Am::This,Config::PublicAddress)) {
     return ret;
   }
+  if(!main_ping_table_initialized) {
+    InitializePingTable();
+    main_ping_table_initialized=true;
+  }
   sql=QString("update ")+main_config->pingTablename(Am::This)+
     QString().sprintf(" set VALUE=%d",testval);
   q=new QSqlQuery(sql,Db());
@@ -800,6 +755,53 @@ void MainObject::SendAlert(const QString &msg)
   }
 
   delete p;
+}
+
+
+void MainObject::InitializePingTable()
+{
+  for(int i=0;i<Am::LastInstance;i++) {
+    QString sql="create table if not exists "+
+      main_config->pingTablename((Am::Instance)i)+" (VALUE int not null primary key)";
+    QSqlQuery *q=new QSqlQuery(sql,Db());
+    if(!q->isActive()) {
+      syslog(LOG_ERR,"unable to create MySQL table %s at %s [%s]",
+	     (const char *)main_config->pingTablename((Am::Instance)i).
+	     toAscii(),
+	     (const char *)main_config->address((Am::Instance)i,
+						Config::PublicAddress).
+	     toString().toAscii(),
+	     (const char *)q->lastError().text().toAscii());
+    }
+    delete q;
+    
+    sql="delete from "+main_config->pingTablename((Am::Instance)i);
+    q=new QSqlQuery(sql,Db());
+    if(!q->isActive()) {
+      syslog(LOG_ERR,"unable to delete from MySQL table %s at %s [%s]",
+	     (const char *)main_config->pingTablename((Am::Instance)i).
+	     toAscii(),
+	     (const char *)main_config->address((Am::Instance)i,
+						Config::PublicAddress).
+	     toString().toAscii(),
+	     (const char *)q->lastError().text().toAscii());
+    }
+    delete q;
+
+    sql="insert into "+main_config->pingTablename((Am::Instance)i)+
+      " set VALUE=0";
+    q=new QSqlQuery(sql,Db());
+    if(!q->isActive()) {
+      syslog(LOG_ERR,"unable to insert into MySQL table %s at %s [%s]",
+	     (const char *)main_config->pingTablename((Am::Instance)i).
+	     toAscii(),
+	     (const char *)main_config->address((Am::Instance)i,
+						Config::PublicAddress).
+	     toString().toAscii(),
+	     (const char *)q->lastError().text().toAscii());
+    }
+    delete q;
+  }
 }
 
 
