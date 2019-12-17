@@ -2,7 +2,7 @@
 //
 // Test MySQL Replication
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -24,13 +24,13 @@
 #include <QObject>
 #include <QTimer>
 
-#include <config.h>
+#include <amconfig.h>
 
 class ReplicationTest : public QObject
 {
  Q_OBJECT;
  public:
-  ReplicationTest(Config::Address addr,Config *config,QObject *parent=0);
+  ReplicationTest(AMConfig::Address addr,AMConfig *config,QObject *parent=0);
   ~ReplicationTest();
   bool isActive() const;
 
@@ -48,8 +48,8 @@ class ReplicationTest : public QObject
   QTimer *repl_timer;
   int repl_value;
   int repl_ticks;
-  Config *repl_config;
-  Config::Address repl_addr;
+  AMConfig *repl_config;
+  AMConfig::Address repl_addr;
 };
 
 

@@ -4,7 +4,7 @@
 ##
 ## by Fred Gleason <fredg@paravelsystems.com>
 ##
-## (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -36,10 +36,10 @@ clean-local:
 
 lib_LTLIBRARIES = libaman.la
 dist_libaman_la_SOURCES = am.cpp am.h\
-                          cmdswitch.cpp cmdswitch.h\
-                          config.cpp config.h\
-                          profile.cpp profile.h\
-                          state.cpp state.h
+                          amcmdswitch.cpp amcmdswitch.h\
+                          amconfig.cpp amconfig.h\
+                          amprofile.cpp amprofile.h\
+                          amstate.cpp amstate.h
 
 nodist_libaman_la_SOURCES = 
 

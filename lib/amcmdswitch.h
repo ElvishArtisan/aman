@@ -1,4 +1,4 @@
-// cmdswitch.h
+// amcmdswitch.h
 //
 // Process Command-Line Switches
 //
@@ -18,16 +18,16 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef CMDSWITCH_H
-#define CMDSWITCH_H
+#ifndef AMCMDSWITCH_H
+#define AMCMDSWITCH_H
 
 #include <vector>
 #include <QtCore/QString>
 
-class CmdSwitch
+class AMCmdSwitch
 {
  public:
-  CmdSwitch(int argc,char *argv[],const char *modname,const char *usage);
+  AMCmdSwitch(int argc,char *argv[],const char *modname,const char *usage);
   unsigned keys() const;
   QString key(unsigned n) const;
   QString value(unsigned n) const;
@@ -42,4 +42,4 @@ class CmdSwitch
 };
 
 
-#endif  // CMDSWITCH_H
+#endif  // AMCMDSWITCH_H

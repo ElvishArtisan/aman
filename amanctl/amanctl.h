@@ -26,7 +26,7 @@
 #include <QObject>
 #include <QTcpSocket>
 
-#include <config.h>
+#include <amconfig.h>
 
 class MainObject : public QObject
 {
@@ -53,7 +53,7 @@ class MainObject : public QObject
   QString ctl_accum;
   DbState ctl_db_states[2];
   AudioState ctl_audio_states[2];
-  Config *ctl_config;
+  AMConfig *ctl_config;
 };
 
 

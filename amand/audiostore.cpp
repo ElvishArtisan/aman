@@ -2,7 +2,7 @@
 //
 // Audio Store routines for Aman
 //
-//   (C) Copyright 2012-2013,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -93,14 +93,14 @@ void MainObject::startAudioCopy()
   QStringList args;
   QProcess *p=new QProcess(this);
 
-  if(main_state->audioState()!=State::StateSlave) {
+  if(main_state->audioState()!=AMState::StateSlave) {
     return;
   }
 
   //
   // Check that the master is alive and ready
   //
-  args.push_back(main_config->address(Am::That,Config::PrivateAddress).
+  args.push_back(main_config->address(Am::That,AMConfig::PrivateAddress).
 		 toString()+"::rivendell/repl.chk");
   p->start("rsync",args);
   p->waitForFinished(30000);
@@ -147,7 +147,7 @@ void MainObject::startAudioCopy()
   if(main_config->globalMirrorDeleteAudio()) {
     args.push_back("--delete");
   }
-  args.push_back(main_config->address(Am::That,Config::PrivateAddress).
+  args.push_back(main_config->address(Am::That,AMConfig::PrivateAddress).
 		 toString()+"::rivendell/");
   args.push_back("/var/snd/");
   main_audio_process->start("rsync",args);
@@ -156,7 +156,7 @@ void MainObject::startAudioCopy()
 
 void MainObject::ScheduleAudioCopy(int msecs)
 {
-  if(main_state->audioState()==State::StateSlave) {
+  if(main_state->audioState()==AMState::StateSlave) {
     main_audio_holdoff_timer->start(msecs);
   }
 }

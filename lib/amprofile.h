@@ -1,4 +1,4 @@
-// profile.h
+// amprofile.h
 //
 // Class for reading INI configuration files.
 //
@@ -18,18 +18,18 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef PROFILE_H
-#define PROFILE_H
+#ifndef AMPROFILE_H
+#define AMPROFILE_H
 
 #include <vector>
 
 #include <QtCore/QString>
 #include <QtCore/QTime>
 
-class ProfileLine
+class AMProfileLine
 {
  public:
-  ProfileLine();
+  AMProfileLine();
   QString tag() const;
   void setTag(QString tag);
   QString value() const;
@@ -42,10 +42,10 @@ class ProfileLine
 };
 
 
-class ProfileSection
+class AMProfileSection
 {
  public:
-  ProfileSection();
+  AMProfileSection();
   QString name() const;
   void setName(QString name);
   bool getValue(QString tag,QString *value) const;
@@ -54,14 +54,14 @@ class ProfileSection
 
  private:
   QString section_name;
-  std::vector<ProfileLine> section_line;
+  std::vector<AMProfileLine> section_line;
 };
 
 
-class Profile
+class AMProfile
 {
  public:
-  Profile();
+  AMProfile();
   QString source() const;
   bool setSource(QString filename);
   bool setSource(std::vector<QString> *values);
@@ -83,8 +83,8 @@ class Profile
 
  private:
   QString profile_source;
-  std::vector<ProfileSection> profile_section;
+  std::vector<AMProfileSection> profile_section;
 };
 
 
-#endif  // PROFILE_H
+#endif  // AMPROFILE_H

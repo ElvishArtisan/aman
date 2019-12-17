@@ -2,7 +2,7 @@
 //
 // Monitor the Opposite Aman Instance
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -25,18 +25,18 @@
 
 #include "pingmonitor.h"
 
-PingMonitor::PingMonitor(Config *config,QObject *parent)
+PingMonitor::PingMonitor(AMConfig *config,QObject *parent)
   : QObject(parent)
 {
   ping_config=config;
   for(int i=0;i<Am::LastInstance;i++) {
     ping_mysql_running[i]=false;
     ping_mysql_accessible[i]=false;
-    ping_db_state[i]=State::StateOffline;
-    ping_audio_state[i]=State::StateIdle;
+    ping_db_state[i]=AMState::StateOffline;
+    ping_audio_state[i]=AMState::StateIdle;
     ping_snapshot_name[i]="";
     ping_mysql_replication_time[i]=0;
-    ping_audio_state[i]=State::StateIdle;
+    ping_audio_state[i]=AMState::StateIdle;
     ping_audio_status[i]=false;
   }
   ping_reachable[0]=true;
@@ -95,18 +95,18 @@ bool PingMonitor::start()
   // Bind Sockets
   //
   if(!ping_sockets[0]->
-     bind(ping_config->address(Am::This,Config::PublicAddress),
+     bind(ping_config->address(Am::This,AMConfig::PublicAddress),
 	  AM_PING_UDP_PORT)) {
     syslog(LOG_ERR,"unable to bind %s:%d",
-	   (const char *)ping_config->address(Am::This,Config::PublicAddress).
+	   (const char *)ping_config->address(Am::This,AMConfig::PublicAddress).
 	   toString().toAscii(),AM_PING_UDP_PORT);
     ret=false;
   }
   if(!ping_sockets[1]->
-     bind(ping_config->address(Am::This,Config::PrivateAddress),
+     bind(ping_config->address(Am::This,AMConfig::PrivateAddress),
 	  AM_PING_UDP_PORT)) {
     syslog(LOG_ERR,"unable to bind %s:%d",
-	   (const char *)ping_config->address(Am::This,Config::PrivateAddress).
+	   (const char *)ping_config->address(Am::This,AMConfig::PrivateAddress).
 	   toString().toAscii(),AM_PING_UDP_PORT);
     ret=false;
   }
@@ -144,9 +144,9 @@ bool PingMonitor::mysqlAccessible(Am::Instance inst) const
 }
 
 
-State::ClusterState PingMonitor::dbState(Am::Instance inst) const
+AMState::ClusterState PingMonitor::dbState(Am::Instance inst) const
 {
-  State::ClusterState ret=State::StateOffline;
+  AMState::ClusterState ret=AMState::StateOffline;
   if(isReachable(inst)&&mysqlRunning(inst)&&mysqlAccessible(inst)) {
     return ping_db_state[inst];
   }
@@ -154,7 +154,7 @@ State::ClusterState PingMonitor::dbState(Am::Instance inst) const
 }
 
 
-State::ClusterState PingMonitor::audioState(Am::Instance inst) const
+AMState::ClusterState PingMonitor::audioState(Am::Instance inst) const
 {
   return ping_audio_state[inst];
 }
@@ -185,13 +185,13 @@ void PingMonitor::setThisMysqlState(bool running,bool accessible)
 }
 
 
-void PingMonitor::setThisDbState(State::ClusterState state)
+void PingMonitor::setThisDbState(AMState::ClusterState state)
 {
   ping_db_state[Am::This]=state;
 }
 
 
-void PingMonitor::setThisAudioState(State::ClusterState state)
+void PingMonitor::setThisAudioState(AMState::ClusterState state)
 {
   ping_audio_state[Am::This]=state;
 }
@@ -222,10 +222,10 @@ void PingMonitor::socketReadyData(int id)
   QStringList fields;
   bool running;
   bool accessible;
-  State::ClusterState db_state;
+  AMState::ClusterState db_state;
   QString snapshot;
   bool replication_time;
-  State::ClusterState audio_state;
+  AMState::ClusterState audio_state;
   bool audio_status;
 
   while((n=ping_sockets[id]->readDatagram(data,1500))>0) {
@@ -236,10 +236,10 @@ void PingMonitor::socketReadyData(int id)
       if(fields.size()==8) {
 	running=fields[1].toInt();
 	accessible=fields[2].toInt();
-	db_state=(State::ClusterState)fields[3].toInt();
+	db_state=(AMState::ClusterState)fields[3].toInt();
 	snapshot=fields[4];
 	replication_time=fields[5].toInt();
-	audio_state=(State::ClusterState)fields[6].toInt();
+	audio_state=(AMState::ClusterState)fields[6].toInt();
 	audio_status=fields[7].toInt();
 	if((running!=ping_mysql_running[Am::That])||
 	   (accessible!=ping_mysql_accessible[Am::That])||
@@ -267,7 +267,7 @@ void PingMonitor::socketReadyData(int id)
 	}
       }
       ping_sockets[id]->writeDatagram("pong",4,
-			   ping_config->address(Am::That,(Config::Address)id),
+			   ping_config->address(Am::That,(AMConfig::Address)id),
 				     AM_PING_UDP_PORT);
     }
     if(fields[0]=="pong") {
@@ -294,9 +294,9 @@ void PingMonitor::socketSendData()
 				ping_mysql_replication_time[Am::This],
 				ping_audio_state[Am::This],
 				ping_audio_status[Am::This]);
-  for(int i=0;i<Config::LastAddress;i++) {
+  for(int i=0;i<AMConfig::LastAddress;i++) {
     ping_sockets[i]->writeDatagram(cmd.toAscii(),cmd.length(),
-			   ping_config->address(Am::That,(Config::Address)i),
+			   ping_config->address(Am::That,(AMConfig::Address)i),
 				   AM_PING_UDP_PORT);
   }
 }

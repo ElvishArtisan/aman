@@ -24,8 +24,9 @@
 
 #include <am.h>
 
+#include <amcmdswitch.h>
+
 #include "amanctl.h"
-#include "cmdswitch.h"
 
 MainObject::MainObject(QObject *parent)
   : QObject(parent)
@@ -33,8 +34,8 @@ MainObject::MainObject(QObject *parent)
   ctl_command="GET_STATE";
   ctl_system=-1;
 
-  CmdSwitch *cmd=
-    new CmdSwitch(qApp->argc(),qApp->argv(),"amanctl",AMANCTL_USAGE);
+  AMCmdSwitch *cmd=
+    new AMCmdSwitch(qApp->argc(),qApp->argv(),"amanctl",AMANCTL_USAGE);
   for(unsigned i=0;i<cmd->keys();i++) {
     if(cmd->key(i)=="--command") {
       if((cmd->value(i).toUpper()!="GET_STATE")&&
@@ -65,7 +66,7 @@ MainObject::MainObject(QObject *parent)
     }
   }
 
-  ctl_config=new Config(AM_CONF_FILE);
+  ctl_config=new AMConfig(AM_CONF_FILE);
   ctl_config->load();
 
   ctl_socket=new QTcpSocket(this);
@@ -76,11 +77,11 @@ MainObject::MainObject(QObject *parent)
 	  this,SLOT(errorData(QAbstractSocket::SocketError)));
   QHostAddress addr;
   if(ctl_system<0) {
-    addr=ctl_config->address(Am::This,Config::PublicAddress);
+    addr=ctl_config->address(Am::This,AMConfig::PublicAddress);
   }
   else {
     addr=ctl_config->
-      address(ctl_config->instance(QString(ctl_system+'a')),Config::PublicAddress);
+      address(ctl_config->instance(QString(ctl_system+'a')),AMConfig::PublicAddress);
   }
   ctl_socket->connectToHost(addr,AM_CMD_TCP_PORT);
 }

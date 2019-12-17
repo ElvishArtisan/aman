@@ -2,7 +2,7 @@
 //
 // amand(8) Monitoring Daemon.
 //
-//   (C) Copyright 2012,2017-2018 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -31,8 +31,8 @@
 #include <QDateTime>
 #include <QSqlDatabase>
 
-#include <config.h>
-#include <state.h>
+#include <amconfig.h>
+#include <amstate.h>
 
 #include "replicationtest.h"
 #include "streamcmdserver.h"
@@ -48,9 +48,9 @@ class MainObject : public QObject
  private slots:
   void commandReceivedData(int id,int cmd,const QStringList &args);
   void thatStateChangedData(bool ping,bool running,bool accessible,
-			    State::ClusterState db_state,
+			    AMState::ClusterState db_state,
 			    const QString &snapshot,int replication_time,
-			    State::ClusterState audio_state,
+			    AMState::ClusterState audio_state,
 			    bool audio_status);
   void checkStatusData();
   void replicationTestCompleteData(bool success,int msecs);
@@ -76,7 +76,7 @@ class MainObject : public QObject
   bool SetMysqlMetadata(const QString &binlog_name,int binlog_pos);
   bool StopSlaves();
   QSqlDatabase Db();
-  bool OpenMysql(Am::Instance inst,Config::Address addr);
+  bool OpenMysql(Am::Instance inst,AMConfig::Address addr);
   void CloseMysql();
   bool PushFile(const QString &srcfile,const QString &desthost,
 		const QString &destfile);
@@ -88,11 +88,11 @@ class MainObject : public QObject
   StreamCmdServer *main_cmd_server;
   PingMonitor *main_monitor;
   ReplicationTest *main_repl_test;
-  Config *main_config;
+  AMConfig *main_config;
   QDir *main_snapshot_dir;
   QTimer *main_auto_rotate_timer;
   bool main_auto_rotate_state;
-  State *main_state;
+  AMState *main_state;
   bool main_replication_test_state;
   bool main_ping_table_initialized;
   QProcess *main_audio_process;

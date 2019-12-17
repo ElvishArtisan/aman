@@ -2,7 +2,7 @@
 //
 // Autorotation Routines for amand(8).
 //
-//   (C) Copyright 2012-2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -95,16 +95,16 @@ void MainObject::PurgeBinlogs()
   unsigned v1=0;
   unsigned v2=0;
 
-  if((main_monitor->dbState(Am::This)==State::StateMaster)&&
-     (main_monitor->dbState(Am::That)==State::StateSlave)) {
-    if(OpenMysql(Am::This,Config::PrivateAddress)) {
+  if((main_monitor->dbState(Am::This)==AMState::StateMaster)&&
+     (main_monitor->dbState(Am::That)==AMState::StateSlave)) {
+    if(OpenMysql(Am::This,AMConfig::PrivateAddress)) {
       sql="show master status";
       q=new QSqlQuery(sql,Db());
       if(q->first()) {
 	log1=q->value(0).toString();
 	delete q;
 	CloseMysql();
-	if(OpenMysql(Am::That,Config::PublicAddress)) {
+	if(OpenMysql(Am::That,AMConfig::PublicAddress)) {
 	  sql="show slave status";
 	  q=new QSqlQuery(sql,Db());
 	  if(q->first()) {
@@ -133,9 +133,9 @@ void MainObject::PurgeBinlogs()
       }
     }
   }
-  if((main_monitor->dbState(Am::This)==State::StateSlave)&&
-     (main_monitor->dbState(Am::That)==State::StateMaster)) {
-    if(OpenMysql(Am::This,Config::PrivateAddress)) {
+  if((main_monitor->dbState(Am::This)==AMState::StateSlave)&&
+     (main_monitor->dbState(Am::That)==AMState::StateMaster)) {
+    if(OpenMysql(Am::This,AMConfig::PrivateAddress)) {
       sql="show master status";
       q=new QSqlQuery(sql,Db());
       if(q->first()) {
@@ -149,7 +149,7 @@ void MainObject::PurgeBinlogs()
 	    DeleteBinlogSequence(f1[0],v1-1);
 	  }
 	}
-	if(OpenMysql(Am::This,Config::PrivateAddress)) {
+	if(OpenMysql(Am::This,AMConfig::PrivateAddress)) {
 	  sql="show slave status";
 	  q=new QSqlQuery(sql,Db());
 	  if(q->first()) {
@@ -200,7 +200,7 @@ void MainObject::DeleteBinlogSequence(const QString &basename,
 	  QString src_file=
 	    main_config->mysqlDataDirectory(Am::This)+"/"+logfile;
 	  QString dst_file=main_config->archiveDirectory(Am::This)+"/"+logfile;
-	  if(Config::copyFile(src_file,dst_file,&err_msg)) {
+	  if(AMConfig::copyFile(src_file,dst_file,&err_msg)) {
 	    syslog(LOG_DEBUG,"archived binlog to \"%s\"",
 		   (const char *)dst_file.toUtf8());
 	  }
@@ -217,7 +217,7 @@ void MainObject::DeleteBinlogSequence(const QString &basename,
   QString sql;
   QSqlQuery *q;
 
-  if(OpenMysql(Am::This,Config::PublicAddress)) {
+  if(OpenMysql(Am::This,AMConfig::PublicAddress)) {
     sql=QString("purge binary logs to ")+
       "\""+basename+QString().sprintf(".%06u\"",last);
     q=new QSqlQuery(sql,Db());

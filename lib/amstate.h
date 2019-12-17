@@ -1,4 +1,4 @@
-// state.h
+// amstate.h
 //
 // A container class for an Aman State
 //
@@ -18,21 +18,21 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef STATE_H
-#define STATE_H
+#ifndef AMSTATE_H
+#define AMSTATE_H
 
 #include "am.h"
 #include "profile.h"
 
-class State
+class AMState
 {
  public:
   enum ClusterState {StateOffline=0,StateIdle=1,StateMaster=2,StateSlave=3};
-  State();
+  AMState();
   ClusterState dbState();
-  void setDbState(State::ClusterState state);
+  void setDbState(AMState::ClusterState state);
   ClusterState audioState();
-  void setAudioState(State::ClusterState state);
+  void setAudioState(AMState::ClusterState state);
   QString currentSnapshot(Am::Instance inst);
   void setCurrentSnapshot(Am::Instance inst,const QString &str);
   void purgeSnapshots();
@@ -48,4 +48,4 @@ class State
 };
 
 
-#endif  // STATE_H
+#endif  // AMSTATE_H

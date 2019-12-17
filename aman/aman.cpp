@@ -2,7 +2,7 @@
 //
 // aman(8) Monitoring Client.
 //
-//   (C) Copyright 2012-2013,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -65,7 +65,7 @@ MainWidget::MainWidget(QWidget *parent)
   //
   // Load Configuration
   //
-  am_config=new Config("/etc/aman.conf");
+  am_config=new AMConfig("/etc/aman.conf");
   if(!am_config->load()) {
     QMessageBox::warning(this,tr("Server Monitor"),
 	       tr("Unable to read configuration from \"/etc/aman.conf\"."));
@@ -206,7 +206,7 @@ MainWidget::MainWidget(QWidget *parent)
 
   am_connection[0]->connectToHost("localhost",AM_CMD_TCP_PORT);
   am_connection[1]->connectToHost(am_config->
-		  address(Am::That,Config::PrivateAddress).toString(),
+		  address(Am::That,AMConfig::PrivateAddress).toString(),
 		  AM_CMD_TCP_PORT);
 
   EnableFields(0,false);
@@ -287,55 +287,55 @@ void MainWidget::statusChangedData(Status *a,Status *b)
   am_db_replicating_light[0]->setStatus(b->dbReplicationTime()>0);
   am_db_replicating_light[1]->setStatus(a->dbReplicationTime()>0);
   switch(a->dbState()) {
-  case State::StateOffline:
+  case AMState::StateOffline:
     am_db_master_button[0]->setEnabled(false);
     am_db_slave_button[0]->setEnabled(false);
     am_db_idle_button[0]->setEnabled(false);
     break;
 
-  case State::StateIdle:
+  case AMState::StateIdle:
     am_db_master_button[0]->setEnabled(true);
-    am_db_slave_button[0]->setEnabled(b->dbState()==State::StateMaster);
+    am_db_slave_button[0]->setEnabled(b->dbState()==AMState::StateMaster);
     am_db_idle_button[0]->setEnabled(false);
     break;
 
-  case State::StateMaster:
+  case AMState::StateMaster:
     am_db_master_button[0]->setEnabled(false);
     am_db_slave_button[0]->setEnabled(false);
     am_db_idle_button[0]->setEnabled(true);
     break;
 
-  case State::StateSlave:
+  case AMState::StateSlave:
     am_db_master_button[0]->setEnabled(false);
     am_db_slave_button[0]->setEnabled(false);
     am_db_idle_button[0]->setEnabled(true);
     break;
   }
-  am_audio_replicating_light[0]->setEnabled(a->audioState()==State::StateSlave);
+  am_audio_replicating_light[0]->setEnabled(a->audioState()==AMState::StateSlave);
   am_audio_replicating_light[0]->setStatus(a->audioStatus());
-  am_audio_replicating_light[1]->setEnabled(b->audioState()==State::StateSlave);
+  am_audio_replicating_light[1]->setEnabled(b->audioState()==AMState::StateSlave);
   am_audio_replicating_light[1]->setStatus(b->audioStatus());
   switch(a->audioState()) {
-  case State::StateSlave:
-    am_audio_state_edit[0]->setText(State::stateString(State::StateSlave));
+  case AMState::StateSlave:
+    am_audio_state_edit[0]->setText(AMState::stateString(AMState::StateSlave));
     am_audio_slave_button[0]->setEnabled(false);
     am_audio_idle_button[0]->setEnabled(true);
     break;
 
-  case State::StateIdle:
-    if(b->audioState()==State::StateSlave) {
-      am_audio_state_edit[0]->setText(State::stateString(State::StateMaster));
+  case AMState::StateIdle:
+    if(b->audioState()==AMState::StateSlave) {
+      am_audio_state_edit[0]->setText(AMState::stateString(AMState::StateMaster));
     }
     else {
-      am_audio_state_edit[0]->setText(State::stateString(State::StateIdle));
+      am_audio_state_edit[0]->setText(AMState::stateString(AMState::StateIdle));
     }
-    am_audio_slave_button[0]->setEnabled(b->audioState()==State::StateIdle);
+    am_audio_slave_button[0]->setEnabled(b->audioState()==AMState::StateIdle);
     am_audio_idle_button[0]->setEnabled(false);
     break;
 
-  case State::StateMaster:
-  case State::StateOffline:
-    am_audio_state_edit[0]->setText(State::stateString(a->audioState()));
+  case AMState::StateMaster:
+  case AMState::StateOffline:
+    am_audio_state_edit[0]->setText(AMState::stateString(a->audioState()));
     am_audio_slave_button[0]->setEnabled(false);
     am_audio_idle_button[0]->setEnabled(false);
     break;
@@ -346,51 +346,51 @@ void MainWidget::statusChangedData(Status *a,Status *b)
   //
   UpdateStatus(1,b);
   switch(b->dbState()) {
-  case State::StateOffline:
+  case AMState::StateOffline:
     am_db_master_button[1]->setEnabled(false);
     am_db_slave_button[1]->setEnabled(false);
     am_db_idle_button[1]->setEnabled(false);
     break;
 
-  case State::StateIdle:
+  case AMState::StateIdle:
     am_db_master_button[1]->setEnabled(true);
-    am_db_slave_button[1]->setEnabled(a->dbState()==State::StateMaster);
+    am_db_slave_button[1]->setEnabled(a->dbState()==AMState::StateMaster);
     am_db_idle_button[1]->setEnabled(false);
     break;
 
-  case State::StateMaster:
+  case AMState::StateMaster:
     am_db_master_button[1]->setEnabled(false);
     am_db_slave_button[1]->setEnabled(false);
     am_db_idle_button[1]->setEnabled(true);
     break;
 
-  case State::StateSlave:
+  case AMState::StateSlave:
     am_db_master_button[1]->setEnabled(false);
     am_db_slave_button[1]->setEnabled(false);
     am_db_idle_button[1]->setEnabled(true);
     break;
   }
   switch(b->audioState()) {
-  case State::StateSlave:
-    am_audio_state_edit[1]->setText(State::stateString(State::StateSlave));
+  case AMState::StateSlave:
+    am_audio_state_edit[1]->setText(AMState::stateString(AMState::StateSlave));
     am_audio_slave_button[1]->setEnabled(false);
     am_audio_idle_button[1]->setEnabled(true);
     break;
 
-  case State::StateIdle:
-    if(b->audioState()==State::StateSlave) {
-      am_audio_state_edit[1]->setText(State::stateString(State::StateMaster));
+  case AMState::StateIdle:
+    if(b->audioState()==AMState::StateSlave) {
+      am_audio_state_edit[1]->setText(AMState::stateString(AMState::StateMaster));
     }
     else {
-      am_audio_state_edit[1]->setText(State::stateString(State::StateIdle));
+      am_audio_state_edit[1]->setText(AMState::stateString(AMState::StateIdle));
     }
-    am_audio_slave_button[1]->setEnabled(a->audioState()==State::StateIdle);
+    am_audio_slave_button[1]->setEnabled(a->audioState()==AMState::StateIdle);
     am_audio_idle_button[1]->setEnabled(false);
     break;
 
-  case State::StateMaster:
-  case State::StateOffline:
-    am_audio_state_edit[1]->setText(State::stateString(a->audioState()));
+  case AMState::StateMaster:
+  case AMState::StateOffline:
+    am_audio_state_edit[1]->setText(AMState::stateString(a->audioState()));
     am_audio_slave_button[1]->setEnabled(false);
     am_audio_idle_button[1]->setEnabled(false);
     break;
@@ -524,16 +524,16 @@ void MainWidget::paintEvent(QPaintEvent *e)
 void MainWidget::UpdateStatus(int sys,Status *s)
 {
   am_hostname_edit[sys]->setText(s->hostname());
-  am_db_state_edit[sys]->setText(State::stateString(s->dbState()));
+  am_db_state_edit[sys]->setText(AMState::stateString(s->dbState()));
   am_service_running_light[sys]->setStatus(s->serviceRunning());
   am_db_running_light[sys]->setStatus(s->dbRunning());
   am_db_accessible_light[sys]->setStatus(s->dbAccessible());
-  am_db_replicating_label[sys]->setEnabled(s->dbState()==State::StateSlave);
-  am_db_replicating_light[sys]->setEnabled(s->dbState()==State::StateSlave);
+  am_db_replicating_label[sys]->setEnabled(s->dbState()==AMState::StateSlave);
+  am_db_replicating_light[sys]->setEnabled(s->dbState()==AMState::StateSlave);
   am_audio_replicating_label[sys]->
-    setEnabled(s->audioState()==State::StateSlave);
+    setEnabled(s->audioState()==AMState::StateSlave);
   am_audio_replicating_light[sys]->
-    setEnabled(s->audioState()==State::StateSlave);
+    setEnabled(s->audioState()==AMState::StateSlave);
 }
 
 

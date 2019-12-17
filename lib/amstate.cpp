@@ -1,4 +1,4 @@
-// state.cpp
+// amstate.cpp
 //
 // A container class for an Aman State
 //
@@ -26,9 +26,10 @@
 #include <QtCore/QFile>
 #include <QtCore/QObject>
 
-#include "state.h"
+#include "amstate.h"
+#include "amprofile.h"
 
-State::State()
+AMState::AMState()
 {
   clear();
   if(!QFile::exists(AM_STATE_FILE)) {
@@ -37,42 +38,42 @@ State::State()
 }
 
 
-State::ClusterState State::dbState()
+AMState::ClusterState AMState::dbState()
 {
   ReadState();
   return db_state;
 }
 
 
-void State::setDbState(State::ClusterState state)
+void AMState::setDbState(AMState::ClusterState state)
 {
   db_state=state;
   WriteState();
 }
 
 
-State::ClusterState State::audioState()
+AMState::ClusterState AMState::audioState()
 {
   ReadState();
   return audio_state;
 }
 
 
-void State::setAudioState(State::ClusterState state)
+void AMState::setAudioState(AMState::ClusterState state)
 {
   audio_state=state;
   WriteState();
 }
 
 
-QString State::currentSnapshot(Am::Instance inst)
+QString AMState::currentSnapshot(Am::Instance inst)
 {
   ReadState();
   return current_snapshot[inst];
 }
 
 
-void State::setCurrentSnapshot(Am::Instance inst,const QString &str)
+void AMState::setCurrentSnapshot(Am::Instance inst,const QString &str)
 {
   if(!str.isEmpty()) {
     current_snapshot[inst]=str;
@@ -81,7 +82,7 @@ void State::setCurrentSnapshot(Am::Instance inst,const QString &str)
 }
 
 
-void State::purgeSnapshots()
+void AMState::purgeSnapshots()
 {
   ReadState();
   QDir *dir=new QDir(AM_SNAPSHOT_DIR,QString("*.")+AM_SNAPSHOT_EXT);
@@ -99,34 +100,34 @@ void State::purgeSnapshots()
 }
 
 
-void State::clear()
+void AMState::clear()
 {
-  db_state=State::StateIdle;
-  audio_state=State::StateIdle;
+  db_state=AMState::StateIdle;
+  audio_state=AMState::StateIdle;
   for(int i=0;i<Am::LastInstance;i++) {
     current_snapshot[i]="";
   }
 }
 
 
-QString State::stateString(ClusterState state)
+QString AMState::stateString(ClusterState state)
 {
   QString ret=QObject::tr("OFFLINE");
 
   switch(state) {
-  case State::StateOffline:
+  case AMState::StateOffline:
     ret=QObject::tr("OFFLINE");
     break;
 
-  case State::StateIdle:
+  case AMState::StateIdle:
     ret=QObject::tr("IDLE");
     break;
 
-  case State::StateMaster:
+  case AMState::StateMaster:
     ret=QObject::tr("MASTER");
     break;
 
-  case State::StateSlave:
+  case AMState::StateSlave:
     ret=QObject::tr("SLAVE");
     break;
   }
@@ -135,20 +136,20 @@ QString State::stateString(ClusterState state)
 }
 
 
-void State::ReadState()
+void AMState::ReadState()
 {
-  Profile *p=new Profile();
+  AMProfile *p=new AMProfile();
 
   if(!p->setSource(AM_STATE_FILE)) {
-    db_state=State::StateIdle;
-    audio_state=State::StateIdle;
+    db_state=AMState::StateIdle;
+    audio_state=AMState::StateIdle;
     syslog(LOG_CRIT,"unable to read state file");
     return;
   }
   db_state=
-    (State::ClusterState)p->intValue("State","Database",State::StateIdle);
+    (AMState::ClusterState)p->intValue("State","Database",AMState::StateIdle);
   audio_state=
-    (State::ClusterState)p->intValue("State","Audio",State::StateIdle);
+    (AMState::ClusterState)p->intValue("State","Audio",AMState::StateIdle);
   current_snapshot[Am::This]=p->stringValue("State","ThisCurrentSnapshot");
   current_snapshot[Am::That]=p->stringValue("State","ThatCurrentSnapshot");
 
@@ -156,7 +157,7 @@ void State::ReadState()
 }
 
 
-void State::WriteState() const
+void AMState::WriteState() const
 {
   FILE *f=NULL;
 

@@ -1,4 +1,4 @@
-// config.cpp
+// amconfig.cpp
 //
 // A container class for an Aman Configuration
 //
@@ -26,142 +26,142 @@
 
 #include <QtCore/QStringList>
 
-#include "config.h"
+#include "amconfig.h"
 
-Config::Config(QString filename)
+AMConfig::AMConfig(QString filename)
 {
   clear();
   conf_filename=filename;
 }
 
 
-QString Config::globalMysqlDatabase() const
+QString AMConfig::globalMysqlDatabase() const
 {
   return conf_global_mysql_database;
 }
 
 
-QString Config::globalMysqlDriver() const
+QString AMConfig::globalMysqlDriver() const
 {
   return conf_global_mysql_driver;
 }
 
 
-int Config::globalMysqlReplicationTimeout() const
+int AMConfig::globalMysqlReplicationTimeout() const
 {
   return conf_global_mysql_replication_timeout;
 }
 
 
-bool Config::globalMirrorDeleteAudio() const
+bool AMConfig::globalMirrorDeleteAudio() const
 {
   return conf_global_mirror_delete_audio;
 }
 
 
-bool Config::globalAutoRotateBinlogs() const
+bool AMConfig::globalAutoRotateBinlogs() const
 {
   return conf_global_auto_rotate_binlogs;
 }
 
 
-bool Config::globalAutoPurgeBinlogs() const
+bool AMConfig::globalAutoPurgeBinlogs() const
 {
   return conf_global_auto_purge_binlogs;
 }
 
 
-QTime Config::globalAutoRotateTime() const
+QTime AMConfig::globalAutoRotateTime() const
 {
   return conf_global_auto_rotate_time;
 }
 
 
-QString Config::globalAlertAddress() const
+QString AMConfig::globalAlertAddress() const
 {
   return conf_global_alert_address;
 }
 
 
-QString Config::globalFromAddress() const
+QString AMConfig::globalFromAddress() const
 {
   return conf_global_from_address;
 }
 
 
-int Config::globalNiceLevel() const
+int AMConfig::globalNiceLevel() const
 {
   return conf_global_nice_level;
 }
 
 
-QString Config::globalMysqlServiceName() const
+QString AMConfig::globalMysqlServiceName() const
 {
   return conf_global_mysql_service_name;
 }
 
 
-QString Config::hostname(Am::Instance inst) const
+QString AMConfig::hostname(Am::Instance inst) const
 {
   return conf_hostname[inst];
 }
 
 
-QString Config::mysqlUsername(Am::Instance inst) const
+QString AMConfig::mysqlUsername(Am::Instance inst) const
 {
   return conf_mysql_username[inst];
 }
 
 
-QString Config::mysqlPassword(Am::Instance inst) const
+QString AMConfig::mysqlPassword(Am::Instance inst) const
 {
   return conf_mysql_password[inst];
 }
 
 
-QString Config::mysqlDataDirectory(Am::Instance inst) const
+QString AMConfig::mysqlDataDirectory(Am::Instance inst) const
 {
   return conf_mysql_data_directory[inst];
 }
 
 
-QString Config::archiveDirectory(Am::Instance inst) const
+QString AMConfig::archiveDirectory(Am::Instance inst) const
 {
   return conf_archive_directory[inst];
 }
 
 
-QHostAddress Config::address(Am::Instance inst,Config::Address addr) const
+QHostAddress AMConfig::address(Am::Instance inst,AMConfig::Address addr) const
 {
   return conf_address[inst][addr];
 }
 
 
-QString Config::pingTablename(Am::Instance inst) const
+QString AMConfig::pingTablename(Am::Instance inst) const
 {
   return conf_ping_tablename[inst];
 }
 
 
-QString Config::secureShellIdentity(Am::Instance inst) const
+QString AMConfig::secureShellIdentity(Am::Instance inst) const
 {
   return conf_secure_shell_identity[inst];
 }
 
 
-Am::Instance Config::instanceA() const
+Am::Instance AMConfig::instanceA() const
 {
   return conf_instance_table[0];
 }
 
 
-Am::Instance Config::instanceB() const
+Am::Instance AMConfig::instanceB() const
 {
   return conf_instance_table[1];
 }
 
 
-Am::Instance Config::instance(const QString &letter) const
+Am::Instance AMConfig::instance(const QString &letter) const
 {
   if(letter.toLower()=="a") {
     return instanceA();
@@ -173,10 +173,10 @@ Am::Instance Config::instance(const QString &letter) const
 }
 
 
-bool Config::load()
+bool AMConfig::load()
 {
   char hostname[PATH_MAX];
-  Profile *p=new Profile();
+  AMProfile *p=new AMProfile();
   if(!p->setSource(conf_filename)) {
     syslog(LOG_ERR,"missing configuration file");
     return false;
@@ -215,7 +215,7 @@ bool Config::load()
 }
 
 
-void Config::clear()
+void AMConfig::clear()
 {
   conf_global_mysql_database="";
   conf_global_mysql_driver="";
@@ -237,7 +237,7 @@ void Config::clear()
     conf_mysql_data_directory[i]="";
     conf_ping_tablename[i]="";
     conf_secure_shell_identity[i]="";
-    for(int j=0;j<Config::LastAddress;j++) {
+    for(int j=0;j<AMConfig::LastAddress;j++) {
       conf_address[i][j]=QHostAddress();
     }
   }
@@ -246,7 +246,7 @@ void Config::clear()
 }
 
 
-bool Config::copyFile(const QString &srcfile,const QString &dstfile,
+bool AMConfig::copyFile(const QString &srcfile,const QString &dstfile,
 		      QString *err_msg)
 {
   FILE *src=NULL;
@@ -281,7 +281,7 @@ bool Config::copyFile(const QString &srcfile,const QString &dstfile,
 }
 
 
-void Config::LoadHost(Profile *p,const QString &section)
+void AMConfig::LoadHost(AMProfile *p,const QString &section)
 {
   char fullname[PATH_MAX];
   int host=1;
@@ -305,9 +305,9 @@ void Config::LoadHost(Profile *p,const QString &section)
   conf_mysql_data_directory[host]=
     p->stringValue(section,"MysqlDataDirectory","/var/lib/mysql");
   conf_archive_directory[host]=p->stringValue(section,"ArchiveDirectory");
-  conf_address[host][Config::PublicAddress].
+  conf_address[host][AMConfig::PublicAddress].
     setAddress(p->stringValue(section,"PublicAddress"));
-  conf_address[host][Config::PrivateAddress].
+  conf_address[host][AMConfig::PrivateAddress].
     setAddress(p->stringValue(section,"PrivateAddress"));
   conf_ping_tablename[host]=p->stringValue(section,"PingTablename",
 			  QString("AMAN_")+section.toUpper()+"_PINGS");
@@ -316,7 +316,7 @@ void Config::LoadHost(Profile *p,const QString &section)
 }
 
 
-bool Config::Validate(Profile *p) const
+bool AMConfig::Validate(AMProfile *p) const
 {
   bool ret=true;
 
@@ -336,13 +336,13 @@ bool Config::Validate(Profile *p) const
     syslog(LOG_ERR,"SystemA and SystemB hostnames cannot match");
     ret=false;
   }
-  if(conf_address[0][Config::PublicAddress]==
-     conf_address[1][Config::PublicAddress]) {
+  if(conf_address[0][AMConfig::PublicAddress]==
+     conf_address[1][AMConfig::PublicAddress]) {
     syslog(LOG_ERR,"SystemA and SystemB public addresses cannot match");
     ret=false;
   }
-  if(conf_address[0][Config::PrivateAddress]==
-     conf_address[1][Config::PrivateAddress]) {
+  if(conf_address[0][AMConfig::PrivateAddress]==
+     conf_address[1][AMConfig::PrivateAddress]) {
     syslog(LOG_ERR,"SystemA and SystemB private addresses cannot match");
     ret=false;
   }

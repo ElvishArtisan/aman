@@ -2,7 +2,7 @@
 //
 // Restore a MySQL Snapshot
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -36,8 +36,8 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   QString sql;
   QSqlQuery *q;
   QStringList args;
-  Config::Address addr;
-  Profile *p=NULL;
+  AMConfig::Address addr;
+  AMProfile *p=NULL;
 
   *binlog="-";
   *pos=0;
@@ -72,9 +72,9 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   // Open Mysql
   //
-  addr=Config::PublicAddress;
+  addr=AMConfig::PublicAddress;
   if(!OpenMysql(Am::This,addr)) {
-    addr=Config::PublicAddress;
+    addr=AMConfig::PublicAddress;
     if(!OpenMysql(Am::This,addr)) {
       return false;
     }
@@ -167,7 +167,7 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   // Open Metadata Record
   //
-  p=new Profile();
+  p=new AMProfile();
   if(!p->setSource(tempdir+"/metadata.ini")) {
     syslog(LOG_ERR,"unable to open metadata in snapshot");
     CloseMysql();
@@ -184,7 +184,7 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   q=new QSqlQuery(sql,Db());
   delete q;
   sql=QString("change master to MASTER_HOST=\"")+
-    main_config->address(Am::That,Config::PublicAddress).toString()+"\","+
+    main_config->address(Am::That,AMConfig::PublicAddress).toString()+"\","+
     "MASTER_USER=\""+main_config->mysqlUsername(Am::This)+"\","+
     "MASTER_PASSWORD=\""+main_config->mysqlPassword(Am::This)+"\","+
     "MASTER_LOG_FILE=\""+p->stringValue("Master","BinlogFilename")+"\","+

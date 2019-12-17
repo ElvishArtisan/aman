@@ -2,7 +2,7 @@
 //
 // Client connection to an Aman monitor instance.
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -30,8 +30,8 @@ Status::Status()
   stat_service_running=false;
   stat_db_running=false;
   stat_db_accessible=false;
-  stat_db_state=State::StateIdle;
-  stat_audio_state=State::StateIdle;
+  stat_db_state=AMState::StateIdle;
+  stat_audio_state=AMState::StateIdle;
   stat_audio_status=false;
   stat_db_replication_time=0;
   stat_is_local=false;
@@ -86,13 +86,13 @@ void Status::setDbAccessible(bool state)
 }
 
 
-State::ClusterState Status::dbState() const
+AMState::ClusterState Status::dbState() const
 {
   return stat_db_state;
 }
 
 
-void Status::setDbState(State::ClusterState state)
+void Status::setDbState(AMState::ClusterState state)
 {
   stat_db_state=state;
 }
@@ -110,13 +110,13 @@ void Status::setDbReplicationTime(int msecs)
 }
 
 
-State::ClusterState Status::audioState() const
+AMState::ClusterState Status::audioState() const
 {
   return stat_audio_state;
 }
 
 
-void Status::setAudioState(State::ClusterState state)
+void Status::setAudioState(AMState::ClusterState state)
 {
   stat_audio_state=state;
 }
@@ -320,10 +320,10 @@ void Connection::ProcessMessage()
 	conn_status[i]->setServiceRunning(fields[2+i*8]=="1");
 	conn_status[i]->setDbRunning(fields[3+i*8]=="1");
 	conn_status[i]->setDbAccessible(fields[4+i*8]=="1");
-	conn_status[i]->setDbState((State::ClusterState)fields[5+i*8].toInt());
+	conn_status[i]->setDbState((AMState::ClusterState)fields[5+i*8].toInt());
 	conn_status[i]->setDbReplicationTime(fields[6+i*8].toInt());
 	conn_status[i]->
-	  setAudioState((State::ClusterState)fields[7+i*8].toInt());
+	  setAudioState((AMState::ClusterState)fields[7+i*8].toInt());
 	conn_status[i]->
 	  setAudioStatus(fields[8+i*8].toInt());
       }

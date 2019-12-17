@@ -2,7 +2,7 @@
 //
 // Generate a MySQL Snapshot
 //
-//   (C) Copyright 2012-2013,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -33,7 +33,7 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
 {
   QString sql;
   QSqlQuery *q;
-  Config::Address addr;
+  AMConfig::Address addr;
   bool ret=true;
   FILE *f=NULL;
 
@@ -48,9 +48,9 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   //
   // Open Mysql
   //
-  addr=Config::PublicAddress;
+  addr=AMConfig::PublicAddress;
   if(!OpenMysql(Am::This,addr)) {
-    addr=Config::PublicAddress;
+    addr=AMConfig::PublicAddress;
     if(!OpenMysql(Am::This,addr)) {
       return false;
     }
@@ -180,9 +180,9 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   //
   // Push Snapshot to Remote Systems
   //
-  if(!PushFile(filename,main_config->address(Am::That,Config::PublicAddress).
+  if(!PushFile(filename,main_config->address(Am::That,AMConfig::PublicAddress).
 	       toString(),filename)) {
-    if(!PushFile(filename,main_config->address(Am::That,Config::PrivateAddress).
+    if(!PushFile(filename,main_config->address(Am::That,AMConfig::PrivateAddress).
 		 toString(),filename)) {
       syslog(LOG_ERR,"unable to push snapshot to \"%s\"",
 	     (const char *)main_config->hostname(Am::That).toAscii());
@@ -197,7 +197,7 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
     QString dst_filename=
       main_config->archiveDirectory(Am::This)+"/"+f0.at(f0.size()-1);
     QString err_msg;
-    if(!Config::copyFile(filename,dst_filename,&err_msg)) {
+    if(!AMConfig::copyFile(filename,dst_filename,&err_msg)) {
       syslog(LOG_WARNING,"unable to archive DB snapshot to \"%s\" [%s]",
 	     (const char *)dst_filename.toUtf8(),
 	     (const char *)err_msg.toUtf8());

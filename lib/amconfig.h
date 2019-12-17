@@ -1,8 +1,8 @@
-// config.h
+// amconfig.h
 //
 // A container class for an Aman Configuration
 //
-//   (C) Copyright 2012-2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -18,8 +18,8 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef AMCONFIG_H
+#define AMCONFIG_H
 
 #include <vector>
 
@@ -29,13 +29,13 @@
 #include <QtNetwork/QHostAddress>
 
 #include "am.h"
-#include "profile.h"
+#include "amprofile.h"
 
-class Config
+class AMConfig
 {
  public:
   enum Address {PublicAddress=0,PrivateAddress=1,LastAddress=2};
-  Config(QString filename);
+  AMConfig(QString filename);
   QString globalMysqlDatabase() const;
   QString globalMysqlDriver() const;
   int globalMysqlReplicationTimeout() const;
@@ -64,8 +64,8 @@ class Config
 		       QString *err_msg);
 
  private:
-  void LoadHost(Profile *p,const QString &section);
-  bool Validate(Profile *p) const;
+  void LoadHost(AMProfile *p,const QString &section);
+  bool Validate(AMProfile *p) const;
   QString conf_filename;
   QString conf_global_mysql_database;
   QString conf_global_mysql_driver;
@@ -83,11 +83,11 @@ class Config
   QString conf_mysql_password[Am::LastInstance];
   QString conf_mysql_data_directory[Am::LastInstance];
   QString conf_archive_directory[Am::LastInstance];
-  QHostAddress conf_address[Am::LastInstance][Config::LastAddress];
+  QHostAddress conf_address[Am::LastInstance][AMConfig::LastAddress];
   QString conf_ping_tablename[Am::LastInstance];
   QString conf_secure_shell_identity[Am::LastInstance];
   Am::Instance conf_instance_table[Am::LastInstance];
 };
 
 
-#endif  // CONFIG_H
+#endif  // AMCONFIG_H

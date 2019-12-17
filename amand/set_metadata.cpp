@@ -2,7 +2,7 @@
 //
 // Set MySQL Replication Metadata
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -33,14 +33,14 @@ bool MainObject::SetMysqlMetadata(const QString &binlog_name,int binlog_pos)
   QString sql;
   QSqlQuery *q;
   QStringList args;
-  Config::Address addr;
+  AMConfig::Address addr;
 
   //
   // Open Mysql
   //
-  addr=Config::PublicAddress;
+  addr=AMConfig::PublicAddress;
   if(!OpenMysql(Am::This,addr)) {
-    addr=Config::PublicAddress;
+    addr=AMConfig::PublicAddress;
     if(!OpenMysql(Am::This,addr)) {
       return false;
     }
@@ -56,7 +56,7 @@ bool MainObject::SetMysqlMetadata(const QString &binlog_name,int binlog_pos)
   q=new QSqlQuery(sql,Db());
   delete q;
   sql=QString("change master to MASTER_HOST=\"")+
-    main_config->address(Am::That,Config::PublicAddress).toString()+"\","+
+    main_config->address(Am::That,AMConfig::PublicAddress).toString()+"\","+
     "MASTER_USER=\""+main_config->mysqlUsername(Am::This)+"\","+
     "MASTER_PASSWORD=\""+main_config->mysqlPassword(Am::This)+"\","+
     "MASTER_LOG_FILE=\""+binlog_name+"\","+

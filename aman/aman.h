@@ -2,7 +2,7 @@
 //
 // aman(1) Monitoring Client.
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -29,7 +29,7 @@
 #include <QPushButton>
 #include <QProgressDialog>
 
-#include <config.h>
+#include <amconfig.h>
 
 #include "statuslight.h"
 #include "connection.h"
@@ -89,7 +89,7 @@ class MainWidget : public QWidget
   QProgressDialog *am_progress_dialog;
   Connection *am_connection[2];
   int am_connection_table[2];
-  Config *am_config;
+  AMConfig *am_config;
 };
 
 

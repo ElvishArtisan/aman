@@ -2,7 +2,7 @@
 //
 // Client connection to an Aman monitor instance.
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -27,7 +27,7 @@
 #include <QObject>
 #include <QTcpSocket>
 
-#include <state.h>
+#include <amstate.h>
 
 #include "am.h"
 
@@ -45,12 +45,12 @@ class Status
   void setDbRunning(bool state);
   bool dbAccessible() const;
   void setDbAccessible(bool state);
-  State::ClusterState dbState() const;
-  void setDbState(State::ClusterState state);
+  AMState::ClusterState dbState() const;
+  void setDbState(AMState::ClusterState state);
   int dbReplicationTime() const;
   void setDbReplicationTime(int msecs);
-  State::ClusterState audioState() const;
-  void setAudioState(State::ClusterState state);
+  AMState::ClusterState audioState() const;
+  void setAudioState(AMState::ClusterState state);
   bool audioStatus() const;
   void setAudioStatus(bool status);
   bool isLocal() const;
@@ -61,9 +61,9 @@ class Status
   bool stat_service_running;
   bool stat_db_running;
   bool stat_db_accessible;
-  State::ClusterState stat_db_state;
+  AMState::ClusterState stat_db_state;
   int stat_db_replication_time;
-  State::ClusterState stat_audio_state;
+  AMState::ClusterState stat_audio_state;
   bool stat_audio_status;
   bool stat_is_local;
 };

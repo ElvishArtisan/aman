@@ -2,7 +2,7 @@
 //
 // amand(8) Monitoring Daemon.
 //
-//   (C) Copyright 2012,2017-2018 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -37,7 +37,8 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include "cmdswitch.h"
+#include <amcmdswitch.h>
+
 #include "amand.h"
 
 void SigHandler(int signo)
@@ -63,8 +64,8 @@ MainObject::MainObject(QObject *parent)
   //
   // Read Command Options
   //
-  CmdSwitch *cmd=
-    new CmdSwitch(qApp->argc(),qApp->argv(),"amand",AMAND_USAGE);
+  AMCmdSwitch *cmd=
+    new AMCmdSwitch(qApp->argc(),qApp->argv(),"amand",AMAND_USAGE);
   for(unsigned i=0;i<cmd->keys();i++) {
     if(cmd->key(i)=="-d") {
       debug=true;
@@ -85,7 +86,7 @@ MainObject::MainObject(QObject *parent)
   //
   // Load Configuration
   //
-  main_config=new Config(AM_CONF_FILE);
+  main_config=new AMConfig(AM_CONF_FILE);
   if(!main_config->load()) {
     syslog(LOG_ERR,"exiting due to configuration errors");
     exit(256);
@@ -94,7 +95,7 @@ MainObject::MainObject(QObject *parent)
   //
   // State Object
   //
-  main_state=new State();
+  main_state=new AMState();
 
   //
   // Snapshot Directory
@@ -192,7 +193,7 @@ MainObject::MainObject(QObject *parent)
   //
   // Replication Tester
   //
-  main_repl_test=new ReplicationTest(Config::PublicAddress,main_config,this);
+  main_repl_test=new ReplicationTest(AMConfig::PublicAddress,main_config,this);
   connect(main_repl_test,SIGNAL(testComplete(bool,int)),
 	  this,SLOT(replicationTestCompleteData(bool,int)));
 
@@ -212,13 +213,13 @@ MainObject::MainObject(QObject *parent)
   main_monitor->setThisDbState(main_state->dbState());
   main_monitor->setThisAudioState(main_state->audioState());
   connect(main_monitor,
-	  SIGNAL(thatStateChanged(bool,bool,bool,State::ClusterState,
+	  SIGNAL(thatStateChanged(bool,bool,bool,AMState::ClusterState,
 				  const QString &,int,
-				  State::ClusterState,bool)),
+				  AMState::ClusterState,bool)),
 	  this,
-	  SLOT(thatStateChangedData(bool,bool,bool,State::ClusterState,
+	  SLOT(thatStateChangedData(bool,bool,bool,AMState::ClusterState,
 				    const QString &,int,
-				    State::ClusterState,bool)));
+				    AMState::ClusterState,bool)));
   if(!main_monitor->start()) {
     syslog(LOG_ERR,"aborting due to errors");
     exit(256);
@@ -331,8 +332,8 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     filename=MakeSnapshotName();
     if(GenerateMysqlSnapshot(QString(AM_SNAPSHOT_DIR)+"/"+filename)) {
       outargs.push_back(filename);
-      main_state->setDbState(State::StateMaster);
-      main_monitor->setThisDbState(State::StateMaster);
+      main_state->setDbState(AMState::StateMaster);
+      main_monitor->setThisDbState(AMState::StateMaster);
       main_state->setCurrentSnapshot(Am::This,filename);
       main_monitor->setThisSnapshotName(filename);
       SendAlert("Database Replication State changed to MASTER on server \""+
@@ -350,8 +351,8 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     if(RestoreMysqlSnapshot(QString(AM_SNAPSHOT_DIR)+"/"+
 			    main_state->currentSnapshot(Am::That),
 			    &binlog_name,&binlog_pos)) {
-      main_state->setDbState(State::StateSlave);
-      main_monitor->setThisDbState(State::StateSlave);
+      main_state->setDbState(AMState::StateSlave);
+      main_monitor->setThisDbState(AMState::StateSlave);
       outargs.push_back(main_state->currentSnapshot(Am::That));
       SendAlert("Database Replication State changed to SLAVE on server \""+
 		main_config->hostname(Am::This)+"\".");
@@ -366,16 +367,16 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 
   case Am::MakeIdleCommand:
     StopSlaves();
-    main_state->setDbState(State::StateIdle);
-    main_monitor->setThisDbState(State::StateIdle);
+    main_state->setDbState(AMState::StateIdle);
+    main_monitor->setThisDbState(AMState::StateIdle);
     break;
 
   case Am::SetMetadataCommand:
     if((args.size()==2)&&(SetMysqlMetadata(args[0],args[1].toInt()))) {
       outargs.push_back(args[0]);
       outargs.push_back(args[1]);
-      main_state->setDbState(State::StateMaster);
-      main_monitor->setThisDbState(State::StateMaster);
+      main_state->setDbState(AMState::StateMaster);
+      main_monitor->setThisDbState(AMState::StateMaster);
     }
     else {
       outargs.push_back("-");
@@ -385,10 +386,10 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
     break;
 
   case Am::StartAudioSlaveCommand:
-    if((main_monitor->audioState(Am::This)!=State::StateSlave)&&
-       (main_monitor->audioState(Am::That)!=State::StateSlave)) {
-      main_state->setAudioState(State::StateSlave);
-      main_monitor->setThisAudioState(State::StateSlave);
+    if((main_monitor->audioState(Am::This)!=AMState::StateSlave)&&
+       (main_monitor->audioState(Am::That)!=AMState::StateSlave)) {
+      main_state->setAudioState(AMState::StateSlave);
+      main_monitor->setThisAudioState(AMState::StateSlave);
       ScheduleAudioCopy(0);
       SendAlert("Audio Replication State changed to SLAVE on server \""+
 	      main_config->hostname(Am::This)+"\".");
@@ -398,8 +399,8 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 
   case Am::StopAudioSlaveCommand:
     StopAudioCopy();
-    main_state->setAudioState(State::StateIdle);
-    main_monitor->setThisAudioState(State::StateIdle);
+    main_state->setAudioState(AMState::StateIdle);
+    main_monitor->setThisAudioState(AMState::StateIdle);
     main_cmd_server->sendCommand(id,Am::StopAudioSlaveCommand);
     SendAlert("Audio Replication State changed to IDLE on server \""+
 	      main_config->hostname(Am::This)+"\".");
@@ -410,47 +411,47 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
 
 
 void MainObject::thatStateChangedData(bool ping,bool running,bool accessible,
-				      State::ClusterState db_state,
+				      AMState::ClusterState db_state,
 				      const QString &snapshot,
 				      int replication_time,
-				      State::ClusterState audio_state,
+				      AMState::ClusterState audio_state,
 				      bool audio_status)
 {
   main_state->setCurrentSnapshot(Am::That,snapshot);
   switch(main_state->dbState()) {
-  case State::StateSlave:
-    if(db_state==State::StateIdle) {
-      main_monitor->setThisDbState(State::StateIdle);
-      main_state->setDbState(State::StateIdle);
+  case AMState::StateSlave:
+    if(db_state==AMState::StateIdle) {
+      main_monitor->setThisDbState(AMState::StateIdle);
+      main_state->setDbState(AMState::StateIdle);
       SendAlert("Database Replication State changed to IDLE on server \""+
 		main_config->hostname(Am::This)+"\".");
       syslog(LOG_INFO,"DB state changed to IDLE");
     }
     break;
 
-  case State::StateMaster:
-    if(db_state==State::StateMaster) {
-      main_monitor->setThisDbState(State::StateIdle);
-      main_state->setDbState(State::StateIdle);
+  case AMState::StateMaster:
+    if(db_state==AMState::StateMaster) {
+      main_monitor->setThisDbState(AMState::StateIdle);
+      main_state->setDbState(AMState::StateIdle);
       SendAlert("Database Replication State changed to IDLE on server \""+
 		main_config->hostname(Am::This)+"\".");
       syslog(LOG_INFO,"DB state changed to IDLE");
     }
     break;
 
-  case State::StateIdle:
-  case State::StateOffline:
+  case AMState::StateIdle:
+  case AMState::StateOffline:
     break;
   }
 
   
   switch(main_state->audioState()) {
-  case State::StateSlave:
+  case AMState::StateSlave:
     break;
 
-  case State::StateMaster:
-  case State::StateIdle:
-  case State::StateOffline:
+  case AMState::StateMaster:
+  case AMState::StateIdle:
+  case AMState::StateOffline:
     break;
   }
   main_cmd_server->sendCommand(Am::StateCommand,StateUpdateArgs());
@@ -474,13 +475,13 @@ void MainObject::replicationTestCompleteData(bool success,int msecs)
       main_cmd_server->sendCommand(Am::StateCommand,StateUpdateArgs());
     }
     if(!main_replication_test_state) {
-      if(main_monitor->dbState(Am::That)==State::StateSlave) {
+      if(main_monitor->dbState(Am::That)==AMState::StateSlave) {
 	SendAlert("Database replication has RESUMED between servers \""+
 		  main_config->hostname(Am::This)+"\" and \""+
 		  main_config->hostname(Am::That)+"\".");
 	syslog(LOG_INFO,"replication restored for mysql at %s",
 	       (const char *)main_config->
-	       address(Am::That,Config::PublicAddress).toString().
+	       address(Am::That,AMConfig::PublicAddress).toString().
 	       toAscii());
       }
       main_replication_test_state=true;
@@ -492,13 +493,13 @@ void MainObject::replicationTestCompleteData(bool success,int msecs)
       main_cmd_server->sendCommand(Am::StateCommand,StateUpdateArgs());
     }
     if(main_replication_test_state) {
-      if(main_monitor->dbState(Am::That)==State::StateSlave) {
+      if(main_monitor->dbState(Am::That)==AMState::StateSlave) {
 	SendAlert("Database replication has STOPPED between servers \""+
 		  main_config->hostname(Am::This)+"\" and \""+
 		  main_config->hostname(Am::That)+"\".");	  
 	syslog(LOG_WARNING,"replication failed for mysql at %s",
 	       (const char *)main_config->
-	       address(Am::That,Config::PublicAddress).toString().
+	       address(Am::That,AMConfig::PublicAddress).toString().
 	       toAscii());
       }
       main_replication_test_state=false;
@@ -571,7 +572,7 @@ bool MainObject::IsMysqlAccessible(int testval)
   QSqlQuery *q;
   bool ret=false;
 
-  if(!OpenMysql(Am::This,Config::PublicAddress)) {
+  if(!OpenMysql(Am::This,AMConfig::PublicAddress)) {
     return ret;
   }
   if(!main_ping_table_initialized) {
@@ -600,14 +601,14 @@ bool MainObject::StopSlaves()
 {
   QString sql;
   QSqlQuery *q;
-  Config::Address addr;
+  AMConfig::Address addr;
 
   //
   // Open Mysql
   //
-  addr=Config::PublicAddress;
+  addr=AMConfig::PublicAddress;
   if(!OpenMysql(Am::This,addr)) {
-    addr=Config::PublicAddress;
+    addr=AMConfig::PublicAddress;
     if(!OpenMysql(Am::This,addr)) {
       return false;
     }
@@ -637,7 +638,7 @@ QSqlDatabase MainObject::Db()
 }
 
 
-bool MainObject::OpenMysql(Am::Instance inst,Config::Address addr)
+bool MainObject::OpenMysql(Am::Instance inst,AMConfig::Address addr)
 {
   QSqlDatabase db=
     QSqlDatabase::addDatabase(main_config->globalMysqlDriver(),"main_db");
@@ -769,7 +770,7 @@ void MainObject::InitializePingTable()
 	     (const char *)main_config->pingTablename((Am::Instance)i).
 	     toAscii(),
 	     (const char *)main_config->address((Am::Instance)i,
-						Config::PublicAddress).
+						AMConfig::PublicAddress).
 	     toString().toAscii(),
 	     (const char *)q->lastError().text().toAscii());
     }
@@ -782,7 +783,7 @@ void MainObject::InitializePingTable()
 	     (const char *)main_config->pingTablename((Am::Instance)i).
 	     toAscii(),
 	     (const char *)main_config->address((Am::Instance)i,
-						Config::PublicAddress).
+						AMConfig::PublicAddress).
 	     toString().toAscii(),
 	     (const char *)q->lastError().text().toAscii());
     }
@@ -796,7 +797,7 @@ void MainObject::InitializePingTable()
 	     (const char *)main_config->pingTablename((Am::Instance)i).
 	     toAscii(),
 	     (const char *)main_config->address((Am::Instance)i,
-						Config::PublicAddress).
+						AMConfig::PublicAddress).
 	     toString().toAscii(),
 	     (const char *)q->lastError().text().toAscii());
     }

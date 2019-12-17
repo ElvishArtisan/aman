@@ -1,4 +1,4 @@
-// cmdswitch.cpp
+// amcmdswitch.cpp
 //
 // Process Command-Line Switches
 //
@@ -23,9 +23,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "cmdswitch.h"
+#include "amcmdswitch.h"
 
-CmdSwitch::CmdSwitch(int argc,char *argv[],const char *modname,
+AMCmdSwitch::AMCmdSwitch(int argc,char *argv[],const char *modname,
 			 const char *usage)
 {
   unsigned l=0;
@@ -78,37 +78,37 @@ CmdSwitch::CmdSwitch(int argc,char *argv[],const char *modname,
 }
 
 
-unsigned CmdSwitch::keys() const
+unsigned AMCmdSwitch::keys() const
 {
   return switch_keys.size();
 }
 
 
-QString CmdSwitch::key(unsigned n) const
+QString AMCmdSwitch::key(unsigned n) const
 {
   return switch_keys[n];
 }
 
 
-QString CmdSwitch::value(unsigned n) const
+QString AMCmdSwitch::value(unsigned n) const
 {
   return switch_values[n];
 }
 
 
-bool CmdSwitch::processed(unsigned n) const
+bool AMCmdSwitch::processed(unsigned n) const
 {
   return switch_processed[n];
 }
 
 
-void CmdSwitch::setProcessed(unsigned n,bool state)
+void AMCmdSwitch::setProcessed(unsigned n,bool state)
 {
   switch_processed[n]=state;
 }
 
 
-bool CmdSwitch::allProcessed() const
+bool AMCmdSwitch::allProcessed() const
 {
   for(unsigned i=0;i<switch_processed.size();i++) {
     if(!switch_processed[i]) {

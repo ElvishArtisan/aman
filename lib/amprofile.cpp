@@ -1,4 +1,4 @@
-// profileline.cpp
+// amprofile.cpp
 //
 // A container class for profile lines.
 //
@@ -22,64 +22,64 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QStringList>
 
-#include "profile.h"
+#include "amprofile.h"
 
-ProfileLine::ProfileLine()
+AMProfileLine::AMProfileLine()
 {
   clear();
 }
 
 
-QString ProfileLine::tag() const
+QString AMProfileLine::tag() const
 {
   return line_tag;
 }
 
 
-void ProfileLine::setTag(QString tag)
+void AMProfileLine::setTag(QString tag)
 {
   line_tag=tag;
 }
 
 
-QString ProfileLine::value() const
+QString AMProfileLine::value() const
 {
   return line_value;
 }
 
 
-void ProfileLine::setValue(QString value)
+void AMProfileLine::setValue(QString value)
 {
   line_value=value;
 }
 
 
-void ProfileLine::clear()
+void AMProfileLine::clear()
 {
   line_tag="";
   line_value="";
 }
 
 
-ProfileSection::ProfileSection()
+AMProfileSection::AMProfileSection()
 {
   clear();
 }
 
 
-QString ProfileSection::name() const
+QString AMProfileSection::name() const
 {
   return section_name;
 }
 
 
-void ProfileSection::setName(QString name)
+void AMProfileSection::setName(QString name)
 {
   section_name=name;
 }
 
 
-bool ProfileSection::getValue(QString tag,QString *value) const
+bool AMProfileSection::getValue(QString tag,QString *value) const
 {
   for(unsigned i=0;i<section_line.size();i++) {
     if(section_line[i].tag()==tag) {
@@ -91,40 +91,40 @@ bool ProfileSection::getValue(QString tag,QString *value) const
 }
 
 
-void ProfileSection::addValue(QString tag,QString value)
+void AMProfileSection::addValue(QString tag,QString value)
 {
-  section_line.push_back(ProfileLine());
+  section_line.push_back(AMProfileLine());
   section_line.back().setTag(tag);
   section_line.back().setValue(value);
 }
 
 
-void ProfileSection::clear()
+void AMProfileSection::clear()
 {
   section_name="";
   section_line.resize(0);
 }
 
 
-Profile::Profile()
+AMProfile::AMProfile()
 {
 }
 
 
-QString Profile::source() const
+QString AMProfile::source() const
 {
   return profile_source;
 }
 
 
-bool Profile::setSource(QString filename)
+bool AMProfile::setSource(QString filename)
 {
   QString section;
   int offset;
 
   profile_source=filename;
   profile_section.resize(0);
-  profile_section.push_back(ProfileSection());
+  profile_section.push_back(AMProfileSection());
   profile_section.back().setName("");
   QFile *file=new QFile(filename);
   if(!file->open(QIODevice::ReadOnly)) {
@@ -137,7 +137,7 @@ bool Profile::setSource(QString filename)
     if((line.left(1)!=";")&&(line.left(1)!="#")) {
       if((line.left(1)=="[")&&(line.right(1)=="]")) {
 	section=line.mid(1,line.length()-2);
-	profile_section.push_back(ProfileSection());
+	profile_section.push_back(AMProfileSection());
 	profile_section.back().setName(section);
       }
       else if(((offset=line.indexOf('='))!=-1)) {
@@ -155,19 +155,19 @@ bool Profile::setSource(QString filename)
 }
 
 
-bool Profile::setSource(std::vector<QString> *values)
+bool AMProfile::setSource(std::vector<QString> *values)
 {
   QString section;
   int offset;
 
   profile_section.resize(0);
-  profile_section.push_back(ProfileSection());
+  profile_section.push_back(AMProfileSection());
   profile_section.back().setName("");
   for(unsigned i=0;i<values->size();i++) {
     if((values->at(i).left(1)!=";")&&(values->at(i).left(1)!="#")) {
       if((values->at(i).left(1)=="[")&&(values->at(i).right(1)=="]")) {
 	section=values->at(i).mid(1,values->at(i).length()-2);
-	profile_section.push_back(ProfileSection());
+	profile_section.push_back(AMProfileSection());
 	profile_section.back().setName(section);
       }
       else if(((offset=values->at(i).indexOf('='))!=-1)) {
@@ -182,7 +182,7 @@ bool Profile::setSource(std::vector<QString> *values)
 }
 
 
-QString Profile::stringValue(QString section,QString tag,
+QString AMProfile::stringValue(QString section,QString tag,
 			      QString default_str,bool *ok) const
 {
   QString result;
@@ -208,7 +208,7 @@ QString Profile::stringValue(QString section,QString tag,
 }
 
 
-int Profile::intValue(QString section,QString tag,
+int AMProfile::intValue(QString section,QString tag,
 		       int default_value,bool *ok) const
 {
   bool valid;
@@ -227,7 +227,7 @@ int Profile::intValue(QString section,QString tag,
 }
 
 
-int Profile::hexValue(QString section,QString tag,
+int AMProfile::hexValue(QString section,QString tag,
 		       int default_value,bool *ok) const
 {
   bool valid;
@@ -246,7 +246,7 @@ int Profile::hexValue(QString section,QString tag,
 }
 
 
-float Profile::floatValue(QString section,QString tag,
+float AMProfile::floatValue(QString section,QString tag,
 			   float default_value,bool *ok) const
 {
   bool valid;
@@ -265,7 +265,7 @@ float Profile::floatValue(QString section,QString tag,
 }
 
 
-double Profile::doubleValue(QString section,QString tag,
+double AMProfile::doubleValue(QString section,QString tag,
 			    double default_value,bool *ok) const
 {
   bool valid;
@@ -284,7 +284,7 @@ double Profile::doubleValue(QString section,QString tag,
 }
 
 
-bool Profile::boolValue(QString section,QString tag,
+bool AMProfile::boolValue(QString section,QString tag,
 			 bool default_value,bool *ok) const
 {
   bool valid;
@@ -315,7 +315,7 @@ bool Profile::boolValue(QString section,QString tag,
 }
 
 
-QTime Profile::timeValue(QString section,QString tag,QTime default_value,
+QTime AMProfile::timeValue(QString section,QString tag,QTime default_value,
 			 bool *ok)
 {
   QStringList fields;
@@ -337,7 +337,7 @@ QTime Profile::timeValue(QString section,QString tag,QTime default_value,
 }
 
 
-void Profile::clear()
+void AMProfile::clear()
 {
   profile_source="";
   profile_section.resize(0);
