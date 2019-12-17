@@ -2,9 +2,7 @@
 //
 // A container class for an Aman Configuration
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: config.cpp,v 1.5 2013/07/09 15:22:28 cvs Exp $
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as

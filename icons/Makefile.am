@@ -2,9 +2,7 @@
 ##
 ## icons/automake.am for Aman
 ##
-## (C) Copyright 2012-2013 Fred Gleason <fredg@salemradiolabs.com>
-##
-##      $Id: Makefile.am,v 1.1 2013/06/17 19:14:24 cvs Exp $
+## (C) Copyright 2012-2019 Fred Gleason <fredg@salemradiolabs.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as

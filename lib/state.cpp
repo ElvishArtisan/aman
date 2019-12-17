@@ -2,9 +2,7 @@
 //
 // A container class for an Aman State
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: state.cpp,v 1.6 2013/11/19 00:14:40 cvs Exp $
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as

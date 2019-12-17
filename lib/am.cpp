@@ -2,9 +2,7 @@
 //
 // amand(8) System-Wide Defines.
 //
-//   (C) Copyright 2012 Fred Gleason <fredg@paravelsystems.com>
-//
-//      $Id: am.cpp,v 1.1 2012/12/12 18:02:22 cvs Exp $
+//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as

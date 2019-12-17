@@ -306,3 +306,5 @@
 	startup if local MySQL instance was not yet started.
 2018-02-16 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.18.
+2019-12-17 Fred Gleason <fredg@paravelsystems.com>
+	* Removed all CVS-style 'Id$' macros.

@@ -2,9 +2,7 @@
 ##
 ## conf/ automake.am for Aman
 ##
-## (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
-##
-##      $Id: Makefile.am,v 1.7 2013/07/02 21:27:28 cvs Exp $
+## (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
