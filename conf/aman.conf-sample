@@ -124,7 +124,7 @@ PingTablename=AMAN_SYSTEMA_PINGS
 ; The location of the ssh(1) private key to use when transferring
 ; DB snapshots to SystemB.
 ;
-SecureShellIdentity=/var/aman/keys/id_dsa
+SecureShellIdentity=/var/aman/keys/id_ed25519
 
 [SystemB]
 
@@ -173,4 +173,4 @@ PingTablename=AMAN_SYSTEMB_PINGS
 ; The location of the ssh(1) private key to use when transferring
 ; DB snapshots to SystemA.
 ;
-SecureShellIdentity=/var/aman/keys/id_dsa
+SecureShellIdentity=/var/aman/keys/id_ed25519

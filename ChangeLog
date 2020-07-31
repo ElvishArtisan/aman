@@ -311,3 +311,5 @@
 2019-12-17 Fred Gleason <fredg@paravelsystems.com>
 	* Renamed all classes in the convenience library to begin with
 	'AM'.
+2020-07-31 Fred Gleason <fredg@paravelsystems.com>
+	* Updated the example configuration to use ed25519 keys for ssh(1).

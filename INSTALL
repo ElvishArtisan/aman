@@ -57,16 +57,16 @@ will need to be performed on each server.
 1) Generate ssh(1) keys.
 From a root shell, do:
 
-     ssh-keygen -t dsa -f /var/aman/keys/id_dsa
+     ssh-keygen -t ed25519 -f /var/aman/keys/id_ed25519
 
 Leave the passphrase blank.  After the command completes, copy the file
-'/var/aman/keys/id_dsa.pub' to the '/root/.ssh/authorized_keys' file
+'/var/aman/keys/id_ed25519.pub' to the '/root/.ssh/authorized_keys' file
 on the other server.
 
 2) Populate the host key.
 From a root shell, test that you can access the remote system by doing:
 
-     ssh -i /var/aman/keys/id_dsa <rmt-server-ip>
+     ssh -i /var/aman/keys/id_ed25519 <rmt-server-ip>
 
 You may be prompted to confirm the remote system's identity with a message like:
 
