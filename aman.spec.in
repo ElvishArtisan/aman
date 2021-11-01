@@ -1,7 +1,7 @@
 ## aman.spec.in
 ##
 ##    The Aman Rivendell Server Manager
-##    Copyright (C) 2012-2013,2017  Fred Gleason <fredg@paravelsystems.com>
+##    Copyright (C) 2012-2021  Fred Gleason <fredg@paravelsystems.com>
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of version 2 of the GNU General Public License as
@@ -26,7 +26,7 @@ License: GPL
 Packager: Fred Gleason <fredg@paravelsystems.com>
 Group: Productivity/Multimedia/Other
 Source: %{name}-@VERSION@.tar.gz
-Requires: @MYSQL_PKG@ @QT4_MYSQL_PKG@ @XINETD_PKG@ rsync perl-TermReadKey perl-DBD-MySQL bzip2
+Requires: @MYSQL_PKG@ @QT5_MYSQL_PKG@ @XINETD_PKG@ rsync perl-TermReadKey perl-DBD-MySQL bzip2
 BuildRoot: /var/tmp/%{name}-@VERSION@
 
 %description
@@ -70,14 +70,9 @@ fi
 if test ! -e /etc/rsyncd.conf ; then
   cp $PACKAGE_DOC_DIR/rsyncd.conf-sample /etc/rsyncd.conf
 fi
-/etc/init.d/amand restart
-if test "@DISTRO@" = "suse" ; then
-  insserv -d -f /etc/init.d/amand
-fi
-if test "@DISTRO@" = "redhat" ; then
-  chkconfig --add amand
-  chkconfig --levels 235 amand on
-fi
+/bin/systemctl daemon-reload
+/bin/systemctl enable aman
+/bin/systemctl start aman
 if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
 fi
@@ -85,19 +80,14 @@ exit 0
 
 %preun
 if test "$1" = "0" ; then
-  /etc/init.d/amand stop
-  if test "@DISTRO@" = "suse" ; then
-    insserv -r -d -f /etc/init.d/amand
-  fi
-  if test "@DISTRO@" = "redhat" ; then
-    chkconfig --levels 2345 amand off
-    chkconfig --del amand
-  fi
+  /bin/systemctl stop aman
+  /bin/systemctl disable aman
 fi
 exit 0
 
 
 %postun
+/bin/systemctl daemon-reload
 if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
 fi
@@ -117,7 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/aman_add_replication_users.pl
 %{_sbindir}/amanctl
 %{_sbindir}/amand
-/etc/init.d/amand
+/usr/lib/systemd/system/aman.service
 /etc/pam.d/aman-root
 /etc/security/console.apps/aman-root
 /etc/security/limits.d/aman-mysql-limits.conf
@@ -146,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/mysql_states.gxd
 
 %changelog
+* Mon Nov  1 2021 Fred Gleason <fredg@paravelsystems.com>
+-- Converted to use Qt5.
+-- Converted startup system to Systemd.
 * Fri Jul 21 2017 Fred Gleason <fredg@paravelsystems.com>
 -- Added a 'bzip2' dependency.
 * Thu Jun 29 2017 Fred Gleason <fredg@paravelsystems.com>

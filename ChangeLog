@@ -315,3 +315,4 @@
 	* Updated the example configuration to use ed25519 keys for ssh(1).
 2021-11-01 Fred Gleason <fredg@paravelsystems.com>
 	* Ported package to Qt5.
+	* Changed the startup system to Systemd.

@@ -4,7 +4,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 ##
-##   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+##   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -31,6 +31,7 @@ SUBDIRS = lib\
           conf\
           $(DOCBOOK_AM_OPT) icons\
           scripts\
+          systemd\
           tests\
           xdg
 
@@ -38,13 +39,6 @@ ACLOCAL_AMFLAGS = -I m4
 
 maintainer-clean-local:	
 	rm -rf m4
-
-install-exec-local:	
-	mkdir -p $(DESTDIR)/etc/init.d
-	cp rc.amand $(DESTDIR)/etc/init.d/amand
-
-uninstall-local:
-	rm -f $(DESTDIR)/etc/init.d/amand
 
 rpm:	dist
 	cp aman-$(VERSION).tar.gz $(HOME)/rpmbuild/SOURCES/
@@ -58,8 +52,7 @@ EXTRA_DIST = aman.spec.in\
              autogen.sh\
              get_distro.sh\
              get_target.sh\
-             PACKAGE_VERSION\
-             rc.amand.in
+             PACKAGE_VERSION
 
 CLEANFILES = *~\
              *.deb\
@@ -72,8 +65,7 @@ CLEANFILES = *~\
 DISTCLEANFILES = aman.spec\
                  config.guess\
                  config.sub\
-                 ltmain.sh\
-                 rc.aman
+                 ltmain.sh
 
 MAINTAINERCLEANFILES = *~\
                        *.tar.gz\

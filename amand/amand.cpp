@@ -643,7 +643,8 @@ bool MainObject::OpenMysql(Am::Instance inst,AMConfig::Address addr)
   db.setPassword(main_config->mysqlPassword(inst));
   db.setHostName(main_config->address(inst,addr).toString());
   if(!db.open()) {
-    syslog(LOG_ERR,"cannot connect to mysql at %s [%s]",
+    syslog(LOG_ERR,"[2] cannot connect to mysql at %s:%s [%s]",
+	   main_config->mysqlUsername(inst).toUtf8().constData(),
 	   main_config->address(inst,addr).toString().toUtf8().constData(),
 	   db.lastError().text().toUtf8().constData());
     return false;

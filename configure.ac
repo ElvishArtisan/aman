@@ -162,7 +162,6 @@ else
 fi 
 
 AC_CONFIG_FILES([aman.spec \
-    rc.amand
     aman/Makefile \
     amanctl/Makefile \
     amand/Makefile \
@@ -171,11 +170,11 @@ AC_CONFIG_FILES([aman.spec \
     icons/Makefile \
     lib/Makefile \
     scripts/Makefile \
+    systemd/Makefile \
     tests/Makefile \
     xdg/Makefile \
     Makefile ])
 AC_OUTPUT()
-chmod 755 rc.amand
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE(Now enter 'make' to build the software.)

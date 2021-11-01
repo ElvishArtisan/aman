@@ -1,0 +1,16 @@
+[Unit]
+Description=Aman Server Monitor
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+LimitNOFILE=4096
+Type=simple
+ExecStart=/usr/sbin/amand -d
+PrivateTmp=true
+Restart=always
+RestartSec=2
+StartLimitInterval=120
+StartLimitBurst=50
+
+[Install]
+WantedBy=multi-user.target

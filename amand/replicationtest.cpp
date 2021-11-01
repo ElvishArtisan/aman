@@ -75,8 +75,10 @@ bool ReplicationTest::startTest(int val)
   db.setPassword(repl_config->mysqlPassword(Am::That));
   db.setHostName(repl_config->address(Am::That,repl_addr).toString());
   if(!db.open()) {
-    syslog(LOG_ERR,"cannot connect to mysql at %s [%s]",
-	   repl_config->address(Am::That,repl_addr).toString().toUtf8().constData(),
+    syslog(LOG_ERR,"1 - cannot connect to mysql at %s:%s [%s]",
+	   repl_config->mysqlUsername(Am::That).toUtf8().constData(),
+	   repl_config->address(Am::That,repl_addr).toString().
+	   toUtf8().constData(),
 	   db.lastError().text().toUtf8().constData());
     emit testComplete(false,0);
     return true;
