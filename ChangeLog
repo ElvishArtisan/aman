@@ -313,3 +313,5 @@
 	'AM'.
 2020-07-31 Fred Gleason <fredg@paravelsystems.com>
 	* Updated the example configuration to use ed25519 keys for ssh(1).
+2021-11-01 Fred Gleason <fredg@paravelsystems.com>
+	* Ported package to Qt5.

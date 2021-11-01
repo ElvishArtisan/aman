@@ -72,7 +72,7 @@ void StreamCmdServer::sendCommand(int id,int cmd,const QStringList &args)
     str+=QString(" ")+args[i];
   }
   str+="!";
-  cmd_sockets[id]->write(str.toAscii(),str.length());
+  cmd_sockets[id]->write(str.toUtf8());
 }
 
 

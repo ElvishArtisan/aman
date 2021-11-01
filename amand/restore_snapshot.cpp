@@ -2,7 +2,7 @@
 //
 // Restore a MySQL Snapshot
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -116,10 +116,10 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
 	   main_config->globalMysqlDatabase());
   QStringList files=dir.entryList();
   for(int i=0;i<files.size();i++) {
-    unlink(files[i].toAscii());
+    unlink(files[i].toUtf8());
   }
   rmdir((main_config->mysqlDataDirectory(Am::This)+"/"+
-	 main_config->globalMysqlDatabase()).toAscii());
+	 main_config->globalMysqlDatabase()).toUtf8());
   
   //
   // Install New Database
@@ -193,9 +193,8 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   q=new QSqlQuery(sql,Db());
   if(!q->isActive()) {
     syslog(LOG_ERR,"cannot configure replication source in mysql at %s [%s]",
-	   (const char *)main_config->address(Am::This,addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     CloseMysql();
     return false;
@@ -205,9 +204,8 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   q=new QSqlQuery(sql,Db());
   if(!q->isActive()) {
     syslog(LOG_ERR,"starting replication slave failed in mysql at %s [%s]",
-	   (const char *)main_config->address(Am::This,addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     CloseMysql();
     return false;
@@ -229,9 +227,9 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   // Clean Up
   //
-  unlink((tempdir+"/sql.tar").toAscii());
-  unlink((tempdir+"/metadata.ini").toAscii());
-  rmdir(tempdir.toAscii());
+  unlink((tempdir+"/sql.tar").toUtf8());
+  unlink((tempdir+"/metadata.ini").toUtf8());
+  rmdir(tempdir.toUtf8());
   delete p;
 
   return true;

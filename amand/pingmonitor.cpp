@@ -98,16 +98,16 @@ bool PingMonitor::start()
      bind(ping_config->address(Am::This,AMConfig::PublicAddress),
 	  AM_PING_UDP_PORT)) {
     syslog(LOG_ERR,"unable to bind %s:%d",
-	   (const char *)ping_config->address(Am::This,AMConfig::PublicAddress).
-	   toString().toAscii(),AM_PING_UDP_PORT);
+	   ping_config->address(Am::This,AMConfig::PublicAddress).
+	   toString().toUtf8().constData(),AM_PING_UDP_PORT);
     ret=false;
   }
   if(!ping_sockets[1]->
      bind(ping_config->address(Am::This,AMConfig::PrivateAddress),
 	  AM_PING_UDP_PORT)) {
     syslog(LOG_ERR,"unable to bind %s:%d",
-	   (const char *)ping_config->address(Am::This,AMConfig::PrivateAddress).
-	   toString().toAscii(),AM_PING_UDP_PORT);
+	   ping_config->address(Am::This,AMConfig::PrivateAddress).
+	   toString().toUtf8().constData(),AM_PING_UDP_PORT);
     ret=false;
   }
 
@@ -290,14 +290,15 @@ void PingMonitor::socketSendData()
 				ping_mysql_running[Am::This],
 				ping_mysql_accessible[Am::This],
 				ping_db_state[Am::This],
-				(const char *)snapshot.toAscii(),
+				snapshot.toUtf8().constData(),
 				ping_mysql_replication_time[Am::This],
 				ping_audio_state[Am::This],
 				ping_audio_status[Am::This]);
   for(int i=0;i<AMConfig::LastAddress;i++) {
-    ping_sockets[i]->writeDatagram(cmd.toAscii(),cmd.length(),
-			   ping_config->address(Am::That,(AMConfig::Address)i),
-				   AM_PING_UDP_PORT);
+    ping_sockets[i]->
+      writeDatagram(cmd.toUtf8(),
+		    ping_config->address(Am::That,(AMConfig::Address)i),
+		    AM_PING_UDP_PORT);
   }
 }
 

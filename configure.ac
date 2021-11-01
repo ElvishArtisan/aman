@@ -4,7 +4,7 @@ dnl Autoconf configuration for Aman.
 dnl
 dnl Use autoconf to process this into a configure script
 dnl
-dnl   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+dnl   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
 dnl
 dnl   This program is free software; you can redistribute it and/or modify
 dnl   it under the terms of the GNU General Public License version 2 as
@@ -60,10 +60,16 @@ AC_ARG_ENABLE(docbook,[  --disable-docbook       disable building of documentati
 #
 # Check for Qt
 #
-PKG_CHECK_MODULES(QT4_GUI,QtGui QtCore QtNetwork,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
-PKG_CHECK_MODULES(QT4_CLI,QtCore QtNetwork QtSql,[],[AC_MSG_ERROR([*** Qt4 not found ***])])
-AC_CHECK_PROG(MOC_NAME,moc-qt4,[moc-qt4],[moc])
-AC_SUBST(MOC,$MOC_NAME)
+PKG_CHECK_MODULES(QT5_GUI,Qt5Core Qt5Widgets Qt5Gui Qt5Network,,[AC_MSG_ERROR([*** Qt5 not found ***])])
+PKG_CHECK_MODULES(QT5_CLI,Qt5Core Qt5Network Qt5Sql,,[AC_MSG_ERROR([*** Qt5 not found ***])])
+AC_CHECK_PROG(MOC_NAME,moc-qt5,[moc-qt5],[moc])
+AC_SUBST(QT_MOC,$MOC_NAME)
+
+AC_CHECK_PROG(LUPDATE_NAME,lupdate-qt5,[lupdate-qt5],[lupdate])
+AC_SUBST(QT_LUPDATE,$LUPDATE_NAME)
+
+AC_CHECK_PROG(LRELEASE_NAME,lrelease-qt5,[lrelease-qt5],[lrelease])
+AC_SUBST(QT_LRELEASE,$LRELEASE_NAME)
 
 #
 # Build DocBook Items?
@@ -86,12 +92,12 @@ AC_SUBST(ARCH,$ar_gcc_arch)
 AR_GET_DISTRO()
 AC_SUBST(DISTRO,$ar_gcc_distro)
 if test $ar_gcc_distro = suse ; then
-  AC_SUBST(QT4_MYSQL_PKG,"libqt4-sql-mysql")
+  AC_SUBST(QT5_MYSQL_PKG,"libqt4-sql-mysql")
   AC_SUBST(MYSQL_PKG,"mysql")
   AC_SUBST(DIST_VER,"")
   AC_SUBST(DEBUG_RPM,"no")
 else
-  AC_SUBST(QT4_MYSQL_PKG,"qt4-mysql")
+  AC_SUBST(QT_MYSQL_PKG,"qt5-qtbase-mysql")
   DISTRO_MAJOR_VER=`echo $ar_distro_version | awk 'split($1,fields,".") {print fields[[1]]}'`
   if test $DISTRO_MAJOR_VER -eq 6 ; then
     AC_SUBST(MYSQL_PKG,"mysql-server")

@@ -1,8 +1,8 @@
 // amcmdswitch.cpp
 //
-// Process Command-Line Switches
+// Process Rivendell Command-Line Switches
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2002-2021 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -18,63 +18,110 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#include <syslog.h>
-
-#include <stdlib.h>
 #include <stdio.h>
+#include <syslog.h>
+#include <stdlib.h>
+
+#include <QCoreApplication>
+//#include <QMessageBox>
+//#include <QStyleFactory>
 
 #include "amcmdswitch.h"
 
-AMCmdSwitch::AMCmdSwitch(int argc,char *argv[],const char *modname,
-			 const char *usage)
+AMCmdSwitch::AMCmdSwitch(const QString &modname,const QString &usage)
 {
-  unsigned l=0;
-  bool handled=false;
-  bool debug=false;
+  switch_debug=false;
 
-  for(int i=1;i<argc;i++) {
-#ifndef WIN32
-    if(!strcmp(argv[i],"--version")) {
-      printf("Aman v%s [%s]\n",VERSION,modname);
+  QStringList args=qApp->arguments();
+
+  for(int i=1;i<args.size();i++) {
+    QString value=args.at(i);
+    if(value=="--version") {
+      printf("Rivendell v%s [%s]\n",VERSION,modname.toUtf8().constData());
       exit(0);
     }
-#endif  // WIN32
-    if(!strcmp(argv[i],"--help")) {
-      printf("\n%s %s\n",modname,usage);
+    if(value=="--help") {
+      printf("\n%s %s\n",modname.toUtf8().constData(),
+	     usage.toUtf8().constData());
       exit(0);
     }
-    if(!strcmp(argv[i],"-d")) {
-      debug=true;
+    if(value=="-d") {
+      switch_debug=true;
     }
-    l=strlen(argv[i]);
-    handled=false;
-    for(unsigned j=0;j<l;j++) {
-      if(argv[i][j]=='=') {
-	switch_keys.push_back(QString(argv[i]).left(j));
-	switch_values.push_back(QString(argv[i]).right(l-(j+1)));
-	switch_processed.push_back(false);
-	j=l;
-	handled=true;
+    QStringList f0=value.split("=",QString::KeepEmptyParts);
+    if(f0.size()>=2) {
+      if(f0.at(0).left(1)=="-") {
+	switch_keys.push_back(f0.at(0));
+	for(int i=2;i<f0.size();i++) {
+	  f0[1]+="="+f0.at(i);
+	}
+	if(f0.at(1).isEmpty()) {
+	  switch_values.push_back("");
+	}
+	else {
+	  switch_values.push_back(f0.at(1));
+	}
       }
+      else {
+	switch_keys.push_back(f0.join("="));
+	switch_values.push_back("");
+      }
+      switch_processed.push_back(false);
     }
-    if(!handled) {
-      switch_keys.push_back(QString(argv[i]));
-      switch_values.push_back(QString(""));
+    else {
+      switch_keys.push_back(value);
+      switch_values.push_back("");
       switch_processed.push_back(false);
     }
   }
+}
 
-  //
-  // Initialize Logging
-  //
-#ifndef WIN32
-  if(debug) {
-    openlog(modname,LOG_PERROR,LOG_USER);
+
+AMCmdSwitch::AMCmdSwitch(int argc,char *argv[],const QString &modname,
+			 const QString &usage)
+{
+  switch_debug=false;
+
+  for(int i=1;i<argc;i++) {
+    QString value=QString::fromUtf8(argv[i]);
+    if(value=="--version") {
+      printf("Rivendell v%s [%s]\n",VERSION,modname.toUtf8().constData());
+      exit(0);
+    }
+    if(value=="--help") {
+      printf("\n%s %s\n",modname.toUtf8().constData(),
+	     usage.toUtf8().constData());
+      exit(0);
+    }
+    if(value=="-d") {
+      switch_debug=true;
+    }
+    QStringList f0=value.split("=",QString::KeepEmptyParts);
+    if(f0.size()>=2) {
+      if(f0.at(0).left(1)=="-") {
+	switch_keys.push_back(f0.at(0));
+	for(int i=2;i<f0.size();i++) {
+	  f0[1]+="="+f0.at(i);
+	}
+	if(f0.at(1).isEmpty()) {
+	  switch_values.push_back("");
+	}
+	else {
+	  switch_values.push_back(f0.at(1));
+	}
+      }
+      else {
+	switch_keys.push_back(f0.join("="));
+	switch_values.push_back("");
+      }
+      switch_processed.push_back(false);
+    }
+    else {
+      switch_keys.push_back(value);
+      switch_values.push_back("");
+      switch_processed.push_back(false);
+    }
   }
-  else {
-    openlog(modname,0,LOG_USER);
-  }
-#endif  // WIN32
 }
 
 
@@ -116,4 +163,10 @@ bool AMCmdSwitch::allProcessed() const
     }
   }
   return true;
+}
+
+
+bool AMCmdSwitch::debugActive() const
+{
+  return switch_debug;
 }

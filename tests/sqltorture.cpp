@@ -2,7 +2,7 @@
 //
 // Stree-test a MySQL server with write quiries.
 //
-//   (C) Copyright 2017-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2017-2021 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -22,9 +22,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include <QCoreApplication>
+#include <QSqlError>
+#include <QSqlQuery>
 
 #include <amcmdswitch.h>
 
@@ -55,8 +55,7 @@ MainObject::MainObject(QObject *parent)
   //
   // Read Command Options
   //
-  AMCmdSwitch *cmd=
-    new AMCmdSwitch(qApp->argc(),qApp->argv(),"sqltorture",SQLTORTURE_USAGE);
+  AMCmdSwitch *cmd=new AMCmdSwitch("sqltorture",SQLTORTURE_USAGE);
   for(unsigned i=0;i<cmd->keys();i++) {
     if(cmd->key(i)=="--mysql-hostname") {
       mysql_hostname=cmd->value(i);

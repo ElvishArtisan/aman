@@ -64,8 +64,7 @@ MainObject::MainObject(QObject *parent)
   //
   // Read Command Options
   //
-  AMCmdSwitch *cmd=
-    new AMCmdSwitch(qApp->argc(),qApp->argv(),"amand",AMAND_USAGE);
+  AMCmdSwitch *cmd=new AMCmdSwitch("amand",AMAND_USAGE);
   for(unsigned i=0;i<cmd->keys();i++) {
     if(cmd->key(i)=="-d") {
       debug=true;
@@ -128,7 +127,7 @@ MainObject::MainObject(QObject *parent)
   //
   if(!QFile::exists(main_config->secureShellIdentity(Am::This))) {
     syslog(LOG_ERR,"ssh(1) identity file \"%s\" not found",
-	   (const char *)main_config->secureShellIdentity(Am::This).toAscii());
+	   main_config->secureShellIdentity(Am::This).toUtf8().constData());
     exit(256);
   }
 
@@ -339,7 +338,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       SendAlert("Database Replication State changed to MASTER on server \""+
 		main_config->hostname(Am::This)+"\".");
       syslog(LOG_INFO,"DB state changed to MASTER, yielding snapshot \"%s\"",
-	     (const char *)filename.toUtf8());
+	     filename.toUtf8().constData());
     }
     else {
       outargs.push_back("-");
@@ -357,7 +356,7 @@ void MainObject::commandReceivedData(int id,int cmd,const QStringList &args)
       SendAlert("Database Replication State changed to SLAVE on server \""+
 		main_config->hostname(Am::This)+"\".");
       syslog(LOG_INFO,"DB state changed to SLAVE using snapshot \"%s\"",
-	     (const char *)main_state->currentSnapshot(Am::That).toUtf8());
+	     main_state->currentSnapshot(Am::That).toUtf8().constData());
     }
     else {
       outargs.push_back("-");
@@ -480,9 +479,8 @@ void MainObject::replicationTestCompleteData(bool success,int msecs)
 		  main_config->hostname(Am::This)+"\" and \""+
 		  main_config->hostname(Am::That)+"\".");
 	syslog(LOG_INFO,"replication restored for mysql at %s",
-	       (const char *)main_config->
-	       address(Am::That,AMConfig::PublicAddress).toString().
-	       toAscii());
+	       main_config->address(Am::That,AMConfig::PublicAddress).
+	       toString().toUtf8().constData());
       }
       main_replication_test_state=true;
     }
@@ -498,9 +496,8 @@ void MainObject::replicationTestCompleteData(bool success,int msecs)
 		  main_config->hostname(Am::This)+"\" and \""+
 		  main_config->hostname(Am::That)+"\".");	  
 	syslog(LOG_WARNING,"replication failed for mysql at %s",
-	       (const char *)main_config->
-	       address(Am::That,AMConfig::PublicAddress).toString().
-	       toAscii());
+	       main_config->address(Am::That,AMConfig::PublicAddress).
+	       toString().toUtf8().constData());
       }
       main_replication_test_state=false;
     }
@@ -618,9 +615,8 @@ bool MainObject::StopSlaves()
   q=new QSqlQuery(sql,Db());
   if(!q->isActive()) {
     syslog(LOG_ERR,"cannot stop slave process in mysql at %s [%s]",
-	   (const char *)main_config->address(Am::This,addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     CloseMysql();
     return false;
@@ -648,8 +644,8 @@ bool MainObject::OpenMysql(Am::Instance inst,AMConfig::Address addr)
   db.setHostName(main_config->address(inst,addr).toString());
   if(!db.open()) {
     syslog(LOG_ERR,"cannot connect to mysql at %s [%s]",
-	   (const char *)main_config->address(inst,addr).toString().toAscii(),
-	   (const char *)db.lastError().text().toAscii());
+	   main_config->address(inst,addr).toString().toUtf8().constData(),
+	   db.lastError().text().toUtf8().constData());
     return false;
   }
   return true;
@@ -677,10 +673,10 @@ bool MainObject::PushFile(const QString &srcfile,const QString &desthost,
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
     syslog(LOG_ERR,"file push \"%s\" to \"%s:%s\" failed [%s]",
-	   (const char *)srcfile.toAscii(),
-	   (const char *)desthost.toAscii(),
-	   (const char *)destfile.toAscii(),
-	   (const char *)proc->readAllStandardError());    
+	   srcfile.toUtf8().constData(),
+	   desthost.toUtf8().constData(),
+	   destfile.toUtf8().constData(),
+	   proc->readAllStandardError().constData());    
     ret=false;
   }
   delete proc;
@@ -745,14 +741,14 @@ void MainObject::SendAlert(const QString &msg)
   p->start("sendmail",args);
   if(!p->waitForStarted()) {
     syslog(LOG_WARNING,"unable to send mail to \"%s\"",
-	   (const char *)main_config->globalAlertAddress().toAscii());
+	   main_config->globalAlertAddress().toUtf8().constData());
     delete p;
     return;
   }
   p->write(text.toUtf8());
   if(!p->waitForFinished()) {
     syslog(LOG_WARNING,"unable to send mail to \"%s\"",
-	   (const char *)main_config->globalAlertAddress().toAscii());
+	   main_config->globalAlertAddress().toUtf8().constData());
   }
 
   delete p;
@@ -767,12 +763,10 @@ void MainObject::InitializePingTable()
     QSqlQuery *q=new QSqlQuery(sql,Db());
     if(!q->isActive()) {
       syslog(LOG_ERR,"unable to create MySQL table %s at %s [%s]",
-	     (const char *)main_config->pingTablename((Am::Instance)i).
-	     toAscii(),
-	     (const char *)main_config->address((Am::Instance)i,
-						AMConfig::PublicAddress).
-	     toString().toAscii(),
-	     (const char *)q->lastError().text().toAscii());
+	     main_config->pingTablename((Am::Instance)i).toUtf8().constData(),
+	     main_config->address((Am::Instance)i,AMConfig::PublicAddress).
+	     toString().toUtf8().constData(),
+	     q->lastError().text().toUtf8().constData());
     }
     delete q;
     
@@ -780,12 +774,10 @@ void MainObject::InitializePingTable()
     q=new QSqlQuery(sql,Db());
     if(!q->isActive()) {
       syslog(LOG_ERR,"unable to delete from MySQL table %s at %s [%s]",
-	     (const char *)main_config->pingTablename((Am::Instance)i).
-	     toAscii(),
-	     (const char *)main_config->address((Am::Instance)i,
-						AMConfig::PublicAddress).
-	     toString().toAscii(),
-	     (const char *)q->lastError().text().toAscii());
+	     main_config->pingTablename((Am::Instance)i).toUtf8().constData(),
+	     main_config->address((Am::Instance)i,AMConfig::PublicAddress).
+	     toString().toUtf8().constData(),
+	     q->lastError().text().toUtf8().constData());
     }
     delete q;
 
@@ -794,12 +786,10 @@ void MainObject::InitializePingTable()
     q=new QSqlQuery(sql,Db());
     if(!q->isActive()) {
       syslog(LOG_ERR,"unable to insert into MySQL table %s at %s [%s]",
-	     (const char *)main_config->pingTablename((Am::Instance)i).
-	     toAscii(),
-	     (const char *)main_config->address((Am::Instance)i,
-						AMConfig::PublicAddress).
-	     toString().toAscii(),
-	     (const char *)q->lastError().text().toAscii());
+	     main_config->pingTablename((Am::Instance)i).toUtf8().constData(),
+	     main_config->address((Am::Instance)i,AMConfig::PublicAddress).
+	     toString().toUtf8().constData(),
+	     q->lastError().text().toUtf8().constData());
     }
     delete q;
   }

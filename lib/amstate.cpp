@@ -2,7 +2,7 @@
 //
 // A container class for an Aman State
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -92,7 +92,7 @@ void AMState::purgeSnapshots()
        (files[i]!=current_snapshot[Am::That])) {
       dir->remove(files[i]);
       syslog(LOG_INFO,"purged snapshot \"%s\"",
-	     (const char *)files[i].toAscii());
+	     files[i].toUtf8().constData());
     }
   }
 
@@ -169,9 +169,9 @@ void AMState::WriteState() const
   fprintf(f,"Database=%d\n",db_state);
   fprintf(f,"Audio=%d\n",audio_state);
   fprintf(f,"ThisCurrentSnapshot=%s\n",
-	  (const char *)current_snapshot[Am::This].toAscii());
+	  current_snapshot[Am::This].toUtf8().constData());
   fprintf(f,"ThatCurrentSnapshot=%s\n",
-	  (const char *)current_snapshot[Am::That].toAscii());
+	  current_snapshot[Am::That].toUtf8().constData());
   fclose(f);
 
   if(rename(AM_TEMP_STATE_FILE,AM_STATE_FILE)!=0) {

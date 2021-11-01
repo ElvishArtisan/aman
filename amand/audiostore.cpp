@@ -85,7 +85,7 @@ void MainObject::rsyncErrorData(QProcess::ProcessError err)
   case QProcess::UnknownError:
     break;
   }
-  syslog(LOG_WARNING,str.toAscii());
+  syslog(LOG_WARNING,str.toUtf8());
 }
 
 void MainObject::startAudioCopy()

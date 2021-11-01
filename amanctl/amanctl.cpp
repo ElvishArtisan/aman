@@ -34,8 +34,7 @@ MainObject::MainObject(QObject *parent)
   ctl_command="GET_STATE";
   ctl_system=-1;
 
-  AMCmdSwitch *cmd=
-    new AMCmdSwitch(qApp->argc(),qApp->argv(),"amanctl",AMANCTL_USAGE);
+  AMCmdSwitch *cmd=new AMCmdSwitch("amanctl",AMANCTL_USAGE);
   for(unsigned i=0;i<cmd->keys();i++) {
     if(cmd->key(i)=="--command") {
       if((cmd->value(i).toUpper()!="GET_STATE")&&

@@ -48,8 +48,7 @@ void MainObject::ScheduleAutoRotation()
     }
     main_auto_rotate_timer->start(msecs);
     syslog(LOG_DEBUG,"next auto rotation scheduled for %s",
-	   (const char *)now.addSecs(msecs/1000).
-	   toString("hh:mm:ss").toAscii());
+	   now.addSecs(msecs/1000).toString("hh:mm:ss").toUtf8().constData());
   }
 }
 

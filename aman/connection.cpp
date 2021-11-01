@@ -219,7 +219,7 @@ void Connection::generateSnapshot()
 void Connection::loadSnapshot(const QString &name)
 {
   QString msg="LS "+name+"!";
-  conn_socket->write(msg.toAscii());
+  conn_socket->write(msg.toUtf8());
 }
 
 
@@ -347,6 +347,6 @@ void Connection::ProcessMessage()
   }
   /*
   fprintf(stderr,"unknown/malformated control message received [%s]\n",
-	  (const char *)conn_buffer.toAscii());
+	  conn_buffer.toUtf8().constData());
   */
 }

@@ -2,7 +2,7 @@
 //
 // Set MySQL Replication Metadata
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -64,9 +64,8 @@ bool MainObject::SetMysqlMetadata(const QString &binlog_name,int binlog_pos)
   q=new QSqlQuery(sql,Db());
   if(!q->isActive()) {
     syslog(LOG_ERR,"cannot configure replication source in mysql at %s [%s]",
-	   (const char *)main_config->address(Am::This,addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     CloseMysql();
     return false;

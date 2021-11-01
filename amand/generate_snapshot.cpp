@@ -2,7 +2,7 @@
 //
 // Generate a MySQL Snapshot
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -63,9 +63,8 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   q=new QSqlQuery(sql,Db());
   if(!q->isActive()) {
     syslog(LOG_ERR,"cannot flush logs in mysql at %s [%s]",
-	   (const char *)main_config->address(Am::This,addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     CloseMysql();
     return false;
@@ -80,9 +79,8 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   q=new QSqlQuery(sql,Db());
   if(!q->isActive()) {
     syslog(LOG_ERR,"cannot lock tables in mysql at %s [%s]",
-	   (const char *)main_config->address(Am::This,addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     CloseMysql();
     return false;
@@ -104,7 +102,7 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   if(proc->exitCode()!=0) {
     syslog(LOG_ERR,"mysql snapshot copy failed [%s]",
 	   (const char *)proc->readAllStandardError());
-    unlink(filename.toAscii());
+    unlink(filename.toUtf8());
     ret=false;
   }
   delete proc;
@@ -116,9 +114,8 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   q=new QSqlQuery(sql,Db());
   if(!q->first()) {
     syslog(LOG_ERR,"unable to get master status in mysql at %s [%s]",
-	   (const char *)main_config->address(Am::This,addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     sql="unlock tables";
     q=new QSqlQuery(sql,Db());
@@ -126,9 +123,9 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
     CloseMysql();
     return false;
   }
-  if((f=fopen((tempdir+"/metadata.ini").toAscii(),"w"))==NULL) {
+  if((f=fopen((tempdir+"/metadata.ini").toUtf8(),"w"))==NULL) {
     syslog(LOG_ERR,"unable to create temporary file at %s",
-	   (const char *)(tempdir+"/metadata.ini").toAscii());
+	   (tempdir+"/metadata.ini").toUtf8().constData());
     sql="unlock tables";
     q=new QSqlQuery(sql,Db());
     delete q;
@@ -137,9 +134,9 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   }
   fprintf(f,"[Master]\n");
   fprintf(f,"MysqlDbname=%s\n",
-	  (const char *)main_config->globalMysqlDatabase().toAscii());
+	  main_config->globalMysqlDatabase().toUtf8().constData());
   fprintf(f,"BinlogFilename=%s\n",
-	  (const char *)q->value(0).toString().toAscii());
+	  q->value(0).toString().toUtf8().constData());
   fprintf(f,"BinlogPosition=%u\n",q->value(1).toUInt());
   fclose(f);
   delete q;
@@ -168,14 +165,14 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
     syslog(LOG_ERR,"mysql snapshot archive creation failed [%s]",
-	   (const char *)proc->readAllStandardError());
-    unlink(filename.toAscii());
+	   proc->readAllStandardError().constData());
+    unlink(filename.toUtf8());
     ret=false;
   }
   delete proc;
   syslog(LOG_INFO,
 	 "generated MySQL snapshot in \"%s\", db was locked for %6.2lf sec",
-	 (const char *)filename.toAscii(),(double)start.msecsTo(finish)/1000.0);
+	 filename.toUtf8().constData(),(double)start.msecsTo(finish)/1000.0);
 
   //
   // Push Snapshot to Remote Systems
@@ -185,7 +182,7 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
     if(!PushFile(filename,main_config->address(Am::That,AMConfig::PrivateAddress).
 		 toString(),filename)) {
       syslog(LOG_ERR,"unable to push snapshot to \"%s\"",
-	     (const char *)main_config->hostname(Am::That).toAscii());
+	     main_config->hostname(Am::That).toUtf8().constData());
     }
   }
 
@@ -207,9 +204,9 @@ bool MainObject::GenerateMysqlSnapshot(const QString &filename)
   //
   // Clean Up
   //
-  unlink((tempdir+"/sql.tar").toAscii());
-  unlink((tempdir+"/metadata.ini").toAscii());
-  rmdir(tempdir.toAscii());
+  unlink((tempdir+"/sql.tar").toUtf8());
+  unlink((tempdir+"/metadata.ini").toUtf8());
+  rmdir(tempdir.toUtf8());
 
   return ret;
 }

@@ -4,7 +4,7 @@
 ##
 ## by Fred Gleason <fredg@paravelsystems.com>
 ##
-## (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -22,8 +22,8 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall @QT4_CLI_CFLAGS@
-MOC = @MOC@
+AM_CPPFLAGS = -Wall -std=c++11 -fPIC @QT5_CLI_CFLAGS@
+MOC = @QT_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)
 moc_%.cpp:	%.h

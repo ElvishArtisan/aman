@@ -76,9 +76,8 @@ bool ReplicationTest::startTest(int val)
   db.setHostName(repl_config->address(Am::That,repl_addr).toString());
   if(!db.open()) {
     syslog(LOG_ERR,"cannot connect to mysql at %s [%s]",
-	   (const char *)repl_config->address(Am::That,repl_addr).toString().
-	   toAscii(),
-	   (const char *)db.lastError().text().toAscii());
+	   repl_config->address(Am::That,repl_addr).toString().toUtf8().constData(),
+	   db.lastError().text().toUtf8().constData());
     emit testComplete(false,0);
     return true;
   }
@@ -103,9 +102,8 @@ void ReplicationTest::tryResultData()
   q=new QSqlQuery(sql,QSqlDatabase::database("repl_db"));
   if(!q->first()) {
     syslog(LOG_ERR,"cannot select from mysql at %s [%s]",
-	   (const char *)repl_config->address(Am::That,repl_addr).toString().
-	   toAscii(),
-	   (const char *)q->lastError().text().toAscii());
+	   repl_config->address(Am::That,repl_addr).toString().toUtf8().constData(),
+	   q->lastError().text().toUtf8().constData());
     delete q;
     ReportResult(false,0);
     return;
