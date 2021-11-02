@@ -316,3 +316,6 @@
 2021-11-01 Fred Gleason <fredg@paravelsystems.com>
 	* Ported package to Qt5.
 	* Changed the startup system to Systemd.
+2021-11-02 Fred Gleason <fredg@paravelsystems.com>
+	* Added code to purge stale host entries to in
+	'scripts/aman_add_replication_users.pl'.

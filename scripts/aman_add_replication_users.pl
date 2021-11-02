@@ -120,21 +120,27 @@ my $dbh=DBI->connect("dbi:mysql:mysql:localhost",
     or die "Couldn't connect to MySQL: " . DBI->errstr;
 
 #
+# Remove Stale User Entries
+#
+my $sql="delete from `user` where `User`='".$repl_username."'";
+ExecuteSql($dbh,$sql);
+
+#
 # Add Users
 #
 foreach(@addresses) {
-    my $sql="insert into user set Host=\"".$_."\",".
-	"User=\"".$repl_username."\",".
-	"Password=password(\"".$repl_password."\"),".
-	"Select_priv=\"Y\",".
-	"Insert_priv=\"Y\",".
-	"Update_priv=\"Y\",".
-	"Create_priv=\"Y\",".
-	"Delete_priv=\"Y\",".
-	"Reload_priv=\"Y\",".
-	"Super_priv=\"Y\",".
-	"Repl_slave_priv=\"Y\",".
-	"Repl_client_priv=\"Y\"";
+    $sql="insert into `user` set `Host`='".$_."',".
+	"`User`='".$repl_username."',".
+	"`Password`=password('".$repl_password."'),".
+	"`Select_priv`='Y',".
+	"`Insert_priv`='Y',".
+	"`Update_priv`='Y',".
+	"`Create_priv`='Y',".
+	"`Delete_priv`='Y',".
+	"`Reload_priv`='Y',".
+	"`Super_priv`='Y',".
+	"`Repl_slave_priv`='Y',".
+	"`Repl_client_priv`='Y'";
     ExecuteSql($dbh,$sql);
 }
 
