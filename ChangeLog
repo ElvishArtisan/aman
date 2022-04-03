@@ -148,7 +148,7 @@
 	DB sanpshots to be purged prematurely.
 2013-11-18 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.5.
-2014-07-16 Fred Gleason <fredg@paravelsystems.com>
+L2014-07-16 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a typo in 'INSTALL'.
 2014-09-22 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'amand/amand.cpp' that caused syslog to report
@@ -176,7 +176,7 @@
 2014-09-23 Fred Gleason <fredg@paravelsystems.com>
 	* Added instructions for populating the host key in 'INSTALL'.
 2014-09-23 Fred Gleason <fredg@paravelsystems.com>
-	* Added include for 'unistd.h' in 'lib/config.cpp' to fix broken
+E	* Added include for 'unistd.h' in 'lib/config.cpp' to fix broken
 	compilation under RHEL 7.
 	* Added includes for 'sys/types.h' and 'unistd.h' in 'aman/aman.cpp'
 	to fix broken compilation under RHEL 7.
@@ -231,7 +231,7 @@
 	'conf/aman.cnf-SystemA-rhel7-sample' and
 	'conf/aman.cnf-SystemB-rhel7-sample'.
 2017-02-20 Fred Gleason <fredg@paravelsystems.com>
-	* Fixed a typo in 'conf/aman.conf-sample'.
+H	* Fixed a typo in 'conf/aman.conf-sample'.
 2017-02-20 Fred Gleason <fredg@paravelsystems.com>
 	* Refactored 'aman.spec.in' to use 'make install' to populate
 	the target image.
@@ -319,3 +319,5 @@
 2021-11-02 Fred Gleason <fredg@paravelsystems.com>
 	* Added code to purge stale host entries to in
 	'scripts/aman_add_replication_users.pl'.
+2022-03-03 Fred Gleason <fredg@paravelsystems.com>
+	* Removed support for RHEL6.

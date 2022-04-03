@@ -2,7 +2,7 @@
 ##
 ## conf/ automake.am for Aman
 ##
-## (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -31,9 +31,6 @@ EXTRA_DIST = aman.conf-sample\
              aman.cnf-SystemA-rhel7-sample\
              aman.cnf-SystemB-rhel7-sample\
              aman-mysql-limits.conf\
-             my.cnf-SystemA-rhel6-sample\
-             my.cnf-SystemB-rhel6-sample\
-             rsync.xinetd-sample\
              rsyncd.conf-sample
 
 CLEANFILES = *~

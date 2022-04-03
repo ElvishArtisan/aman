@@ -126,11 +126,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc NEWS 
 %doc README 
 %doc conf/aman.conf-sample
-%doc conf/my.cnf-SystemA-rhel6-sample
-%doc conf/my.cnf-SystemB-rhel6-sample
 %doc conf/aman.cnf-SystemA-rhel7-sample
 %doc conf/aman.cnf-SystemB-rhel7-sample
-%doc conf/rsync.xinetd-sample
 %doc conf/rsyncd.conf-sample
 %doc docs/command_protocol.txt
 %doc docs/mysql_states.gxd

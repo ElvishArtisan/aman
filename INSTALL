@@ -83,12 +83,9 @@ provided with this package.  The exact same configuration file should be
 used on both servers.
 
 4) Configure MySQL.
-On a RHEL-6 system, this is a matter of copying the appropriate sample
-configuration file ('my.cnf-SystemA-rhel6-sample' or
-'my.cnf-SystemB-rhel6-sample') to '/etc/my.cnf'. For an RHEL-7 system,
-copy the 'aman.cnf-SystemA-rhel7-sample' or 'aman.cnf-SystemB-rhel7-sample'
-file to '/etc/my.cnf.d/aman.cnf'. After copying the config files restart
-the MySQL service.
+For an RHEL-7 system, copy the 'aman.cnf-SystemA-rhel7-sample' or
+'aman.cnf-SystemB-rhel7-sample' file to '/etc/my.cnf.d/aman.cnf'. After
+copying the config files restart the MySQL service.
 
 Create a 'repl' user in MySQL with rights to connect from both the
 private and public IP addresses of each server and with the following
@@ -112,9 +109,7 @@ with the appropriate privileges semi-automatically.
 Create an RSync mountpoint named 'rivendell' that provides read-only
 access to the '/var/snd' directory from the other server.  A sample
 snippet for the '/etc/rsyncd.conf' file can be found in 'rsyncd.conf-sample'.
-For systems such as RHEL-6 which start rsyncd(8) by means of xinetd(8), a
-sample rsync service configuration for xinetd(8) is also provided in
-'rsync.xinetd-sample'.  Ensure that the rsyncd service is started.
+Ensure that the rsyncd service is started.
 
 6) Audio Replication Check File.
 Create the check file by doing the following commands from a root shell:
