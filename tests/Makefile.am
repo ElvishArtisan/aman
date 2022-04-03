@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -DPREFIX=\"$(prefix)\" -std=c++11 -fPIC @QT5_CLI_CFLAGS@
+AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -DPREFIX=\"$(prefix)\" -std=c++11 -fPIC @QT5_GUI_CFLAGS@
 LIBS = -L$(top_srcdir)/lib
 MOC = @QT_MOC@
 
@@ -35,7 +35,7 @@ dist_sqltorture_SOURCES = sqltorture.cpp sqltorture.h
 
 nodist_sqltorture_SOURCES = moc_sqltorture.cpp
 
-sqltorture_LDADD = @LIB_ALIBS@ @QT5_CLI_LIBS@
+sqltorture_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@
 sqltorture_LDFLAGS = @LIB_AFLAGS@
 
 

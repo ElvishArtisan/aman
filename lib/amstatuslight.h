@@ -1,4 +1,4 @@
-// statuslight.h
+// amstatuslight.h
 //
 // Status Light Widget
 //
@@ -18,19 +18,19 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef STATUSLIGHT_H
-#define STATUSLIGHT_H
+#ifndef AMSTATUSLIGHT_H
+#define AMSTATUSLIGHT_H
 
 #define AMAN_USAGE "\n"
 
 #include <QEvent>
 #include <QWidget>
 
-class StatusLight : public QWidget
+class AMStatusLight : public QWidget
 {
  Q_OBJECT;
  public:
-  StatusLight(QWidget *parent=0);
+  AMStatusLight(QWidget *parent=0);
   QSize sizeHint() const;
   bool status() const;
   void setStatus(bool state);
@@ -46,4 +46,4 @@ class StatusLight : public QWidget
 };
 
 
-#endif  // STATUSLIGHT_H
+#endif  // AMSTATUSLIGHT_H

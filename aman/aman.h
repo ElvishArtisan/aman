@@ -2,7 +2,7 @@
 //
 // aman(1) Monitoring Client.
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -30,9 +30,8 @@
 #include <QProgressDialog>
 
 #include <amconfig.h>
-
-#include "statuslight.h"
-#include "connection.h"
+#include <amstatuslight.h>
+#include <amconnection.h>
 
 class MainWidget : public QWidget
 {
@@ -49,7 +48,7 @@ class MainWidget : public QWidget
   void makeDbIdleData(int inst);
   void startAudioData(int inst);
   void stopAudioData(int inst);
-  void statusChangedData(Status *a,Status *b);
+  void statusChangedData(AMStatus *a,AMStatus *b);
 
   void snapshotGeneratedData(const QString &name);
   void loadSnapshotData();
@@ -60,7 +59,7 @@ class MainWidget : public QWidget
   void paintEvent(QPaintEvent *e);
 
  private:
-  void UpdateStatus(int sys,Status *s);
+  void UpdateStatus(int sys,AMStatus *s);
   void EnableFields(int inst,bool state);
   QLabel *am_database_label;
   QLabel *am_audio_label;
@@ -70,24 +69,24 @@ class MainWidget : public QWidget
   QLabel *am_db_state_label[2];
   QLineEdit *am_db_state_edit[2];
   QLabel *am_service_running_label[2];
-  StatusLight *am_service_running_light[2];
+  AMStatusLight *am_service_running_light[2];
   QLabel *am_db_running_label[2];
-  StatusLight *am_db_running_light[2];
+  AMStatusLight *am_db_running_light[2];
   QLabel *am_db_accessible_label[2];
-  StatusLight *am_db_accessible_light[2];
+  AMStatusLight *am_db_accessible_light[2];
   QLabel *am_db_replicating_label[2];
-  StatusLight *am_db_replicating_light[2];
+  AMStatusLight *am_db_replicating_light[2];
   QPushButton *am_db_master_button[2];
   QPushButton *am_db_slave_button[2];
   QPushButton *am_db_idle_button[2];
   QLabel *am_audio_state_label[2];
   QLineEdit *am_audio_state_edit[2];
   QLabel *am_audio_replicating_label[2];
-  StatusLight *am_audio_replicating_light[2];
+  AMStatusLight *am_audio_replicating_light[2];
   QPushButton *am_audio_slave_button[2];
   QPushButton *am_audio_idle_button[2];
   QProgressDialog *am_progress_dialog;
-  Connection *am_connection[2];
+  AMConnection *am_connection[2];
   int am_connection_table[2];
   AMConfig *am_config;
 };

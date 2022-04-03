@@ -1,8 +1,8 @@
-// statuslight.cpp
+// amstatuslight.cpp
 //
 // Status Light Widget
 //
-//   (C) Copyright 2012,2017 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -20,12 +20,12 @@
 
 #include <stdio.h>
 
-#include <QtGui/QPixmap>
-#include <QtGui/QPainter>
+#include <QPainter>
+#include <QPixmap>
 
-#include "statuslight.h"
+#include "amstatuslight.h"
 
-StatusLight::StatusLight(QWidget *parent)
+AMStatusLight::AMStatusLight(QWidget *parent)
   : QWidget(parent)
 {
   status_status=false;
@@ -33,19 +33,19 @@ StatusLight::StatusLight(QWidget *parent)
 }
 
 
-QSize StatusLight::sizeHint() const
+QSize AMStatusLight::sizeHint() const
 {
   return QSize(20,20);
 }
 
 
-bool StatusLight::status() const
+bool AMStatusLight::status() const
 {
   return status_status;
 }
 
 
-void StatusLight::setStatus(bool state)
+void AMStatusLight::setStatus(bool state)
 {
   if(state!=status_status) {
     status_status=state;
@@ -54,7 +54,7 @@ void StatusLight::setStatus(bool state)
 }
 
 
-void StatusLight::changeEvent(QEvent *e)
+void AMStatusLight::changeEvent(QEvent *e)
 {
   switch(e->type()) {
   case QEvent::EnabledChange:
@@ -70,13 +70,13 @@ void StatusLight::changeEvent(QEvent *e)
 }
 
 
-void StatusLight::resizeEvent(QResizeEvent *e)
+void AMStatusLight::resizeEvent(QResizeEvent *e)
 {
   update();
 }
 
 
-void StatusLight::paintEvent(QPaintEvent *e)
+void AMStatusLight::paintEvent(QPaintEvent *e)
 {
   QPainter *p=new QPainter(this);
 

@@ -1,8 +1,8 @@
-// connection.cpp
+// amconnection.cpp
 //
 // Client connection to an Aman monitor instance.
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -22,9 +22,9 @@
 
 #include <QStringList>
 
-#include "connection.h"
+#include "amconnection.h"
 
-Status::Status()
+AMStatus::AMStatus()
 {
   stat_hostname="";
   stat_service_running=false;
@@ -38,115 +38,115 @@ Status::Status()
 }
 
 
-QString Status::hostname() const
+QString AMStatus::hostname() const
 {
   return stat_hostname;
 }
 
 
-void Status::setHostname(const QString &str)
+void AMStatus::setHostname(const QString &str)
 {
   stat_hostname=str;
 }
 
 
-bool Status::serviceRunning() const
+bool AMStatus::serviceRunning() const
 {
   return stat_service_running;
 }
 
 
-void Status::setServiceRunning(bool state)
+void AMStatus::setServiceRunning(bool state)
 {
   stat_service_running=state;
 }
 
 
-bool Status::dbRunning() const
+bool AMStatus::dbRunning() const
 {
   return stat_db_running;
 }
 
 
-void Status::setDbRunning(bool state)
+void AMStatus::setDbRunning(bool state)
 {
   stat_db_running=state;
 }
 
 
-bool Status::dbAccessible() const
+bool AMStatus::dbAccessible() const
 {
   return stat_db_accessible;
 }
 
 
-void Status::setDbAccessible(bool state)
+void AMStatus::setDbAccessible(bool state)
 {
   stat_db_accessible=state;
 }
 
 
-AMState::ClusterState Status::dbState() const
+AMState::ClusterState AMStatus::dbState() const
 {
   return stat_db_state;
 }
 
 
-void Status::setDbState(AMState::ClusterState state)
+void AMStatus::setDbState(AMState::ClusterState state)
 {
   stat_db_state=state;
 }
 
 
-int Status::dbReplicationTime() const
+int AMStatus::dbReplicationTime() const
 {
   return stat_db_replication_time;
 }
 
 
-void Status::setDbReplicationTime(int msecs)
+void AMStatus::setDbReplicationTime(int msecs)
 {
   stat_db_replication_time=msecs;
 }
 
 
-AMState::ClusterState Status::audioState() const
+AMState::ClusterState AMStatus::audioState() const
 {
   return stat_audio_state;
 }
 
 
-void Status::setAudioState(AMState::ClusterState state)
+void AMStatus::setAudioState(AMState::ClusterState state)
 {
   stat_audio_state=state;
 }
 
 
-bool Status::audioStatus() const
+bool AMStatus::audioStatus() const
 {
   return stat_audio_status;
 }
 
 
-void Status::setAudioStatus(bool status)
+void AMStatus::setAudioStatus(bool status)
 {
   stat_audio_status=status;
 }
 
 
-bool Status::isLocal() const
+bool AMStatus::isLocal() const
 {
   return stat_is_local;
 }
 
 
-void Status::setLocal(bool state)
+void AMStatus::setLocal(bool state)
 {
   stat_is_local=state;
 }
 
 
-Connection::Connection(QObject *parent)
+AMConnection::AMConnection(QObject *parent)
   : QObject(parent)
 {
   conn_hostname="";
@@ -154,10 +154,10 @@ Connection::Connection(QObject *parent)
   char sname[256];
 
   //
-  // Status
+  // AMStatus
   //
   for(unsigned i=0;i<2;i++) {
-    conn_status[i]=new Status();
+    conn_status[i]=new AMStatus();
   }
 
   //
@@ -186,7 +186,7 @@ Connection::Connection(QObject *parent)
 }
 
 
-Connection::~Connection()
+AMConnection::~AMConnection()
 {
   delete conn_watchdog_timer;
   delete conn_socket;
@@ -196,7 +196,7 @@ Connection::~Connection()
 }
 
 
-void Connection::connectToHost(const QString &hostname,uint16_t port)
+void AMConnection::connectToHost(const QString &hostname,uint16_t port)
 {
   conn_hostname=hostname;
   conn_port=port;
@@ -204,56 +204,56 @@ void Connection::connectToHost(const QString &hostname,uint16_t port)
 }
 
 
-Status *Connection::status(int sys)
+AMStatus *AMConnection::status(int sys)
 {
   return conn_status[sys];
 }
 
 
-void Connection::generateSnapshot()
+void AMConnection::generateSnapshot()
 {
   conn_socket->write("GS!",3);
 }
 
 
-void Connection::loadSnapshot(const QString &name)
+void AMConnection::loadSnapshot(const QString &name)
 {
   QString msg="LS "+name+"!";
   conn_socket->write(msg.toUtf8());
 }
 
 
-void Connection::makeDbMaster()
+void AMConnection::makeDbMaster()
 {
   conn_socket->write("MM!");
 }
 
 
-void Connection::makeDbSlave()
+void AMConnection::makeDbSlave()
 {
   conn_socket->write("MS!");
 }
 
 
-void Connection::makeDbIdle()
+void AMConnection::makeDbIdle()
 {
   conn_socket->write("MI!");
 }
 
 
-void Connection::startAudioSlave()
+void AMConnection::startAudioSlave()
 {
   conn_socket->write("AS!");
 }
 
 
-void Connection::stopAudioSlave()
+void AMConnection::stopAudioSlave()
 {
   conn_socket->write("AI!");
 }
 
 
-void Connection::connectedData()
+void AMConnection::connectedData()
 {
   conn_buffer="";
   conn_socket->write("ST!",3);
@@ -261,20 +261,20 @@ void Connection::connectedData()
 }
 
 
-void Connection::disconnectedData()
+void AMConnection::disconnectedData()
 {
-  conn_watchdog_timer->start(CONNECTION_RECONNECT_INTERVAL);
+  conn_watchdog_timer->start(AMCONNECTION_RECONNECT_INTERVAL);
   emit disconnected();
 }
 
 
-void Connection::errorData(QAbstractSocket::SocketError err)
+void AMConnection::errorData(QAbstractSocket::SocketError err)
 {
   switch(err) {
   case QAbstractSocket::ConnectionRefusedError:
   case QAbstractSocket::SocketTimeoutError:
     conn_watchdog_timer->stop();
-    conn_watchdog_timer->start(CONNECTION_RECONNECT_INTERVAL);
+    conn_watchdog_timer->start(AMCONNECTION_RECONNECT_INTERVAL);
     break;
 
   default:
@@ -283,7 +283,7 @@ void Connection::errorData(QAbstractSocket::SocketError err)
 }
 
 
-void Connection::readyReadData()
+void AMConnection::readyReadData()
 {
   int n=0;
   char data[1500];
@@ -302,13 +302,13 @@ void Connection::readyReadData()
 }
 
 
-void Connection::watchdogData()
+void AMConnection::watchdogData()
 {
   conn_socket->connectToHost(conn_hostname,conn_port);
 }
 
 
-void Connection::ProcessMessage()
+void AMConnection::ProcessMessage()
 {
   QStringList fields=conn_buffer.split(" ");
 

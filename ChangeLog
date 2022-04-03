@@ -321,3 +321,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	'scripts/aman_add_replication_users.pl'.
 2022-03-03 Fred Gleason <fredg@paravelsystems.com>
 	* Removed support for RHEL6.
+2022-03-03 Fred Gleason <fredg@paravelsystems.com>
+	* Moved the 'StatusLight' class to 'AMStatusLight'.
+	* Moved the 'Connection' class to 'AMConnctionClass'.

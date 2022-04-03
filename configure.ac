@@ -4,7 +4,7 @@ dnl Autoconf configuration for Aman.
 dnl
 dnl Use autoconf to process this into a configure script
 dnl
-dnl   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
+dnl   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 dnl
 dnl   This program is free software; you can redistribute it and/or modify
 dnl   it under the terms of the GNU General Public License version 2 as
@@ -60,8 +60,7 @@ AC_ARG_ENABLE(docbook,[  --disable-docbook       disable building of documentati
 #
 # Check for Qt
 #
-PKG_CHECK_MODULES(QT5_GUI,Qt5Core Qt5Widgets Qt5Gui Qt5Network,,[AC_MSG_ERROR([*** Qt5 not found ***])])
-PKG_CHECK_MODULES(QT5_CLI,Qt5Core Qt5Network Qt5Sql,,[AC_MSG_ERROR([*** Qt5 not found ***])])
+PKG_CHECK_MODULES(QT5_GUI,Qt5Core Qt5Widgets Qt5Gui Qt5Network Qt5Sql,,[AC_MSG_ERROR([*** Qt5 not found ***])])
 AC_CHECK_PROG(MOC_NAME,moc-qt5,[moc-qt5],[moc])
 AC_SUBST(QT_MOC,$MOC_NAME)
 

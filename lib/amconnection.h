@@ -1,8 +1,8 @@
-// connection.h
+// amconnection.h
 //
 // Client connection to an Aman monitor instance.
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -18,8 +18,8 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef AMCONNECTION_H
+#define AMCONNECTION_H
 
 #include <stdint.h>
 
@@ -31,12 +31,12 @@
 
 #include "am.h"
 
-#define CONNECTION_RECONNECT_INTERVAL 5000
+#define AMCONNECTION_RECONNECT_INTERVAL 5000
 
-class Status
+class AMStatus
 {
  public:
-  Status();
+  AMStatus();
   QString hostname() const;
   void setHostname(const QString &str);
   bool serviceRunning() const;
@@ -69,14 +69,14 @@ class Status
 };
 
 
-class Connection : public QObject
+class AMConnection : public QObject
 {
  Q_OBJECT;
  public:
-  Connection(QObject *parent=0);
-  ~Connection();
+  AMConnection(QObject *parent=0);
+  ~AMConnection();
   void connectToHost(const QString &hostname,uint16_t port);
-  Status *status(int sys);
+  AMStatus *status(int sys);
 
  public slots:
   void generateSnapshot();
@@ -88,7 +88,7 @@ class Connection : public QObject
   void stopAudioSlave();
 
  signals:
-  void statusChanged(Status *a,Status *b);
+  void statusChanged(AMStatus *a,AMStatus *b);
   void snapshotGenerated(const QString &name);
   void snapshotLoaded(const QString &name);
   void connected();
@@ -103,7 +103,7 @@ class Connection : public QObject
 
  private:
   void ProcessMessage();
-  Status *conn_status[2];
+  AMStatus *conn_status[2];
   QString conn_buffer;
   QTcpSocket *conn_socket;
   QTimer *conn_watchdog_timer;
@@ -113,4 +113,4 @@ class Connection : public QObject
 };
 
 
-#endif  // CONNECTION_H
+#endif  // AMCONNECTION_H

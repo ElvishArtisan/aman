@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -std=c++11 -fPIC -DPREFIX=\"$(prefix)\" @QT5_CLI_CFLAGS@
+AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -std=c++11 -fPIC -DPREFIX=\"$(prefix)\" @QT5_GUI_CFLAGS@
 LIBS = -L$(top_srcdir)/lib
 MOC = @QT_MOC@
 
@@ -34,7 +34,7 @@ dist_amanctl_SOURCES = amanctl.cpp amanctl.h
 
 nodist_amanctl_SOURCES = moc_amanctl.cpp
 
-amanctl_LDADD = @LIB_ALIBS@ @QT5_CLI_LIBS@
+amanctl_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@
 amanctl_LDFLAGS = @LIB_AFLAGS@
 
 CLEANFILES = *~\

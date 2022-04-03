@@ -31,13 +31,9 @@ moc_%.cpp:	%.h
 
 bin_PROGRAMS = aman
 
-dist_aman_SOURCES = aman.cpp aman.h\
-                    connection.cpp connection.h\
-                    statuslight.cpp statuslight.h
+dist_aman_SOURCES = aman.cpp aman.h
 
-nodist_aman_SOURCES = moc_aman.cpp\
-                      moc_connection.cpp\
-                      moc_statuslight.cpp
+nodist_aman_SOURCES = moc_aman.cpp
 
 aman_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@
 aman_LDFLAGS = @LIB_AFLAGS@

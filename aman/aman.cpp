@@ -81,7 +81,7 @@ MainWidget::MainWidget(QWidget *parent)
   connect(disconnected_mapper,SIGNAL(mapped(int)),
 	  this,SLOT(disconnectedData(int)));
   for(int i=0;i<2;i++) {
-    am_connection[i]=new Connection(this);
+    am_connection[i]=new AMConnection(this);
     connect(am_connection[i],SIGNAL(connected()),
 	    connected_mapper,SLOT(map()));
     connected_mapper->setMapping(am_connection[i],i);
@@ -89,8 +89,8 @@ MainWidget::MainWidget(QWidget *parent)
 	    disconnected_mapper,SLOT(map()));
     disconnected_mapper->setMapping(am_connection[i],i);
   }
-  connect(am_connection[0],SIGNAL(statusChanged(Status *,Status *)),
-	  this,SLOT(statusChangedData(Status *,Status *)));
+  connect(am_connection[0],SIGNAL(statusChanged(AMStatus *,AMStatus *)),
+	  this,SLOT(statusChangedData(AMStatus *,AMStatus *)));
   connect(am_connection[0],SIGNAL(snapshotGenerated(const QString &)),
 	  this,SLOT(snapshotGeneratedData(const QString &)));
   connect(am_connection[0],SIGNAL(snapshotLoaded(const QString &)),
@@ -147,19 +147,19 @@ MainWidget::MainWidget(QWidget *parent)
 
     am_service_running_label[i]=new QLabel(tr("Service Running"),this);
     am_service_running_label[i]->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-    am_service_running_light[i]=new StatusLight(this);
+    am_service_running_light[i]=new AMStatusLight(this);
 
     am_db_running_label[i]=new QLabel(tr("DB Server Running"),this);
     am_db_running_label[i]->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-    am_db_running_light[i]=new StatusLight(this);
+    am_db_running_light[i]=new AMStatusLight(this);
 
     am_db_accessible_label[i]=new QLabel(tr("DB Accessible"),this);
     am_db_accessible_label[i]->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-    am_db_accessible_light[i]=new StatusLight(this);
+    am_db_accessible_light[i]=new AMStatusLight(this);
 
     am_db_replicating_label[i]=new QLabel(tr("DB Replicating"),this);
     am_db_replicating_label[i]->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-    am_db_replicating_light[i]=new StatusLight(this);
+    am_db_replicating_light[i]=new AMStatusLight(this);
 
     am_db_master_button[i]=new QPushButton(tr("Make Master"),this);
     am_db_master_button[i]->setFont(title_font);
@@ -187,7 +187,7 @@ MainWidget::MainWidget(QWidget *parent)
 
     am_audio_replicating_label[i]=new QLabel(tr("Audio Replicating"),this);
     am_audio_replicating_label[i]->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-    am_audio_replicating_light[i]=new StatusLight(this);
+    am_audio_replicating_light[i]=new AMStatusLight(this);
 
     am_audio_slave_button[i]=new QPushButton(tr("Start Slave"),this);
     am_audio_slave_button[i]->setFont(title_font);
@@ -265,7 +265,7 @@ void MainWidget::stopAudioData(int inst)
 }
 
 
-void MainWidget::statusChangedData(Status *a,Status *b)
+void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
 {
   am_progress_dialog->reset();
 
@@ -521,7 +521,7 @@ void MainWidget::paintEvent(QPaintEvent *e)
 }
 
 
-void MainWidget::UpdateStatus(int sys,Status *s)
+void MainWidget::UpdateStatus(int sys,AMStatus *s)
 {
   am_hostname_edit[sys]->setText(s->hostname());
   am_db_state_edit[sys]->setText(AMState::stateString(s->dbState()));
