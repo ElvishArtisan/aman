@@ -164,6 +164,7 @@ AC_CONFIG_FILES([aman.spec \
     aman/Makefile \
     amanctl/Makefile \
     amand/Makefile \
+    amanrmt/Makefile \
     conf/Makefile \
     docs/Makefile \
     icons/Makefile \

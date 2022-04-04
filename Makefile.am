@@ -28,6 +28,7 @@ SUBDIRS = lib\
           aman\
           amanctl\
           amand\
+          amanrmt\
           conf\
           $(DOCBOOK_AM_OPT) icons\
           scripts\

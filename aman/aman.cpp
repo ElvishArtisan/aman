@@ -65,7 +65,7 @@ MainWidget::MainWidget(QWidget *parent)
   //
   // Load Configuration
   //
-  am_config=new AMConfig("/etc/aman.conf");
+  am_config=new AMConfig("/etc/aman.conf",false);
   if(!am_config->load()) {
     QMessageBox::warning(this,tr("Server Monitor"),
 	       tr("Unable to read configuration from \"/etc/aman.conf\"."));

@@ -65,7 +65,7 @@ MainObject::MainObject(QObject *parent)
     }
   }
 
-  ctl_config=new AMConfig(AM_CONF_FILE);
+  ctl_config=new AMConfig(AM_CONF_FILE,true);
   ctl_config->load();
 
   ctl_socket=new QTcpSocket(this);

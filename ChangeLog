@@ -324,3 +324,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-03-03 Fred Gleason <fredg@paravelsystems.com>
 	* Moved the 'StatusLight' class to 'AMStatusLight'.
 	* Moved the 'Connection' class to 'AMConnctionClass'.
+2022-03-04 Fred Gleason <fredg@paravelsystems.com>
+	* Stubbed out amanrmt(1) client.

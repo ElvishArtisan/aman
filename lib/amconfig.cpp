@@ -28,8 +28,9 @@
 
 #include "amconfig.h"
 
-AMConfig::AMConfig(QString filename)
+AMConfig::AMConfig(QString filename,bool is_rmt)
 {
+  conf_is_remote=is_rmt;
   clear();
   conf_filename=filename;
 }
@@ -107,9 +108,21 @@ QString AMConfig::hostname(Am::Instance inst) const
 }
 
 
+QString AMConfig::hostname(int n) const
+{
+  return conf_hostnames.at(n);
+}
+
+
 QString AMConfig::mysqlUsername(Am::Instance inst) const
 {
   return conf_mysql_username[inst];
+}
+
+
+QString AMConfig::mysqlUsername(int n) const
+{
+  return conf_mysql_usernames.at(n);
 }
 
 
@@ -119,9 +132,21 @@ QString AMConfig::mysqlPassword(Am::Instance inst) const
 }
 
 
+QString AMConfig::mysqlPassword(int n) const
+{
+  return conf_mysql_passwords.at(n);
+}
+
+
 QString AMConfig::mysqlDataDirectory(Am::Instance inst) const
 {
   return conf_mysql_data_directory[inst];
+}
+
+
+QString AMConfig::mysqlDataDirectory(int n) const
+{
+  return conf_mysql_data_directories.at(n);
 }
 
 
@@ -131,9 +156,21 @@ QString AMConfig::archiveDirectory(Am::Instance inst) const
 }
 
 
+QString AMConfig::archiveDirectory(int n) const
+{
+  return conf_archive_directories.at(n);
+}
+
+
 QHostAddress AMConfig::address(Am::Instance inst,AMConfig::Address addr) const
 {
   return conf_address[inst][addr];
+}
+
+
+QHostAddress AMConfig::address(int n,AMConfig::Address addr) const
+{
+  return conf_addresses.at((int)addr).at(n);
 }
 
 
@@ -143,9 +180,21 @@ QString AMConfig::pingTablename(Am::Instance inst) const
 }
 
 
+QString AMConfig::pingTablename(int n) const
+{
+  return conf_ping_tablenames.at(n);
+}
+
+
 QString AMConfig::secureShellIdentity(Am::Instance inst) const
 {
   return conf_secure_shell_identity[inst];
+}
+
+
+QString AMConfig::secureShellIdentity(int n) const
+{
+  return conf_secure_shell_identities.at(n);
 }
 
 
@@ -300,19 +349,40 @@ void AMConfig::LoadHost(AMProfile *p,const QString &section)
     }
   }
   conf_hostname[host]=p->stringValue(section,"Hostname");
+  conf_hostnames.push_back(p->stringValue(section,"Hostname"));
   conf_mysql_username[host]=p->stringValue(section,"MysqlUsername","repl");
+  conf_mysql_usernames.
+    push_back(p->stringValue(section,"MysqlUsername","repl"));
   conf_mysql_password[host]=p->stringValue(section,"MysqlPassword","repl");
+  conf_mysql_passwords.
+    push_back(p->stringValue(section,"MysqlPassword","repl"));
   conf_mysql_data_directory[host]=
     p->stringValue(section,"MysqlDataDirectory","/var/lib/mysql");
+  conf_mysql_data_directories.
+    push_back(p->stringValue(section,"MysqlDataDirectory","/var/lib/mysql"));
   conf_archive_directory[host]=p->stringValue(section,"ArchiveDirectory");
+  conf_archive_directories.
+    push_back(p->stringValue(section,"ArchiveDirectory"));
   conf_address[host][AMConfig::PublicAddress].
     setAddress(p->stringValue(section,"PublicAddress"));
   conf_address[host][AMConfig::PrivateAddress].
     setAddress(p->stringValue(section,"PrivateAddress"));
+  QHostAddress addr;
+  QList<QHostAddress> addrs;
+  addr.setAddress(p->stringValue(section,"PublicAddress"));
+  addrs.push_back(addr);
+  addr.setAddress(p->stringValue(section,"PrivateAddress"));
+  addrs.push_back(addr);
+  conf_addresses.push_back(addrs);
   conf_ping_tablename[host]=p->stringValue(section,"PingTablename",
 			  QString("AMAN_")+section.toUpper()+"_PINGS");
+  conf_ping_tablenames.
+    push_back(p->stringValue(section,"PingTablename",
+			     QString("AMAN_")+section.toUpper()+"_PINGS"));
   conf_secure_shell_identity[host]=
     p->stringValue(section,"SecureShellIdentity",AM_IDENTITY_FILE);
+  conf_secure_shell_identities.
+    push_back(p->stringValue(section,"SecureShellIdentity",AM_IDENTITY_FILE));
 }
 
 
@@ -320,16 +390,27 @@ bool AMConfig::Validate(AMProfile *p) const
 {
   bool ret=true;
 
-  if(conf_hostname[Am::This].isEmpty()) {
-    syslog(LOG_ERR,"we are neither SystemA nor SystemB");
-    ret=false;
+  if(conf_is_remote) {
+    syslog(LOG_DEBUG,"we are remote");
   }
   else {
-    if(conf_hostname[Am::This]==p->stringValue("SystemA","Hostname")) {
-      syslog(LOG_DEBUG,"we are SystemA");
+    if(conf_hostname[Am::This].isEmpty()) {
+      syslog(LOG_ERR,"missing hostname value in aman(5)");
+      ret=false;
     }
     else {
-      syslog(LOG_DEBUG,"we are SystemB");
+      if(conf_hostname[Am::This]==p->stringValue("SystemA","Hostname")) {
+	syslog(LOG_DEBUG,"we are SystemA");
+      }
+      else {
+	if(conf_hostname[Am::This]==p->stringValue("SystemB","Hostname")) {
+	  syslog(LOG_DEBUG,"we are SystemB");
+	}
+	else {
+	  syslog(LOG_ERR,"we are neither SystemA nor SystemB");
+	  ret=false;
+	}
+      }
     }
   }
   if(conf_hostname[0]==conf_hostname[1]) {

@@ -85,7 +85,7 @@ MainObject::MainObject(QObject *parent)
   //
   // Load Configuration
   //
-  main_config=new AMConfig(AM_CONF_FILE);
+  main_config=new AMConfig(AM_CONF_FILE,false);
   if(!main_config->load()) {
     syslog(LOG_ERR,"exiting due to configuration errors");
     exit(256);

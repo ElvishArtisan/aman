@@ -35,7 +35,7 @@ class AMConfig
 {
  public:
   enum Address {PublicAddress=0,PrivateAddress=1,LastAddress=2};
-  AMConfig(QString filename);
+  AMConfig(QString filename,bool is_rmt);
   QString globalMysqlDatabase() const;
   QString globalMysqlDriver() const;
   int globalMysqlReplicationTimeout() const;
@@ -48,13 +48,21 @@ class AMConfig
   int globalNiceLevel() const;
   QString globalMysqlServiceName() const;
   QString hostname(Am::Instance inst) const;
+  QString hostname(int n) const;
   QString mysqlUsername(Am::Instance inst) const;
+  QString mysqlUsername(int n) const;
   QString mysqlPassword(Am::Instance inst) const;
+  QString mysqlPassword(int n) const;
   QString mysqlDataDirectory(Am::Instance inst) const;
+  QString mysqlDataDirectory(int n) const;
   QString archiveDirectory(Am::Instance inst) const;
+  QString archiveDirectory(int n) const;
   QHostAddress address(Am::Instance inst,Address addr) const;
+  QHostAddress address(int n,Address addr) const;
   QString pingTablename(Am::Instance inst) const;
+  QString pingTablename(int n) const;
   QString secureShellIdentity(Am::Instance inst) const;
+  QString secureShellIdentity(int n) const;
   Am::Instance instanceA() const;
   Am::Instance instanceB() const;
   Am::Instance instance(const QString &letter) const;
@@ -79,14 +87,23 @@ class AMConfig
   int conf_global_nice_level;
   QString conf_global_mysql_service_name;
   QString conf_hostname[Am::LastInstance];
+  QStringList conf_hostnames;
   QString conf_mysql_username[Am::LastInstance];
+  QStringList conf_mysql_usernames;
   QString conf_mysql_password[Am::LastInstance];
+  QStringList conf_mysql_passwords;
   QString conf_mysql_data_directory[Am::LastInstance];
+  QStringList conf_mysql_data_directories;
   QString conf_archive_directory[Am::LastInstance];
+  QStringList conf_archive_directories;
   QHostAddress conf_address[Am::LastInstance][AMConfig::LastAddress];
+  QList<QList<QHostAddress> > conf_addresses;
   QString conf_ping_tablename[Am::LastInstance];
+  QStringList conf_ping_tablenames;
   QString conf_secure_shell_identity[Am::LastInstance];
+  QStringList conf_secure_shell_identities;
   Am::Instance conf_instance_table[Am::LastInstance];
+  bool conf_is_remote;
 };
 
 
