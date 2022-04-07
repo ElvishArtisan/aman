@@ -332,3 +332,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Got audio replication working in amanrmt(1).
 2022-03-07 Fred Gleason <fredg@paravelsystems.com>
 	* Added an 'aman-remote' RPM subpackage.
+2022-03-07 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.9.18rmt0.
