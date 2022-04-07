@@ -24,6 +24,7 @@
 #include <curl/curl.h>
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QFileDialog>
 #include <QFontMetrics>
 #include <QMessageBox>
@@ -47,6 +48,7 @@ MainWidget::MainWidget(QWidget *parent)
   am_connection_table[0]=0;
   am_connection_table[1]=1;
   am_active_connection=NULL;
+  am_exiting=false;
 
   setWindowTitle(tr("Rivendell Server Manager")+" v"+VERSION);
   setWindowIcon(QPixmap(aman_xpm));
@@ -236,11 +238,23 @@ MainWidget::MainWidget(QWidget *parent)
   EnableSourceFields(0,false);
   EnableSourceFields(1,false);
 
+  //
+  // DB Replication Monitoring
+  //
   am_check_db_prev_ping=0;
   am_check_db_replication_timer=new QTimer(this);
   connect(am_check_db_replication_timer,SIGNAL(timeout()),
 	  this,SLOT(checkDbReplicationData()));
   am_check_db_replication_timer->start(1000);
+
+  //
+  // Audio Replication
+  //
+  am_audio_active=false;
+  am_audio_process=NULL;
+  am_audio_timer=new QTimer(this);
+  am_audio_timer->setSingleShot(true);
+  connect(am_audio_timer,SIGNAL(timeout()),this,SLOT(startAudioProcessData()));
 }
 
 
@@ -268,17 +282,6 @@ void MainWidget::makeDbSlaveData()
   // Get Master Connection
   //
   int master_id=GetMasterServerId();
-  /*
-  for(int i=0;i<2;i++) {
-    if(am_connection[i]->isConnected()) {
-      if(am_connection[i]->status(i)->dbState()==AMState::StateMaster) {
-	am_active_connection=am_connection[i];
-	am_source_sys=i;
-	break;
-      }
-    }
-  }
-  */
   if(master_id<0) {
     QMessageBox::warning(this,tr("Server Manager - Error"),
 			 tr("No master server available!"));
@@ -317,13 +320,17 @@ void MainWidget::makeDbIdleData()
 
 void MainWidget::startAudioData()
 {
-  //  am_connection[am_connection_table[inst]]->startAudioSlave();
+  am_audio_timer->start(1000);
+  am_audio_active=true;
 }
 
 
 void MainWidget::stopAudioData()
 {
-  //  am_connection[am_connection_table[inst]]->stopAudioSlave();
+  am_audio_active=false;
+  if(am_audio_process!=NULL) {
+    am_audio_process->terminate();
+  }
 }
 
 
@@ -456,7 +463,7 @@ void MainWidget::checkDbReplicationData()
   int master_id=-1;
 
   //
-  // State Check
+  // DB State Check
   //
   // FIXME: "information_schema" becomes "performance_schema" in MySQL 5.7
   //        and later. See:
@@ -485,7 +492,7 @@ void MainWidget::checkDbReplicationData()
   delete q;
 
   //
-  // Confidence Monitor Check
+  // DB Confidence Monitor Check
   //
   if((master_id=GetMasterServerId())>=0) {
     sql=QString("select ")+
@@ -506,6 +513,144 @@ void MainWidget::checkDbReplicationData()
   else {
     am_check_db_prev_ping=0;
     am_dst_db_replicating_light->setStatus(false);
+  }
+
+  //
+  // Audio State Check
+  //
+  if(am_audio_active) {
+    am_dst_audio_state_edit->setText(AMState::stateString(AMState::StateSlave));
+  }
+  else {
+    am_dst_audio_state_edit->setText(AMState::stateString(AMState::StateIdle));
+    am_dst_audio_replicating_light->setStatus(false);
+  }
+  am_audio_slave_button->setDisabled(am_audio_active);
+  am_audio_idle_button->setEnabled(am_audio_active);
+}
+
+
+void MainWidget::startAudioProcessData()
+{
+  QStringList args;
+  int master_id=GetMasterServerId();
+
+  if(master_id<0) {
+    am_audio_timer->start(AM_RSYNC_PAUSE_INTERVAL);
+    return;
+  }
+
+  //
+  // Check that the master is alive and ready
+  //
+  args.clear();
+  args.push_back(am_config->address(master_id,AMConfig::PublicAddress).
+		 toString()+"::rivendell/repl.chk");
+  am_audio_process=new QProcess(this);
+  am_audio_process->start("rsync",args);
+  am_audio_process->waitForFinished(30000);
+  switch(am_audio_process->exitCode()) {
+  case 0:
+    am_dst_audio_replicating_light->setStatus(true);
+    break;
+
+  case 23:  // Check file not found, deferring sync
+  case 30:  // Rsync service timed out, deferring sync
+  case 35:  // Connection timeout, deferring sync
+    delete am_audio_process;
+    am_audio_process=NULL;
+    am_dst_audio_replicating_light->setStatus(false);
+    am_audio_timer->start(AM_RSYNC_PAUSE_INTERVAL);
+    return;
+
+  default:
+    QMessageBox::warning(this,tr("Server Manager - Error"),
+			 tr("rsync(1) process returned an error, exit code")+
+			 QString::asprintf(" %d",am_audio_process->exitCode()));
+    delete am_audio_process;
+    am_audio_process=NULL;
+    am_audio_active=false;
+    return;
+  }
+  delete am_audio_process;
+  am_audio_process=NULL;
+
+  //
+  // Start the main file copy
+  //
+  args.clear();
+  args.push_back("-a");
+  args.push_back("--delete");
+  args.push_back(am_config->address(master_id,AMConfig::PublicAddress).
+		 toString()+"::rivendell/");
+  args.push_back("/var/snd/");
+  am_audio_process=new QProcess(this);
+  connect(am_audio_process,SIGNAL(finished(int,QProcess::ExitStatus)),
+	  this,SLOT(audioProcessFinishedData(int,QProcess::ExitStatus)));
+  am_audio_process->start("rsync",args);
+}
+
+
+void MainWidget::audioProcessFinishedData(int exit_code,
+					  QProcess::ExitStatus status)
+{
+  if(am_exiting) {
+    exit(0);
+  }
+  if(status==QProcess::CrashExit) {
+    QMessageBox::warning(this,tr("Server Manager - Error"),
+			 tr("rsync(1) crashed!"));
+    delete am_audio_process;
+    am_audio_process->deleteLater();
+    am_audio_process=NULL;
+    am_audio_active=false;
+    return;
+  }
+
+  switch(am_audio_process->exitCode()) {
+  case 0:   // Normal Exit
+  case 20:  // Stopped due to signal
+  case 23:  // Partial transfer due to error
+  case 24:  // Partial transfer due to vanished source files
+    if(am_audio_active) {
+      am_audio_timer->start(AM_RSYNC_PAUSE_INTERVAL);
+    }
+    break;
+
+  default:
+    QMessageBox::warning(this,tr("Server Manager - Error"),
+			 tr("rsync(1) process returned an error, exit code")+
+			 QString::asprintf(" %d",am_audio_process->exitCode()));
+    am_audio_active=false;
+    break;
+  }
+  am_audio_process->deleteLater();
+  am_audio_process=NULL;
+}
+
+
+void MainWidget::closeEvent(QCloseEvent *e)
+{
+  if(am_audio_active) {
+    if(QMessageBox::question(this,tr("Server Manager - Closing"),
+			     tr("Audio replication will be halted if this program is exited.")+"\n"+
+			     tr("Exit program?"),
+			     QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes) {
+      if((am_audio_process!=NULL)&&
+	 am_audio_process->state()==QProcess::Running) {
+	am_exiting=true;
+	am_audio_process->terminate();
+      }
+      else {
+	e->accept();
+      }      
+    }
+    else {
+      e->ignore();
+    }
+  }
+  else {
+    e->accept();
   }
 }
 

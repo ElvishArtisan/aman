@@ -26,8 +26,9 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
-#include <QPushButton>
+#include <QProcess>
 #include <QProgressDialog>
+#include <QPushButton>
 #include <QTimer>
 #include <QWidget>
 
@@ -53,10 +54,12 @@ class MainWidget : public QWidget
   void snapshotGeneratedData(const QString &name);
   void loadSnapshotData();
   void snapshotLoadedData(const QString &name);
-
   void checkDbReplicationData();
+  void startAudioProcessData();
+  void audioProcessFinishedData(int exit_code,QProcess::ExitStatus status);
 
  protected:
+  void closeEvent(QCloseEvent *e);
   void resizeEvent(QResizeEvent *e);
   void paintEvent(QPaintEvent *e);
 
@@ -101,9 +104,13 @@ class MainWidget : public QWidget
   int am_connection_table[2];
   AMConfig *am_config;
   AMState *am_state;
-
   QTimer *am_check_db_replication_timer;
   unsigned am_check_db_prev_ping;
+
+  bool am_audio_active;
+  QProcess *am_audio_process;
+  QTimer *am_audio_timer;
+  bool am_exiting;
 };
 
 
