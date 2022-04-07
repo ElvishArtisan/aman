@@ -2,7 +2,7 @@
 ##
 ## Makefile for the amand(8) daemon.
 ##
-## (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -std=c++11 -fPIC -DPREFIX=\"$(prefix)\" @QT5_GUI_CFLAGS@
+AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -std=c++11 -fPIC -DPREFIX=\"$(prefix)\" @QT5_GUI_CFLAGS@ @LIBCURL_CFLAGS@
 LIBS = -L$(top_srcdir)/lib
 MOC = @QT_MOC@
 
@@ -46,7 +46,7 @@ nodist_amand_SOURCES = moc_amand.cpp\
                        moc_replicationtest.cpp\
                        moc_streamcmdserver.cpp
 
-amand_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@
+amand_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@ @LIBCURL_LIBS@
 amand_LDFLAGS = @LIB_AFLAGS@
 
 CLEANFILES = *~\

@@ -2,7 +2,7 @@
 ##
 ## Makefile for the amand(8) daemon.
 ##
-## (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -35,7 +35,7 @@ dist_sqltorture_SOURCES = sqltorture.cpp sqltorture.h
 
 nodist_sqltorture_SOURCES = moc_sqltorture.cpp
 
-sqltorture_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@
+sqltorture_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@ @LIBCURL_LIBS@
 sqltorture_LDFLAGS = @LIB_AFLAGS@
 
 

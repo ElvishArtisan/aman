@@ -1,0 +1,4 @@
+[mysqld]
+server-id = 100
+skip-log-bin
+binlog-do-db=Rivendell

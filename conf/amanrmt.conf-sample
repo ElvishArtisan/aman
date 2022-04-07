@@ -1,0 +1,12 @@
+; amanrmt.conf
+;
+; This is the sample configuration file for the Aman Remote utility.
+;
+
+[MySQL]
+; The connection parameters for the MySQL server.
+Hostname=localhost
+Loginname=amanrmt
+Password=letmein
+Database=Rivendell
+Driver=QMYSQL3

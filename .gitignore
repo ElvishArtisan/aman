@@ -28,4 +28,5 @@ rc.amand
 aman/aman
 amanctl/amanctl
 amand/amand
+amanrmt/amanrmt
 tests/sqltorture

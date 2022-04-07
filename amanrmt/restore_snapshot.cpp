@@ -2,7 +2,7 @@
 //
 // Restore a MySQL Snapshot
 //
-//   (C) Copyright 2012-2021 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -21,21 +21,21 @@
 #include <syslog.h>
 #include <unistd.h>
 
+#include <QDir>
 #include <QProcess>
 #include <QStringList>
 #include <QVariant>
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include "amand.h"
+#include "amanrmt.h"
 
-bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
-				      int *pos)
+bool MainWidget::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
+				      int *pos,int src_sys,QString *err_msg)
 {
   QString sql;
   QSqlQuery *q;
   QStringList args;
-  AMConfig::Address addr;
   AMProfile *p=NULL;
 
   *binlog="-";
@@ -57,52 +57,41 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   args.push_back("-C");
   args.push_back(tempdir);
   args.push_back("-jxf");
-  args.push_back(filename);
+  args.push_back(QString(AM_SNAPSHOT_DIR)+"/"+filename);
   proc->start("tar",args);
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
-    syslog(LOG_ERR,"unpacking snapshot failed [%s]",
-	   (const char *)proc->readAllStandardError());
+    *err_msg=QString::asprintf("unpacking snapshot failed [%s]",
+			       proc->readAllStandardError().constData());
     delete proc;
     return false;
   }
   delete proc;
 
   //
-  // Open Mysql
-  //
-  addr=AMConfig::PublicAddress;
-  if(!OpenMysql(Am::This,addr)) {
-    addr=AMConfig::PublicAddress;
-    if(!OpenMysql(Am::This,addr)) {
-      return false;
-    }
-  }
-
-  //
   // Stop Replication
   //
   sql="stop slave";
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   delete q;
   sql="reset slave";
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   delete q;
-  CloseMysql();
+  CloseDb();
 
   //
   // Stop MySQL Service
   //
   proc=new QProcess(this);
   args.clear();
-  args.push_back(main_config->globalMysqlServiceName());
+  args.push_back(am_config->globalMysqlServiceName());
   args.push_back("stop");
   proc->start("service",args);
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
-    syslog(LOG_ERR,"%s(8) shutdown failed [%s]",
-	   (const char *)main_config->globalMysqlServiceName().toUtf8(),
-	   (const char *)proc->readAllStandardError());
+    *err_msg=QString::asprintf("%s(8) shutdown failed [%s]",
+			       am_config->globalMysqlServiceName().toUtf8().constData(),
+			       proc->readAllStandardError().constData());
     delete proc;
     return false;
   }
@@ -111,14 +100,13 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   // Delete Old Database
   //
-  QDir dir(main_config->mysqlDataDirectory(Am::This)+"/"+
-	   main_config->globalMysqlDatabase());
+  QDir dir(QString(AM_MYSQL_DATADIR)+"/"+am_config->globalMysqlDatabase());
   QStringList files=dir.entryList();
   for(int i=0;i<files.size();i++) {
     unlink(files[i].toUtf8());
   }
-  rmdir((main_config->mysqlDataDirectory(Am::This)+"/"+
-	 main_config->globalMysqlDatabase()).toUtf8());
+  rmdir((QString(AM_MYSQL_DATADIR)+"/"+
+	 am_config->globalMysqlDatabase()).toUtf8());
   
   //
   // Install New Database
@@ -126,14 +114,14 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   proc=new QProcess(this);
   args.clear();
   args.push_back("-C");
-  args.push_back(main_config->mysqlDataDirectory(Am::This));
+  args.push_back(AM_MYSQL_DATADIR);
   args.push_back("-xf");
   args.push_back(tempdir+"/sql.tar");
   proc->start("tar",args);
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
-    syslog(LOG_ERR,"database table restore failed [%s]",
-	   (const char *)proc->readAllStandardError());
+    *err_msg=QString::asprintf("database table restore failed [%s]",
+			       proc->readAllStandardError().constData());
     delete proc;
     return false;
   }
@@ -144,23 +132,25 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   proc=new QProcess(this);
   args.clear();
-  args.push_back(main_config->globalMysqlServiceName());
+  args.push_back(am_config->globalMysqlServiceName());
   args.push_back("start");
   proc->start("service",args);
   proc->waitForFinished(-1);
   if(proc->exitCode()!=0) {
-    syslog(LOG_ERR,"%s(8) restart failed [%s]",
-	   (const char *)main_config->globalMysqlServiceName().toUtf8(),
-	   (const char *)proc->readAllStandardError());
+    *err_msg=QString::asprintf("%s(8) restart failed [%s]",
+			       am_config->globalMysqlServiceName().toUtf8().constData(),
+			       proc->readAllStandardError().constData());
     delete proc;
     return false;
   }
   delete proc;
-  if(!OpenMysql(Am::This,addr)) {
+
+  if(!OpenDb(err_msg)) {
     return false;
   }
+
   sql="reset master";
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   delete q;
 
   //
@@ -168,8 +158,7 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   //
   p=new AMProfile();
   if(!p->setSource(tempdir+"/metadata.ini")) {
-    syslog(LOG_ERR,"unable to open metadata in snapshot");
-    CloseMysql();
+    *err_msg=QString::asprintf("unable to open metadata in snapshot");
     return false;
   }
 
@@ -177,36 +166,32 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   // Restart Replication
   //
   sql="stop slave";
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   delete q;
   sql="reset slave";
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   delete q;
   sql=QString("change master to MASTER_HOST=\"")+
-    main_config->address(Am::That,AMConfig::PublicAddress).toString()+"\","+
-    "MASTER_USER=\""+main_config->mysqlUsername(Am::This)+"\","+
-    "MASTER_PASSWORD=\""+main_config->mysqlPassword(Am::This)+"\","+
+    am_config->address(src_sys,AMConfig::PublicAddress).toString()+"\","+
+    "MASTER_USER=\""+am_config->mysqlUsername(src_sys)+"\","+
+    "MASTER_PASSWORD=\""+am_config->mysqlPassword(src_sys)+"\","+
     "MASTER_LOG_FILE=\""+p->stringValue("Master","BinlogFilename")+"\","+
     "MASTER_LOG_POS="+
     QString().sprintf("%d",p->intValue("Master","BinlogPosition"));
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   if(!q->isActive()) {
-    syslog(LOG_ERR,"cannot configure replication source in mysql at %s [%s]",
-	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
-	   q->lastError().text().toUtf8().constData());
+    *err_msg=QString::asprintf("cannot configure replication source [%s]",
+			       q->lastError().text().toUtf8().constData());
     delete q;
-    CloseMysql();
     return false;
   }
   delete q;
   sql="start slave";
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   if(!q->isActive()) {
-    syslog(LOG_ERR,"starting replication slave failed in mysql at %s [%s]",
-	   main_config->address(Am::This,addr).toString().toUtf8().constData(),
-	   q->lastError().text().toUtf8().constData());
+    *err_msg=QString::asprintf("starting replication slave failed [%s]",
+			       q->lastError().text().toUtf8().constData());
     delete q;
-    CloseMysql();
     return false;
   }
   delete q;
@@ -215,13 +200,12 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   // Get New Metadata
   //
   sql="show master status";
-  q=new QSqlQuery(sql,Db());
+  q=new QSqlQuery(sql);
   if(q->first()) {
     *binlog=q->value(0).toString();
     *pos=q->value(1).toInt();
   }
   delete q;
-  CloseMysql();
 
   //
   // Clean Up
@@ -232,4 +216,37 @@ bool MainObject::RestoreMysqlSnapshot(const QString &filename,QString *binlog,
   delete p;
 
   return true;
+}
+
+
+bool MainWidget::OpenDb(QString *err_msg)
+{
+  AMProfile *p=new AMProfile();
+  p->setSource("/etc/amanrmt.conf");
+
+  QSqlDatabase db=
+    QSqlDatabase::addDatabase(p->stringValue("MySQL","Driver","QMYSQL3"));
+  if(!db.isValid()) {
+    *err_msg=QObject::tr("Couldn't initialize MySql driver!");
+    return false;
+  }
+  db.setHostName(p->stringValue("MySQL","Hostname","localhost"));
+  db.setDatabaseName(p->stringValue("MySQL","Database","Rivendell"));
+  db.setUserName(p->stringValue("MySQL","Loginname","amanrmt"));
+  db.setPassword(p->stringValue("MySQL","Password"));
+  if(!db.open()) {
+    *err_msg=QObject::tr("Couldn't open MySQL connection!");
+    db.removeDatabase(p->stringValue("MySQL","Database","Rivendell"));
+    db.close();
+    return false;
+  }
+  delete p;
+
+  return true;
+}
+
+
+void MainWidget::CloseDb()
+{
+  QSqlDatabase::removeDatabase("main_db");
 }

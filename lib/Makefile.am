@@ -22,7 +22,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -std=c++11 -fPIC @QT5_GUI_CFLAGS@
+AM_CPPFLAGS = -Wall -std=c++11 -fPIC @QT5_GUI_CFLAGS@ @LIBCURL_CFLAGS@
 MOC = @QT_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)

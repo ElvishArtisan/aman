@@ -326,3 +326,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Moved the 'Connection' class to 'AMConnctionClass'.
 2022-03-04 Fred Gleason <fredg@paravelsystems.com>
 	* Stubbed out amanrmt(1) client.
+2022-03-07 Fred Gleason <fredg@paravelsystems.com>
+	* Got DB replication working in amanrmt(1).

@@ -71,6 +71,11 @@ AC_CHECK_PROG(LRELEASE_NAME,lrelease-qt5,[lrelease-qt5],[lrelease])
 AC_SUBST(QT_LRELEASE,$LRELEASE_NAME)
 
 #
+# Check for OpenSSL
+#
+PKG_CHECK_MODULES(LIBCURL,libcurl,[],[AC_MSG_ERROR([*** LibCURL not found ***])])
+
+#
 # Build DocBook Items?
 #
 if test -z $DOCBOOK_DISABLED ; then

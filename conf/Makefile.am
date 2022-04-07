@@ -28,6 +28,7 @@ uninstall-local:
 	rm -f $(DESTDIR)/etc/security/limits.d/aman-mysql-limits.conf
 
 EXTRA_DIST = aman.conf-sample\
+             amanrmt.conf-sample\
              aman.cnf-SystemA-rhel7-sample\
              aman.cnf-SystemB-rhel7-sample\
              aman-mysql-limits.conf\

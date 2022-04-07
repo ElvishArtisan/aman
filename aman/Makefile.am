@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -std=c++11 -fPIC -DPREFIX=\"$(prefix)\" @QT5_GUI_CFLAGS@
+AM_CPPFLAGS = -Wall -I$(top_srcdir)/lib -std=c++11 -fPIC -DPREFIX=\"$(prefix)\" @QT5_GUI_CFLAGS@ @LIBCURL_CFLAGS@
 LIBS = -L$(top_srcdir)/lib
 MOC = @QT_MOC@
 
@@ -35,7 +35,7 @@ dist_aman_SOURCES = aman.cpp aman.h
 
 nodist_aman_SOURCES = moc_aman.cpp
 
-aman_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@
+aman_LDADD = @LIB_ALIBS@ @QT5_GUI_LIBS@ @LIBCURL_LIBS@
 aman_LDFLAGS = @LIB_AFLAGS@
 
 CLEANFILES = *~\

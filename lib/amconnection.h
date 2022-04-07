@@ -27,6 +27,8 @@
 #include <QObject>
 #include <QTcpSocket>
 
+#include <curl/curl.h>
+
 #include <amstate.h>
 
 #include "am.h"
@@ -76,10 +78,13 @@ class AMConnection : public QObject
   AMConnection(QObject *parent=0);
   ~AMConnection();
   void connectToHost(const QString &hostname,uint16_t port);
+  bool isConnected() const;
   AMStatus *status(int sys);
 
  public slots:
   void generateSnapshot();
+  bool downloadSnapshot(const QString &name,const QString &ssh_id,
+			QString *err_msg);
   void loadSnapshot(const QString &name);
   void makeDbMaster();
   void makeDbSlave();
@@ -110,6 +115,7 @@ class AMConnection : public QObject
   QString conn_hostname;
   QString conn_localname;
   uint16_t conn_port;
+  char conn_curl_errorbuffer[CURL_ERROR_SIZE];
 };
 
 

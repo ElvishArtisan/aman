@@ -28,6 +28,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QProgressDialog>
+#include <QTimer>
 #include <QWidget>
 
 #include <amconfig.h>
@@ -44,15 +45,16 @@ class MainWidget : public QWidget
  private slots:
   void connectedData(int inst);
   void disconnectedData(int inst);
-  void makeDbSlaveData(int inst);
-  void makeDbIdleData(int inst);
-  void startAudioData(int inst);
-  void stopAudioData(int inst);
+  void makeDbSlaveData();
+  void makeDbIdleData();
+  void startAudioData();
+  void stopAudioData();
   void statusChangedData(AMStatus *a,AMStatus *b);
-
   void snapshotGeneratedData(const QString &name);
   void loadSnapshotData();
   void snapshotLoadedData(const QString &name);
+
+  void checkDbReplicationData();
 
  protected:
   void resizeEvent(QResizeEvent *e);
@@ -62,6 +64,12 @@ class MainWidget : public QWidget
   void UpdateSourceStatus(int sys,AMStatus *s);
   void EnableSourceFields(int inst,bool state);
   void DrawFrame(QPainter *p,const QRect &rect,QLabel *label);
+  bool RestoreMysqlSnapshot(const QString &filename,QString *binlog,int *pos,
+			    int src_sys,QString *err_msg);
+  int GetMasterServerId() const;
+  bool OpenDb(QString *err_msg);
+  void CloseDb();
+  QString MakeTempDir();
   QLabel *am_source_label;
   QLabel *am_src_system_label[2];
   QLabel *am_src_hostname_label[2];
@@ -83,14 +91,19 @@ class MainWidget : public QWidget
   QLineEdit *am_dst_audio_state_edit;
   QLabel *am_dst_audio_replicating_label;
   AMStatusLight *am_dst_audio_replicating_light;
-  QPushButton *am_db_slave_button[2];
+  QPushButton *am_db_slave_button;
   QPushButton *am_db_idle_button;
-  QPushButton *am_audio_slave_button[2];
+  QPushButton *am_audio_slave_button;
   QPushButton *am_audio_idle_button;
   QProgressDialog *am_progress_dialog;
   AMConnection *am_connection[2];
+  AMConnection *am_active_connection;
   int am_connection_table[2];
   AMConfig *am_config;
+  AMState *am_state;
+
+  QTimer *am_check_db_replication_timer;
+  unsigned am_check_db_prev_ping;
 };
 
 

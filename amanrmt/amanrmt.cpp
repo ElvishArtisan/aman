@@ -21,12 +21,16 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <curl/curl.h>
+
 #include <QApplication>
 #include <QFileDialog>
 #include <QFontMetrics>
 #include <QMessageBox>
 #include <QPainter>
 #include <QSignalMapper>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include "amanrmt.h"
 
@@ -38,8 +42,11 @@
 MainWidget::MainWidget(QWidget *parent)
   : QWidget(parent)
 {
+  QString err_msg;
+
   am_connection_table[0]=0;
   am_connection_table[1]=1;
+  am_active_connection=NULL;
 
   setWindowTitle(tr("Rivendell Server Manager")+" v"+VERSION);
   setWindowIcon(QPixmap(aman_xpm));
@@ -58,6 +65,11 @@ MainWidget::MainWidget(QWidget *parent)
   }
 
   //
+  // Initialize CURL
+  //
+  curl_global_init(CURL_GLOBAL_ALL);
+
+  //
   // Fonts
   //
   QFont title_font(font().family(),font().pointSize(),QFont::Bold);
@@ -71,6 +83,16 @@ MainWidget::MainWidget(QWidget *parent)
     QMessageBox::warning(this,tr("Server Monitor"),
 	       tr("Unable to read configuration from \"/etc/aman.conf\"."));
     exit(256);
+  }
+
+  am_state=new AMState();
+
+  //
+  // Connect to local DB
+  //
+  if(!OpenDb(&err_msg)) {
+    QMessageBox::critical(this,"AmanRmt - "+tr("Error"),err_msg);
+    exit(1);
   }
 
   //
@@ -93,6 +115,8 @@ MainWidget::MainWidget(QWidget *parent)
   connect(am_connection[0],SIGNAL(statusChanged(AMStatus *,AMStatus *)),
 	  this,SLOT(statusChangedData(AMStatus *,AMStatus *)));
   connect(am_connection[0],SIGNAL(snapshotGenerated(const QString &)),
+	  this,SLOT(snapshotGeneratedData(const QString &)));
+  connect(am_connection[1],SIGNAL(snapshotGenerated(const QString &)),
 	  this,SLOT(snapshotGeneratedData(const QString &)));
   connect(am_connection[0],SIGNAL(snapshotLoaded(const QString &)),
 	  this,SLOT(snapshotLoadedData(const QString &)));
@@ -175,43 +199,48 @@ MainWidget::MainWidget(QWidget *parent)
   am_dst_audio_replicating_label->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
   am_dst_audio_replicating_light=new AMStatusLight(this);
 
-  for(int i=0;i<2;i++) {
-    am_db_slave_button[i]=new QPushButton(tr("Make Slave"),this);
-    am_db_slave_button[i]->setFont(title_font);
-    //    connect(am_db_slave_button[i],SIGNAL(clicked()),
-    //	    db_slave_mapper,SLOT(map()));
-    am_db_slave_button[i]->setDisabled(true);
+  am_db_slave_button=new QPushButton(tr("Make Slave"),this);
+  am_db_slave_button->setFont(title_font);
+  connect(am_db_slave_button,SIGNAL(clicked()),
+	  this,SLOT(makeDbSlaveData()));
+  am_db_slave_button->setDisabled(true);
 
-    am_audio_slave_button[i]=new QPushButton(tr("Start Slave"),this);
-    am_audio_slave_button[i]->setFont(title_font);
-    //    connect(am_audio_slave_button[i],SIGNAL(clicked()),
-    //	    audio_slave_mapper,SLOT(map()));
-    am_audio_slave_button[i]->setDisabled(true);
-  }
   am_db_idle_button=new QPushButton(tr("Make Idle"),this);
   am_db_idle_button->setFont(title_font);
-  //    connect(am_db_idle_button,SIGNAL(clicked()),
-  //	    db_idle_mapper,SLOT(map()));
+  connect(am_db_idle_button,SIGNAL(clicked()),
+	  this,SLOT(makeDbIdleData()));
   am_db_idle_button->setDisabled(true);
+
+  am_audio_slave_button=new QPushButton(tr("Start Slave"),this);
+  am_audio_slave_button->setFont(title_font);
+  connect(am_audio_slave_button,SIGNAL(clicked()),
+	  this,SLOT(startAudioData()));
+  am_audio_slave_button->setDisabled(true);
 
   am_audio_idle_button=new QPushButton(tr("Make Idle"),this);
   am_audio_idle_button->setFont(title_font);
-  //    connect(am_audio_idle_button,SIGNAL(clicked()),
-  //	    audio_idle_mapper,SLOT(map()));
+  connect(am_audio_idle_button,SIGNAL(clicked()),
+	  this,SLOT(stopAudioData()));
   am_audio_idle_button->setDisabled(true);
 
   //
   // Start Source Server Connections
   //
   am_connection[0]->
-    connectToHost(am_config->address(0,AMConfig::PrivateAddress).toString(),
+    connectToHost(am_config->address(0,AMConfig::PublicAddress).toString(),
 		  AM_CMD_TCP_PORT);
   am_connection[1]->
-    connectToHost(am_config->address(1,AMConfig::PrivateAddress).toString(),
+    connectToHost(am_config->address(1,AMConfig::PublicAddress).toString(),
 		  AM_CMD_TCP_PORT);
 
   EnableSourceFields(0,false);
   EnableSourceFields(1,false);
+
+  am_check_db_prev_ping=0;
+  am_check_db_replication_timer=new QTimer(this);
+  connect(am_check_db_replication_timer,SIGNAL(timeout()),
+	  this,SLOT(checkDbReplicationData()));
+  am_check_db_replication_timer->start(1000);
 }
 
 
@@ -233,27 +262,66 @@ void MainWidget::disconnectedData(int inst)
 }
 
 
-void MainWidget::makeDbSlaveData(int inst)
+void MainWidget::makeDbSlaveData()
 {
-  //  am_connection[am_connection_table[inst]]->makeDbSlave();
-  //  am_progress_dialog->setValue(0);
+  //
+  // Get Master Connection
+  //
+  int master_id=GetMasterServerId();
+  /*
+  for(int i=0;i<2;i++) {
+    if(am_connection[i]->isConnected()) {
+      if(am_connection[i]->status(i)->dbState()==AMState::StateMaster) {
+	am_active_connection=am_connection[i];
+	am_source_sys=i;
+	break;
+      }
+    }
+  }
+  */
+  if(master_id<0) {
+    QMessageBox::warning(this,tr("Server Manager - Error"),
+			 tr("No master server available!"));
+    am_active_connection=NULL;
+    return;
+  }
+  am_active_connection=am_connection[master_id];
+
+  //
+  // Get Snapshot
+  //
+  am_active_connection->generateSnapshot();
 }
 
 
-void MainWidget::makeDbIdleData(int inst)
+void MainWidget::makeDbIdleData()
 {
-  //  am_connection[am_connection_table[inst]]->makeDbIdle();
-  //  am_progress_dialog->setValue(0);
+  QString sql;
+  QSqlQuery *q=NULL;
+
+  //
+  // Stop Replication
+  //
+  sql="stop slave";
+  q=new QSqlQuery(sql);
+  delete q;
+
+  sql="reset slave";
+  q=new QSqlQuery(sql);
+  delete q;
+
+  am_db_slave_button->setEnabled(true);
+  am_db_idle_button->setDisabled(true);
 }
 
 
-void MainWidget::startAudioData(int inst)
+void MainWidget::startAudioData()
 {
   //  am_connection[am_connection_table[inst]]->startAudioSlave();
 }
 
 
-void MainWidget::stopAudioData(int inst)
+void MainWidget::stopAudioData()
 {
   //  am_connection[am_connection_table[inst]]->stopAudioSlave();
 }
@@ -327,13 +395,37 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
     am_src_audio_state_edit[1]->setText(AMState::stateString(a->audioState()));
     break;
   }
+
+  //
+  // Update Local State Indicators
+  //
+  am_dst_db_state_edit->setText(AMState::stateString(am_state->dbState()));
+  am_db_slave_button->setEnabled(((a->dbState()==AMState::StateMaster)||
+				  (b->dbState()==AMState::StateMaster))&&
+				 (am_state->dbState()==AMState::StateIdle));
+  am_db_idle_button->setEnabled(a->dbState()==AMState::StateSlave);
 }
 
 
 void MainWidget::snapshotGeneratedData(const QString &name)
 {
-  QMessageBox::information(this,tr("Server Maanger - Snapshot Generated"),
-			   tr("Generated snapshot")+":\n \""+name+"\".");
+  QString err_msg;
+  QString binlog;
+  int pos=0;
+
+  if(!am_active_connection->
+     downloadSnapshot(name,AM_AMANRMT_IDENTITY_FILE,&err_msg)) {
+    QMessageBox::warning(this,tr("Server Manager - Error"),
+			 tr("Error generating snapshot")+": "+err_msg);
+    return;
+  }
+  if(!RestoreMysqlSnapshot(name,&binlog,&pos,GetMasterServerId(),&err_msg)) {
+    QMessageBox::warning(this,tr("Server Manager - Error"),
+			 tr("Error restoring snapshot")+": "+err_msg);
+    return;
+  }
+  am_db_slave_button->setDisabled(true);
+  am_db_idle_button->setEnabled(true);
 }
 
 
@@ -354,6 +446,67 @@ void MainWidget::snapshotLoadedData(const QString &name)
 {
   QMessageBox::information(this,tr("Server Maanger - Snapshot Loaded"),
 			   tr("Loaded snapshot")+":\n \""+name+"\".");
+}
+
+
+void MainWidget::checkDbReplicationData()
+{
+  QString sql;
+  QSqlQuery *q=NULL;
+  int master_id=-1;
+
+  //
+  // State Check
+  //
+  // FIXME: "information_schema" becomes "performance_schema" in MySQL 5.7
+  //        and later. See:
+  //  https://stackoverflow.com/questions/7009021/how-to-know-mysql-replication-status-using-a-select-query
+  //
+  sql=QString("select variable_value FROM information_schema.global_status ")+
+	      "where variable_name='SLAVE_RUNNING'";
+  q=new QSqlQuery(sql);
+  if(q->first()) {
+    if(q->value(0).toString().toUpper()=="ON") {
+      am_dst_db_state_edit->setText(AMState::stateString(AMState::StateSlave));
+      am_db_slave_button->setDisabled(true);
+      am_db_idle_button->setEnabled(true);
+    }
+    else {
+      am_dst_db_state_edit->setText(AMState::stateString(AMState::StateIdle));
+      am_db_slave_button->setEnabled(true);
+      am_db_idle_button->setDisabled(true);
+    }
+  }
+  else {
+    am_dst_db_state_edit->setText(AMState::stateString(AMState::StateOffline));
+    am_db_slave_button->setDisabled(true);
+    am_db_idle_button->setDisabled(true);
+  }
+  delete q;
+
+  //
+  // Confidence Monitor Check
+  //
+  if((master_id=GetMasterServerId())>=0) {
+    sql=QString("select ")+
+      "`VALUE` "+  // 00
+      "from `"+am_config->pingTablename(master_id)+"`";
+    q=new QSqlQuery(sql);
+    if(q->next()) {
+      am_dst_db_replicating_light->
+	setStatus(q->value(0).toUInt()!=am_check_db_prev_ping);
+      am_check_db_prev_ping=q->value(0).toUInt();
+    }
+    else {
+      am_check_db_prev_ping=0;
+      am_dst_db_replicating_light->setStatus(false);
+    }
+    delete q;
+  }
+  else {
+    am_check_db_prev_ping=0;
+    am_dst_db_replicating_light->setStatus(false);
+  }
 }
 
 
@@ -397,9 +550,7 @@ void MainWidget::resizeEvent(QResizeEvent *e)
     setGeometry(size().width()/2,210,size().width()/2-105,20);
   am_dst_db_replicating_light->setGeometry(size().width()/2-70,232,20,20);
   am_dst_db_replicating_label->setGeometry(size().width()/2-45,232,150,20);
-  for(int i=0;i<2;i++) {
-    am_db_slave_button[i]->setGeometry(20+i*size().width()/2,254,170,35);
-  }
+  am_db_slave_button->setGeometry(85,254,240,35);
   am_db_idle_button->setGeometry(85,294,240,35);
 
   am_dst_audio_state_label->setGeometry(10,344,size().width()/2-15,20);
@@ -407,9 +558,7 @@ void MainWidget::resizeEvent(QResizeEvent *e)
     setGeometry(size().width()/2,344,size().width()/2-105,20);
   am_dst_audio_replicating_light->setGeometry(size().width()/2-70,366,20,20);
   am_dst_audio_replicating_label->setGeometry(size().width()/2-45,366,150,20);
-  for(int i=0;i<2;i++) {
-    am_audio_slave_button[i]->setGeometry(20+i*size().width()/2,388,170,35);
-  }
+  am_audio_slave_button->setGeometry(85,388,240,35);
   am_audio_idle_button->setGeometry(85,428,240,35);
 }
 
@@ -475,6 +624,37 @@ void MainWidget::DrawFrame(QPainter *p,const QRect &rect,QLabel *label)
   p->drawLine(rect.x(),rect.y()+rect.height(),rect.width(),rect.y()+rect.height());
 
   delete fm;
+}
+
+
+int MainWidget::GetMasterServerId() const
+{
+  int sys=-1;
+
+  for(int i=0;i<2;i++) {
+    if(am_connection[i]->isConnected()) {
+      if(am_connection[i]->status(i)->dbState()==AMState::StateMaster) {
+	sys=i;
+	break;
+      }
+    }
+  }
+  return sys;
+}
+
+
+QString MainWidget::MakeTempDir()
+{
+  char dirpath[PATH_MAX];
+
+  strcpy(dirpath,"/tmp/amanrmtXXXXXX");
+  if(mkdtemp(dirpath)==NULL) {
+    QMessageBox::critical(this,"AmanRmt - "+tr("Error"),
+			  tr("Unable to create temporary directory")+
+			  " ["+strerror(errno)+"].");
+    exit(1);
+  }
+  return QString(dirpath);
 }
 
 

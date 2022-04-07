@@ -75,6 +75,7 @@
  */
 #define AM_IDENTITY_FILE "/var/aman/keys/id_dsa"
 
+#define AM_AMANRMT_IDENTITY_FILE "/var/aman/keys/id_rsa_amanrmt"
 /*
  * Snapshot File Extension
  */

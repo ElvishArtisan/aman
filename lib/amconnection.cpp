@@ -20,7 +20,9 @@
 
 #include <unistd.h>
 
+#include <QHostAddress>
 #include <QStringList>
+#include <QUrl>
 
 #include "amconnection.h"
 
@@ -146,6 +148,16 @@ void AMStatus::setLocal(bool state)
 }
 
 
+
+
+size_t __AMConnection_WriteCallback(char *ptr, size_t size, size_t nmemb, 
+				    void *userdata)
+{
+  fwrite(ptr,size,nmemb,(FILE *)userdata);
+
+  return size*nmemb;
+}
+
 AMConnection::AMConnection(QObject *parent)
   : QObject(parent)
 {
@@ -204,6 +216,12 @@ void AMConnection::connectToHost(const QString &hostname,uint16_t port)
 }
 
 
+bool AMConnection::isConnected() const
+{
+  return conn_socket->state()==QAbstractSocket::ConnectedState;
+}
+
+
 AMStatus *AMConnection::status(int sys)
 {
   return conn_status[sys];
@@ -212,7 +230,65 @@ AMStatus *AMConnection::status(int sys)
 
 void AMConnection::generateSnapshot()
 {
+  printf("snapshot addr: %s\n",
+	 conn_socket->peerAddress().toString().toUtf8().constData());
   conn_socket->write("GS!",3);
+}
+
+
+bool AMConnection::downloadSnapshot(const QString &name,const QString &ssh_id,
+				    QString *err_msg)
+{
+  CURL *curl=NULL;
+  FILE *f=NULL;
+  long resp_code=0;
+  QString filepath=QString(AM_SNAPSHOT_DIR)+"/"+name;
+  QUrl url(QString("sftp://")+conn_hostname+filepath);
+
+  if((f=fopen(filepath.toUtf8(),"w"))==NULL) {
+    *err_msg=tr("Unable to download snapshot")+" ["+strerror(errno)+"]";
+    return false;
+  }
+
+  if((curl=curl_easy_init())==NULL) {
+    *err_msg=tr("Unable to initialize the cURL subsystem!");
+    unlink(filepath.toUtf8());
+    return false;
+  }
+  curl_easy_setopt(curl,CURLOPT_VERBOSE,1);
+  curl_easy_setopt(curl,CURLOPT_USERNAME,"root");
+  curl_easy_setopt(curl,CURLOPT_SSH_PRIVATE_KEYFILE,
+		   ssh_id.toUtf8().constData());
+  curl_easy_setopt(curl,CURLOPT_ERRORBUFFER,conn_curl_errorbuffer);
+
+  curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,__AMConnection_WriteCallback);
+  curl_easy_setopt(curl,CURLOPT_WRITEDATA,(void *)f);
+  curl_easy_setopt(curl,CURLOPT_URL,url.toEncoded().constData());
+  CURLcode code=curl_easy_perform(curl);
+  if(code==CURLE_OK) {
+    curl_easy_getinfo(curl,CURLINFO_RESPONSE_CODE,&resp_code);
+    if(((resp_code<200)||(resp_code>=300))&&(resp_code!=0)) {
+      *err_msg=
+	QString::asprintf("Snapshot download failed, returned code %lu",
+			  resp_code);
+      fclose(f);
+      unlink(filepath.toUtf8());
+      curl_easy_cleanup(curl);
+      return false;
+    }
+  }
+  else {
+    *err_msg=tr("Snapshot download failed")+" ["+conn_curl_errorbuffer+"]";
+    fclose(f);
+    unlink(filepath.toUtf8());
+    curl_easy_cleanup(curl);
+    return false;
+  }
+
+  fclose(f);
+  curl_easy_cleanup(curl);
+  *err_msg=tr("OK");
+  return true;
 }
 
 

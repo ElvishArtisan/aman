@@ -170,7 +170,8 @@ QHostAddress AMConfig::address(Am::Instance inst,AMConfig::Address addr) const
 
 QHostAddress AMConfig::address(int n,AMConfig::Address addr) const
 {
-  return conf_addresses.at((int)addr).at(n);
+  return conf_addresses.at(n).at((int)addr);
+  //  return conf_addresses.at((int)addr).at(n);
 }
 
 
@@ -260,6 +261,7 @@ bool AMConfig::load()
 
   bool ret=Validate(p);
   delete p;
+
   return ret;
 }
 
