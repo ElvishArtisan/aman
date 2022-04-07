@@ -1,7 +1,7 @@
 ## aman.spec.in
 ##
 ##    The Aman Rivendell Server Manager
-##    Copyright (C) 2012-2021  Fred Gleason <fredg@paravelsystems.com>
+##    Copyright (C) 2012-2022  Fred Gleason <fredg@paravelsystems.com>
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of version 2 of the GNU General Public License as
@@ -28,6 +28,7 @@ Group: Productivity/Multimedia/Other
 Source: %{name}-@VERSION@.tar.gz
 Requires: @MYSQL_PKG@ @QT5_MYSQL_PKG@ @XINETD_PKG@ rsync perl-TermReadKey perl-DBD-MySQL bzip2
 BuildRoot: /var/tmp/%{name}-@VERSION@
+Conflicts: aman-remote
 
 %description
 Aman is a package for managing a redundant pair of servers for the
@@ -35,6 +36,14 @@ Rivendell Radio Automation System.  It includes facilities for monitoring
 the status of each server and managing data replication between them for
 both the database and audio stores.
 
+%package remote
+Summary: Allow an additional systemto replicate from an Aman cluster
+Group: Productivity/Multimedia/Other
+Conflicts: aman
+
+%description remote
+This package allows a third system to replicate data (database and audio) from
+an Aman server cluster.
 
 %prep
 
@@ -132,7 +141,32 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/command_protocol.txt
 %doc docs/mysql_states.gxd
 
+%files remote
+%defattr(-,root,root)
+%{_libdir}/libaman-@VERSION@.so
+%{_libdir}/libaman.so
+%{_bindir}/amanrmt
+%{_bindir}/amanrmt-root
+/etc/pam.d/amanrmt-root
+/etc/security/console.apps/amanrmt-root
+/usr/share/icons/hicolor/16x16/apps/aman.png
+/usr/share/icons/hicolor/22x22/apps/aman.png
+/usr/share/icons/hicolor/32x32/apps/aman.png
+/usr/share/icons/hicolor/48x48/apps/aman.png
+/usr/share/applications/aman-amanrmt.desktop
+%dir /var/aman/keys
+%dir /var/aman/snapshots
+%doc AUTHORS
+%doc ChangeLog
+%doc COPYING 
+%doc INSTALL
+%doc NEWS 
+%doc README 
+%doc conf/amanrmt.conf-sample
+
 %changelog
+* Thu Apr  7 2022 Fred Gleason <fredg@paravelsystems.com>
+-- Added amanrmt(1).
 * Mon Nov  1 2021 Fred Gleason <fredg@paravelsystems.com>
 -- Converted to use Qt5.
 -- Converted startup system to Systemd.

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Terminal=false
+Categories=System;Application;
+Name=Rivendell Server Manager
+GenericName=Server Manager
+Exec=amanrmt-root
+Icon=aman
+Type=Application
+Terminal=false
+X-KDE-SubstituteUID=true
+X-KDE-Username=root

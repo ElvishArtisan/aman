@@ -2,7 +2,7 @@
 ##
 ## xdg/automake.am for Aman
 ##
-##   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+##   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -22,22 +22,34 @@
 install-exec-local:	
 	mkdir -p $(DESTDIR)@prefix@/share/applications
 	cp aman-aman.desktop $(DESTDIR)@prefix@/share/applications/
+	cp aman-amanrmt.desktop $(DESTDIR)@prefix@/share/applications/
 	mkdir -p $(DESTDIR)/etc/pam.d
 	cp aman-root-pam $(DESTDIR)/etc/pam.d/aman-root
+	cp amanrmt-root-pam $(DESTDIR)/etc/pam.d/amanrmt-root
 	mkdir -p $(DESTDIR)/etc/security/console.apps
 	cp aman-root-consolehelper $(DESTDIR)/etc/security/console.apps/aman-root
+	cp amanrmt-root-consolehelper $(DESTDIR)/etc/security/console.apps/amanrmt-root
 	rm -f $(DESTDIR)@prefix@/bin/aman-root
 	ln -s /usr/bin/consolehelper $(DESTDIR)@prefix@/bin/aman-root
+	rm -f $(DESTDIR)@prefix@/bin/amanrmt-root
+	ln -s /usr/bin/consolehelper $(DESTDIR)@prefix@/bin/amanrmt-root
 
 uninstall-local:	
 	rm -f $(DESTDIR)@prefix@/share/applications/aman-aman.desktop
 	rm -f $(DESTDIR)/etc/pam.d/aman-root
 	rm -f $(DESTDIR)/etc/security/console.apps/aman-root
 	rm -f $(DESTDIR)@prefix@/sbin/aman-root
+	rm -f $(DESTDIR)@prefix@/share/applications/aman-amanrmt.desktop
+	rm -f $(DESTDIR)/etc/pam.d/amanrmt-root
+	rm -f $(DESTDIR)/etc/security/console.apps/amanrmt-root
+	rm -f $(DESTDIR)@prefix@/sbin/amanrmt-root
 
 EXTRA_DIST = aman-aman.desktop\
+             aman-amanrmt.desktop\
              aman-root-consolehelper\
-             aman-root-pam
+             aman-root-pam\
+             amanrmt-root-consolehelper\
+             amanrmt-root-pam
 
 CLEANFILES = *~
 
