@@ -101,6 +101,8 @@ privileges on the 'Rivendell' database:
      Delete
      Reload
      Super
+     Create
+     Drop
      Replication Slave
      Replication Client
 

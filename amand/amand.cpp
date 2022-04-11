@@ -758,9 +758,31 @@ void MainObject::SendAlert(const QString &msg)
 
 void MainObject::InitializePingTable()
 {
+  QString sql;
+  QSqlQuery *q=NULL;
+  QSqlQuery *q1=NULL;
+
   for(int i=0;i<Am::LastInstance;i++) {
+    sql="show tables like '"+main_config->pingTablename((Am::Instance)i)+"'";
+    q=new QSqlQuery(sql,Db());
+    if(q->first()) {
+      sql="drop table "+main_config->pingTablename((Am::Instance)i);
+      q1=new QSqlQuery(sql,Db());
+      if(!q1->isActive()) {
+	syslog(LOG_ERR,"unable to create MySQL table %s at %s [%s]",
+	       main_config->pingTablename((Am::Instance)i).toUtf8().constData(),
+	       main_config->address((Am::Instance)i,AMConfig::PublicAddress).
+	       toString().toUtf8().constData(),
+	       q->lastError().text().toUtf8().constData());
+      }
+      delete q1;
+    }
+    delete q;
+
     QString sql="create table if not exists "+
-      main_config->pingTablename((Am::Instance)i)+" (VALUE int not null primary key)";
+      main_config->pingTablename((Am::Instance)i)+
+      " (VALUE int not null primary key) "+
+      "engine MyISAM";
     QSqlQuery *q=new QSqlQuery(sql,Db());
     if(!q->isActive()) {
       syslog(LOG_ERR,"unable to create MySQL table %s at %s [%s]",

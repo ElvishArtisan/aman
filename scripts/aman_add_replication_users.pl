@@ -4,7 +4,7 @@
 #
 #  Add MySQL Replication User Logins for Aman
 #
-# (C) Copyright 2013 Fred Gleason <fredg@paravelsystems.com>
+# (C) Copyright 2013-2022 Fred Gleason <fredg@paravelsystems.com>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License version 2 as
@@ -139,6 +139,8 @@ foreach(@addresses) {
 	"`Delete_priv`='Y',".
 	"`Reload_priv`='Y',".
 	"`Super_priv`='Y',".
+	"`Create_priv`='Y',".
+	"`Drop_priv`='Y',".
 	"`Repl_slave_priv`='Y',".
 	"`Repl_client_priv`='Y'";
     ExecuteSql($dbh,$sql);

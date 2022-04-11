@@ -334,3 +334,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Added an 'aman-remote' RPM subpackage.
 2022-03-07 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.9.18rmt0.
+2022-03-11 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in amand(8) that could cause the ping tables to be
+	created with the incorrect table engine type.
