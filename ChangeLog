@@ -343,3 +343,7 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Added an 'AMConnection::errorReturned()' signal.
 2022-03-12 Fred Gleason <fredg@paravelsystems.com>
 	* Added a modeless progress dialog box to aman(1).
+2022-03-12 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in aman(1) that caused the 'Make Master' button
+	to be enabled for a host when the opposite system was already
+	Master.

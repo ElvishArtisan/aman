@@ -293,7 +293,7 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
     break;
 
   case AMState::StateIdle:
-    am_db_master_button[0]->setEnabled(true);
+    am_db_master_button[0]->setEnabled(b->dbState()!=AMState::StateMaster);
     am_db_slave_button[0]->setEnabled(b->dbState()==AMState::StateMaster);
     am_db_idle_button[0]->setEnabled(false);
     break;
@@ -352,7 +352,7 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
     break;
 
   case AMState::StateIdle:
-    am_db_master_button[1]->setEnabled(true);
+    am_db_master_button[1]->setEnabled(a->dbState()!=AMState::StateMaster);
     am_db_slave_button[1]->setEnabled(a->dbState()==AMState::StateMaster);
     am_db_idle_button[1]->setEnabled(false);
     break;
