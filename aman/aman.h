@@ -27,7 +27,6 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QProgressDialog>
 
 #include <amconfig.h>
 #include <amstatuslight.h>
@@ -49,6 +48,7 @@ class MainWidget : public QWidget
   void startAudioData(int inst);
   void stopAudioData(int inst);
   void statusChangedData(AMStatus *a,AMStatus *b);
+  void showConnectionError(const QString &str);
 
   void snapshotGeneratedData(const QString &name);
   void loadSnapshotData();
@@ -85,7 +85,6 @@ class MainWidget : public QWidget
   AMStatusLight *am_audio_replicating_light[2];
   QPushButton *am_audio_slave_button[2];
   QPushButton *am_audio_idle_button[2];
-  QProgressDialog *am_progress_dialog;
   AMConnection *am_connection[2];
   int am_connection_table[2];
   AMConfig *am_config;

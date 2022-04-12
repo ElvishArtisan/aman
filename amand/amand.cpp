@@ -628,7 +628,7 @@ bool MainObject::StopSlaves()
 }
 
 
-QSqlDatabase MainObject::Db()
+QSqlDatabase MainObject::Db() const
 {
   return QSqlDatabase::database("main_db");
 }
@@ -816,6 +816,30 @@ void MainObject::InitializePingTable()
     }
     delete q;
   }
+}
+
+
+bool MainObject::CheckTableEngines(const QString &eng_name)
+{
+  QStringList table_names;
+  QString sql;
+  QSqlQuery *q=NULL;
+
+  sql=QString("show table status");
+  q=new QSqlQuery(sql,Db());
+  while(q->next()) {
+    if(q->value(1).toString().toLower()!=eng_name.toLower()) {
+      table_names.push_back(q->value(0).toString());
+    }
+  }
+  delete q;
+
+  for(int i=0;i<table_names.size();i++) {
+    syslog(LOG_WARNING,"rivendell DB table \"%s\" is not MyISAM",
+	   table_names.at(i).toUtf8().constData());
+  }
+
+  return table_names.size()==0;
 }
 
 

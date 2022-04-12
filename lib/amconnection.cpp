@@ -386,7 +386,30 @@ void AMConnection::watchdogData()
 
 void AMConnection::ProcessMessage()
 {
+  //  printf("AMConnection processing: %s\n",conn_buffer.toUtf8().constData());
   QStringList fields=conn_buffer.split(" ");
+
+  if(fields[0]=="MM") {
+    if(fields.size()!=2) {
+      emit errorReturned(tr("MM returned corrupt message!"));
+    }
+    else {
+      if(fields.at(1)=="-") {
+	emit errorReturned(tr("Set DB replication to MASTER failed!"));
+      }
+    }
+  }
+
+  if(fields[0]=="MS") {
+    if(fields.size()!=2) {
+      emit errorReturned(tr("MS returned corrupt message!"));
+    }
+    else {
+      if(fields.at(1)=="-") {
+	emit errorReturned(tr("Set DB replication to SLAVE failed!"));
+      }
+    }
+  }
 
   if(fields[0]=="ST") {
     if(fields.size()==17) {
@@ -410,17 +433,41 @@ void AMConnection::ProcessMessage()
 
   if(fields[0]=="GS") {
     if(fields.size()==2) {
+      if(fields.at(1)=="-") {
+	emit errorReturned(tr("Snapshot generation failed!"));
+      }
       emit snapshotGenerated(fields[1]);
+    }
+    else {
+      emit errorReturned(tr("GS returned corrupt message!"));
     }
     return;
   }
 
   if(fields[0]=="LS") {
     if(fields.size()==3) {
+      if(fields.at(0)=="-") {
+	emit errorReturned(tr("Snapshot load failed!"));
+      }
       emit snapshotLoaded(fields[1]);
+    }
+    else {
+      emit errorReturned(tr("LS returned corrupt message!"));
     }
     return;
   }
+
+  if(fields[0]=="SM") {
+    if(fields.size()==3) {
+      if(fields.at(0)=="-") {
+	emit errorReturned(tr("Set database replication metadata failed!"));
+      }
+    }
+    else {
+      emit errorReturned(tr("SM returned corrupt message!"));
+    }
+  }
+
   /*
   fprintf(stderr,"unknown/malformated control message received [%s]\n",
 	  conn_buffer.toUtf8().constData());

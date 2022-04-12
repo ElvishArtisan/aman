@@ -2,7 +2,7 @@
 //
 // amand(8) Monitoring Daemon.
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -75,7 +75,7 @@ class MainObject : public QObject
   bool RestoreMysqlSnapshot(const QString &filename,QString *binlog,int *pos);
   bool SetMysqlMetadata(const QString &binlog_name,int binlog_pos);
   bool StopSlaves();
-  QSqlDatabase Db();
+  QSqlDatabase Db() const;
   bool OpenMysql(Am::Instance inst,AMConfig::Address addr);
   void CloseMysql();
   bool PushFile(const QString &srcfile,const QString &desthost,
@@ -84,6 +84,7 @@ class MainObject : public QObject
   QString MakeSnapshotName() const;
   void SendAlert(const QString &msg);
   void InitializePingTable();
+  bool CheckTableEngines(const QString &eng_name);
   bool debug;
   StreamCmdServer *main_cmd_server;
   PingMonitor *main_monitor;

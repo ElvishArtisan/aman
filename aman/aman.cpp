@@ -2,7 +2,7 @@
 //
 // aman(8) Monitoring Client.
 //
-//   (C) Copyright 2012-2019 Fred Gleason <fredg@paravelsystems.com>
+//   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License version 2 as
@@ -95,15 +95,10 @@ MainWidget::MainWidget(QWidget *parent)
 	  this,SLOT(snapshotGeneratedData(const QString &)));
   connect(am_connection[0],SIGNAL(snapshotLoaded(const QString &)),
 	  this,SLOT(snapshotLoadedData(const QString &)));
-
-  //
-  // Progress Dialog
-  //
-  am_progress_dialog=new QProgressDialog(tr("Processing..."),"",-1,-1,this);
-  am_progress_dialog->setWindowTitle(tr("Server Manager"));
-  am_progress_dialog->setWindowModality(Qt::WindowModal);
-  am_progress_dialog->setMinimumDuration(2000);
-  am_progress_dialog->setCancelButton(NULL);
+  connect(am_connection[0],SIGNAL(errorReturned(const QString &)),
+	  this,SLOT(showConnectionError(const QString &)));
+  connect(am_connection[1],SIGNAL(errorReturned(const QString &)),
+	  this,SLOT(showConnectionError(const QString &)));
 
   //
   // Controls
@@ -235,21 +230,18 @@ void MainWidget::disconnectedData(int inst)
 void MainWidget::makeDbMasterData(int inst)
 {
   am_connection[am_connection_table[inst]]->makeDbMaster();
-  am_progress_dialog->setValue(0);
 }
 
 
 void MainWidget::makeDbSlaveData(int inst)
 {
   am_connection[am_connection_table[inst]]->makeDbSlave();
-  am_progress_dialog->setValue(0);
 }
 
 
 void MainWidget::makeDbIdleData(int inst)
 {
   am_connection[am_connection_table[inst]]->makeDbIdle();
-  am_progress_dialog->setValue(0);
 }
 
 
@@ -267,8 +259,6 @@ void MainWidget::stopAudioData(int inst)
 
 void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
 {
-  am_progress_dialog->reset();
-
   //
   // Update Connection Table
   //
@@ -395,6 +385,14 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
     am_audio_idle_button[1]->setEnabled(false);
     break;
   }
+}
+
+
+void MainWidget::showConnectionError(const QString &str)
+{
+  QMessageBox::warning(this,tr("Server Manager")+" - "+tr("Error"),
+		       str+"\n\n"+
+		       tr("See syslog for details."));
 }
 
 

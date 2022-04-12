@@ -98,6 +98,7 @@ class AMConnection : public QObject
   void snapshotLoaded(const QString &name);
   void connected();
   void disconnected();
+  void errorReturned(const QString &str);
 
  private slots:
   void connectedData();

@@ -337,3 +337,7 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-03-11 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in amand(8) that could cause the ping tables to be
 	created with the incorrect table engine type.
+2022-03-12 Fred Gleason <fredg@paravelsystems.com>
+	* Added a table engine type check to amand(8).
+	* Removed stale progress dialog implication from aman(8).
+	* Added an 'AMConnection::errorReturned()' signal.
