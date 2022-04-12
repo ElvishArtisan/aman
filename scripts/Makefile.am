@@ -2,7 +2,7 @@
 ##
 ## /scripts Directory Makefile.am for Aman
 ##
-## (C) Copyright 2013 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2013-2022 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -21,9 +21,11 @@
 ## Use automake to process this into a Makefile.in
 
 bin_SCRIPTS = aman_add_rivendell_user.pl\
+              aman_add_remote_replication_user.pl\
               aman_add_replication_users.pl
 
 EXTRA_DIST = aman_add_rivendell_user.pl\
+              aman_add_remote_replication_user.pl\
              aman_add_replication_users.pl
 
 CLEANFILES = *~

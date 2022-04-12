@@ -122,15 +122,15 @@ MainWidget::MainWidget(QWidget *parent)
 	  this,SLOT(snapshotGeneratedData(const QString &)));
   connect(am_connection[0],SIGNAL(snapshotLoaded(const QString &)),
 	  this,SLOT(snapshotLoadedData(const QString &)));
+  connect(am_connection[0],SIGNAL(errorReturned(const QString &)),
+	  this,SLOT(showConnectionError(const QString &)));
+  connect(am_connection[1],SIGNAL(errorReturned(const QString &)),
+	  this,SLOT(showConnectionError(const QString &)));
 
   //
   // Progress Dialog
   //
-  am_progress_dialog=new QProgressDialog(tr("Processing..."),"",-1,-1,this);
-  am_progress_dialog->setWindowTitle(tr("Server Manager"));
-  am_progress_dialog->setWindowModality(Qt::WindowModal);
-  am_progress_dialog->setMinimumDuration(2000);
-  am_progress_dialog->setCancelButton(NULL);
+  am_progress_dialog=new AMProgressDialog(this);
 
   //
   // Source Servers
@@ -294,6 +294,8 @@ void MainWidget::makeDbSlaveData()
   // Get Snapshot
   //
   am_active_connection->generateSnapshot();
+
+  am_progress_dialog->show();
 }
 
 
@@ -336,7 +338,7 @@ void MainWidget::stopAudioData()
 
 void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
 {
-  am_progress_dialog->reset();
+  am_progress_dialog->hide();
 
   //
   // Update Connection Table
@@ -626,6 +628,16 @@ void MainWidget::audioProcessFinishedData(int exit_code,
   }
   am_audio_process->deleteLater();
   am_audio_process=NULL;
+}
+
+
+void MainWidget::showConnectionError(const QString &str)
+{
+  am_progress_dialog->hide();
+
+  QMessageBox::warning(this,tr("Server Manager")+" - "+tr("Error"),
+		       str+"\n\n"+
+		       tr("See syslog for details."));
 }
 
 

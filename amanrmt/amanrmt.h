@@ -27,14 +27,14 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QProcess>
-#include <QProgressDialog>
 #include <QPushButton>
 #include <QTimer>
 #include <QWidget>
 
 #include <amconfig.h>
-#include <amstatuslight.h>
 #include <amconnection.h>
+#include <amprogressdialog.h>
+#include <amstatuslight.h>
 
 class MainWidget : public QWidget
 {
@@ -57,6 +57,7 @@ class MainWidget : public QWidget
   void checkDbReplicationData();
   void startAudioProcessData();
   void audioProcessFinishedData(int exit_code,QProcess::ExitStatus status);
+  void showConnectionError(const QString &str);
 
  protected:
   void closeEvent(QCloseEvent *e);
@@ -98,15 +99,14 @@ class MainWidget : public QWidget
   QPushButton *am_db_idle_button;
   QPushButton *am_audio_slave_button;
   QPushButton *am_audio_idle_button;
-  QProgressDialog *am_progress_dialog;
   AMConnection *am_connection[2];
   AMConnection *am_active_connection;
   int am_connection_table[2];
+  AMProgressDialog *am_progress_dialog;
   AMConfig *am_config;
   AMState *am_state;
   QTimer *am_check_db_replication_timer;
   unsigned am_check_db_prev_ping;
-
   bool am_audio_active;
   QProcess *am_audio_process;
   QTimer *am_audio_timer;

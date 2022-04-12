@@ -347,3 +347,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Fixed a bug in aman(1) that caused the 'Make Master' button
 	to be enabled for a host when the opposite system was already
 	Master.
+2022-03-12 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'aman_add_remote_replication_user.pl' provisioning script.
+	* Added a progress dialog to amanrmt(8).

@@ -130,3 +130,71 @@ Start the amand(8) daemon by doing:
 
 from a root shell.  You should now be able to run the aman(8) applet
 from the 'System Tools' menu to configure and monitor replication.
+
+
+ADDING A REMOTE INSTANCE
+In addition to the core pair of synchronized servers, it is possible to
+configure one or more 'remote' servers that will act as slaves by use
+of the amanrmt(8) applet. To configure such a remote server, do the
+following on the remote system:
+
+1) Generate an ssh(1) key.
+From a root shell, do:
+
+     ssh-keygen -t rsa -f /var/aman/keys/id_rsa_amanrmt
+
+Leave the passphrase blank.  After the command completes, add the contents
+of the file '/var/aman/keys/id_rsa_amanrmt.pub' to the
+'/root/.ssh/authorized_keys' file on both of the primary servers.
+
+WARNING: Be sure not to overwrite the existing contents of the
+         '/root/.ssh/authorized_keys' files!
+
+2) Populate the host key.
+From a root shell, test that you can access both primary systems by doing:
+
+     ssh -i /var/aman/keys/id_rsa_amanrmt <rmt-server-ip>
+
+You may be prompted to confirm the remote system's identity with a message like:
+
+    The authenticity of host '<rmt-server-ip> (<rmt-server-ip>)' can't be
+    established.  RSA key fingerprint is <rsa-key-fingerprint>.
+    Are you sure you want to continue connecting (yes/no)?
+
+Enter 'yes' and confirm that you are logged into the remote system, then
+enter 'exit'.
+
+3) Copy /etc/aman.conf file from primary servers.
+This should be the exact same configuration file as is used on both servers.
+
+4) Configure MySQL.
+For an RHEL-7 system, copy the 'aman.cnf-remote-rhel7-sample' file to
+'/etc/my.cnf.d/aman.cnf'. After copying the config files restart the MySQL
+service.
+
+NOTE: If you are provisioning more than one remote server, you will need
+to edit '/etc/my.cnf.d/aman.cnf' to ensure that each has a unique 'server-id'
+value.
+
+Create a 'repl' user in MySQL with rights to connect from 'localhost'
+and with the following privileges on the 'Rivendell' database:
+
+     Select
+     Insert
+     Update
+     Create
+     Delete
+     Reload
+     Super
+     Create
+     Drop
+     Replication Slave
+     Replication Client
+
+Edit the '/etc/amanrmt.conf' file and insert the access parameters
+for the 'repl' user.
+
+5) On the two primary servers, adjust the access rights for the 'repl'
+MySQL user to allow connection from the remote server. The
+'aman_add_remote_replication_user.pl' can be used for this purpose.
+
