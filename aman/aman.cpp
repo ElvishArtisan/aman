@@ -73,6 +73,11 @@ MainWidget::MainWidget(QWidget *parent)
   }
 
   //
+  // Dialogs
+  //
+  am_progress_dialog=new AMProgressDialog(this);
+
+  //
   // Local Status Connection
   //
   QSignalMapper *connected_mapper=new QSignalMapper(this);
@@ -229,12 +234,14 @@ void MainWidget::disconnectedData(int inst)
 
 void MainWidget::makeDbMasterData(int inst)
 {
+  am_progress_dialog->show();
   am_connection[am_connection_table[inst]]->makeDbMaster();
 }
 
 
 void MainWidget::makeDbSlaveData(int inst)
 {
+  am_progress_dialog->show();
   am_connection[am_connection_table[inst]]->makeDbSlave();
 }
 
@@ -259,6 +266,8 @@ void MainWidget::stopAudioData(int inst)
 
 void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
 {
+  am_progress_dialog->hide();
+
   //
   // Update Connection Table
   //
@@ -390,6 +399,8 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
 
 void MainWidget::showConnectionError(const QString &str)
 {
+  am_progress_dialog->hide();
+
   QMessageBox::warning(this,tr("Server Manager")+" - "+tr("Error"),
 		       str+"\n\n"+
 		       tr("See syslog for details."));

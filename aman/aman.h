@@ -31,6 +31,7 @@
 #include <amconfig.h>
 #include <amstatuslight.h>
 #include <amconnection.h>
+#include <amprogressdialog.h>
 
 class MainWidget : public QWidget
 {
@@ -87,6 +88,7 @@ class MainWidget : public QWidget
   QPushButton *am_audio_idle_button[2];
   AMConnection *am_connection[2];
   int am_connection_table[2];
+  AMProgressDialog *am_progress_dialog;
   AMConfig *am_config;
 };
 

@@ -40,10 +40,12 @@ dist_libaman_la_SOURCES = amconnection.cpp amconnection.h\
                           amcmdswitch.cpp amcmdswitch.h\
                           amconfig.cpp amconfig.h\
                           amprofile.cpp amprofile.h\
+                          amprogressdialog.cpp amprogressdialog.h\
                           amstate.cpp amstate.h\
                           amstatuslight.cpp amstatuslight.h
 
 nodist_libaman_la_SOURCES = moc_amconnection.cpp\
+                            moc_amprogressdialog.cpp\
                             moc_amstatuslight.cpp
 
 libaman_la_LDFLAGS = -release $(VERSION)

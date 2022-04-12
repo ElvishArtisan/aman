@@ -341,3 +341,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Added a table engine type check to amand(8).
 	* Removed stale progress dialog implication from aman(8).
 	* Added an 'AMConnection::errorReturned()' signal.
+2022-03-12 Fred Gleason <fredg@paravelsystems.com>
+	* Added a modeless progress dialog box to aman(1).
