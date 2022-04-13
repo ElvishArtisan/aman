@@ -114,18 +114,16 @@ MainWidget::MainWidget(QWidget *parent)
 	    disconnected_mapper,SLOT(map()));
     disconnected_mapper->setMapping(am_connection[i],i);
   }
-  connect(am_connection[0],SIGNAL(statusChanged(AMStatus *,AMStatus *)),
-	  this,SLOT(statusChangedData(AMStatus *,AMStatus *)));
-  connect(am_connection[0],SIGNAL(snapshotGenerated(const QString &)),
-	  this,SLOT(snapshotGeneratedData(const QString &)));
-  connect(am_connection[1],SIGNAL(snapshotGenerated(const QString &)),
-	  this,SLOT(snapshotGeneratedData(const QString &)));
-  connect(am_connection[0],SIGNAL(snapshotLoaded(const QString &)),
-	  this,SLOT(snapshotLoadedData(const QString &)));
-  connect(am_connection[0],SIGNAL(errorReturned(const QString &)),
-	  this,SLOT(showConnectionError(const QString &)));
-  connect(am_connection[1],SIGNAL(errorReturned(const QString &)),
-	  this,SLOT(showConnectionError(const QString &)));
+  for(int i=0;i<2;i++) {
+    connect(am_connection[i],SIGNAL(statusChanged(AMStatus *,AMStatus *)),
+	    this,SLOT(statusChangedData(AMStatus *,AMStatus *)));
+    connect(am_connection[i],SIGNAL(snapshotGenerated(const QString &)),
+	    this,SLOT(snapshotGeneratedData(const QString &)));
+    connect(am_connection[i],SIGNAL(snapshotLoaded(const QString &)),
+	    this,SLOT(snapshotLoadedData(const QString &)));
+    connect(am_connection[i],SIGNAL(errorReturned(const QString &)),
+	    this,SLOT(showConnectionError(const QString &)));
+  }
 
   //
   // Progress Dialog
@@ -358,9 +356,7 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
   am_src_db_replicating_light[0]->setStatus(b->dbReplicationTime()>0);
   am_src_db_replicating_light[1]->setStatus(a->dbReplicationTime()>0);
   am_src_audio_replicating_light[0]->setEnabled(a->audioState()==AMState::StateSlave);
-  am_src_audio_replicating_light[0]->setStatus(a->audioStatus());
   am_src_audio_replicating_light[1]->setEnabled(b->audioState()==AMState::StateSlave);
-  am_src_audio_replicating_light[1]->setStatus(b->audioStatus());
   switch(a->audioState()) {
   case AMState::StateSlave:
     am_src_audio_state_edit[0]->setText(AMState::stateString(AMState::StateSlave));

@@ -354,3 +354,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Changed the default value of the 'MysqlReplicationTimeout'
 	directive in the '[Global]' section of aman.conf(5) from
 	60000 to 10.
+2022-03-13 Fred Gleason <fredg@paravelsystems.com>
+	* Modified amanrmt(8) to turn the 'Audio Replicating' light RED
+	if not check file is found in the source audio store.
