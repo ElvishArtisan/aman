@@ -20,10 +20,10 @@ MysqlDatabase=Rivendell
 MysqlDriver=QMYSQL3
 
 ;
-; The number of milliseconds to wait for a response to a replication
-; test before signaling a failure of replication.
+; The number of 'ticks' (10 milliseconds each) to wait for a response to
+; a replication test before signaling a failure of replication.
 ;
-MysqlReplicationTimeout=60000
+MysqlReplicationTimeout=10
 
 ;
 ; The name of the Service that runs MySQL on this system. If you're

@@ -350,3 +350,7 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-03-12 Fred Gleason <fredg@paravelsystems.com>
 	* Added a 'aman_add_remote_replication_user.pl' provisioning script.
 	* Added a progress dialog to amanrmt(8).
+2022-03-13 Fred Gleason <fredg@paravelsystems.com>
+	* Changed the default value of the 'MysqlReplicationTimeout'
+	directive in the '[Global]' section of aman.conf(5) from
+	60000 to 10.
