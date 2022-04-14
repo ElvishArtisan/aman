@@ -74,6 +74,7 @@ class MainWidget : public QWidget
   bool OpenDb(QString *err_msg);
   void CloseDb();
   QString MakeTempDir();
+  void SendAlert(const QString &msg) const;
   QLabel *am_source_label;
   QLabel *am_src_system_label[2];
   QLabel *am_src_hostname_label[2];
@@ -104,7 +105,6 @@ class MainWidget : public QWidget
   int am_connection_table[2];
   AMProgressDialog *am_progress_dialog;
   AMConfig *am_config;
-  AMState *am_state;
   QTimer *am_check_db_replication_timer;
   unsigned am_check_db_prev_ping;
   bool am_audio_active;

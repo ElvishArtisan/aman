@@ -18,6 +18,7 @@
 //   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 
+#include <syslog.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -32,6 +33,8 @@
 #include <QSignalMapper>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+
+#include <amsendmail.h>
 
 #include "amanrmt.h"
 
@@ -86,8 +89,6 @@ MainWidget::MainWidget(QWidget *parent)
 	       tr("Unable to read configuration from \"/etc/aman.conf\"."));
     exit(256);
   }
-
-  am_state=new AMState();
 
   //
   // Connect to local DB
@@ -404,10 +405,8 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
   //
   // Update Local State Indicators
   //
-  am_dst_db_state_edit->setText(AMState::stateString(am_state->dbState()));
   am_db_slave_button->setEnabled(((a->dbState()==AMState::StateMaster)||
-				  (b->dbState()==AMState::StateMaster))&&
-				 (am_state->dbState()==AMState::StateIdle));
+				  (b->dbState()==AMState::StateMaster)));
   am_db_idle_button->setEnabled(a->dbState()==AMState::StateSlave);
 }
 
@@ -808,6 +807,21 @@ QString MainWidget::MakeTempDir()
     exit(1);
   }
   return QString(dirpath);
+}
+
+
+void MainWidget::SendAlert(const QString &msg) const
+{
+  QString err_msg;
+
+  if(am_config->globalAlertAddress().isEmpty()) {
+    return;
+  }
+  if(!AMSendMail(&err_msg,tr("Rivendell Server Alert"),msg,
+		 am_config->globalFromAddress(),
+		 am_config->globalAlertAddress())) {
+    syslog(LOG_WARNING,"mail send failed [%s]",err_msg.toUtf8().constData());
+  }
 }
 
 

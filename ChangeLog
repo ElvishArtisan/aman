@@ -359,3 +359,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	if no check file is found in the source audio store.
 2022-03-13 Fred Gleason <fredg@paravelsystems.com>
 	* Updated the e-mail routines to be UTF-8 clean.
+2022-03-13 Fred Gleason <fredg@paravelsystems.com>
+	* Removed superfluous data structures from amanrmt(8).
