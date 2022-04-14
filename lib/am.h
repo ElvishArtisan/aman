@@ -98,6 +98,7 @@ class Am
 		MakeSlaveCommand=6,MakeIdleCommand=7,StartAudioSlaveCommand=8,
 		StopAudioSlaveCommand=9,PurgeBinLogsCommand=10};
   static QString instanceText(Am::Instance inst);
+  static bool emailAddressIsValid(const QString &addr);
 };
 
 

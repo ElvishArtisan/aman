@@ -41,6 +41,7 @@ dist_libaman_la_SOURCES = amconnection.cpp amconnection.h\
                           amconfig.cpp amconfig.h\
                           amprofile.cpp amprofile.h\
                           amprogressdialog.cpp amprogressdialog.h\
+                          amsendmail.cpp amsendmail.h\
                           amstate.cpp amstate.h\
                           amstatuslight.cpp amstatuslight.h
 

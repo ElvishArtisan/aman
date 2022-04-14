@@ -41,3 +41,18 @@ QString Am::instanceText(Am::Instance inst)
 
   return ret;
 }
+
+
+bool Am::emailAddressIsValid(const QString &addr)
+{
+  QStringList f0=addr.split("@",QString::KeepEmptyParts);
+
+  if(f0.size()!=2) {
+    return false;
+  }
+  QStringList f1=f0.last().split(".");
+  if(f1.size()<2) {
+    return false;
+  }
+  return true;
+}

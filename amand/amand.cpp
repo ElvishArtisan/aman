@@ -38,6 +38,7 @@
 #include <QSqlError>
 
 #include <amcmdswitch.h>
+#include <amsendmail.h>
 
 #include "amand.h"
 
@@ -709,50 +710,16 @@ QString MainObject::MakeSnapshotName() const
 
 void MainObject::SendAlert(const QString &msg)
 {
-  QProcess *p;
-  QString text;
-  QStringList args;
+  QString err_msg;
 
   if(main_config->globalAlertAddress().isEmpty()) {
     return;
   }
-
-  //
-  // Compose Message
-  //
-  text="From: Rivendell Server Monitor on "+main_config->hostname(Am::This)+
-    " <"+main_config->globalFromAddress()+">\n";
-  text+="To: "+main_config->globalAlertAddress()+"\n";
-  text+="Subject: "+tr("Rivendell Server Alert")+"\n";
-  text+="\n";
-  text+=msg;
-  text+="\n";
-  text+=".\n";
-
-  //
-  // Generate Arguments
-  //
-  args.push_back("-bm");
-  args.push_back(main_config->globalAlertAddress());
-
-  //
-  // Send Message
-  //
-  p=new QProcess(this);
-  p->start("sendmail",args);
-  if(!p->waitForStarted()) {
-    syslog(LOG_WARNING,"unable to send mail to \"%s\"",
-	   main_config->globalAlertAddress().toUtf8().constData());
-    delete p;
-    return;
+  if(!AMSendMail(&err_msg,tr("Rivendell Server Alert"),msg,
+		 main_config->globalFromAddress(),
+		 main_config->globalAlertAddress())) {
+    syslog(LOG_WARNING,"mail send failed [%s]",err_msg.toUtf8().constData());
   }
-  p->write(text.toUtf8());
-  if(!p->waitForFinished()) {
-    syslog(LOG_WARNING,"unable to send mail to \"%s\"",
-	   main_config->globalAlertAddress().toUtf8().constData());
-  }
-
-  delete p;
 }
 
 

@@ -357,3 +357,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-03-13 Fred Gleason <fredg@paravelsystems.com>
 	* Modified amanrmt(8) to turn the 'Audio Replicating' light RED
 	if no check file is found in the source audio store.
+2022-03-13 Fred Gleason <fredg@paravelsystems.com>
+	* Updated the e-mail routines to be UTF-8 clean.
