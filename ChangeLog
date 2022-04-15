@@ -362,7 +362,7 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-03-13 Fred Gleason <fredg@paravelsystems.com>
 	* Removed superfluous data structures from amanrmt(8).
 2022-03-15 Fred Gleason <fredg@paravelsystems.com>
-	* Added a 'SiteName=' directive to the '[Global]' section of
+	* Added a 'Sitename=' directive to the '[Global]' section of
 	amanrmt.conf(5).
 	* Added e-mail alerts when replication status or state changes in
 	amanrmt(8).
