@@ -184,7 +184,7 @@ MainWidget::MainWidget(QWidget *parent)
   am_dst_db_state_label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   am_dst_db_state_edit=new QLineEdit(this);
   am_dst_db_state_edit->setReadOnly(true);
-  am_dst_db_state_edit->setText(tr("UNKNOWN"));
+  am_dst_db_state_edit->setText(AMState::stateString(AMState::StateIdle));
 
   am_dst_db_replicating_label=new QLabel(tr("DB Replicating"),this);
   am_dst_db_replicating_label->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
@@ -194,7 +194,7 @@ MainWidget::MainWidget(QWidget *parent)
   am_dst_audio_state_label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   am_dst_audio_state_edit=new QLineEdit(this);
   am_dst_audio_state_edit->setReadOnly(true);
-  am_dst_audio_state_edit->setText(tr("UNKNOWN"));
+  am_dst_audio_state_edit->setText(AMState::stateString(AMState::StateIdle));
 
   am_dst_audio_replicating_label=new QLabel(tr("Audio Replicating"),this);
   am_dst_audio_replicating_label->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
@@ -471,18 +471,24 @@ void MainWidget::checkDbReplicationData()
   q=new QSqlQuery(sql);
   if(q->first()) {
     if(q->value(0).toString().toUpper()=="ON") {
-      am_dst_db_state_edit->setText(AMState::stateString(AMState::StateSlave));
+      SetClusterState(am_dst_db_state_edit,
+		      tr("DB replication state changed to SLAVE"),
+		      AMState::StateSlave);
       am_db_slave_button->setDisabled(true);
       am_db_idle_button->setEnabled(true);
     }
     else {
-      am_dst_db_state_edit->setText(AMState::stateString(AMState::StateIdle));
+      SetClusterState(am_dst_db_state_edit,
+		      tr("DB replication state changed to IDLE"),
+		      AMState::StateIdle);
       am_db_slave_button->setEnabled(true);
       am_db_idle_button->setDisabled(true);
     }
   }
   else {
-    am_dst_db_state_edit->setText(AMState::stateString(AMState::StateOffline));
+    SetClusterState(am_dst_db_state_edit,
+		    tr("DB replication state changed to OFFLINE"),
+		    AMState::StateOffline);
     am_db_slave_button->setDisabled(true);
     am_db_idle_button->setDisabled(true);
   }
@@ -497,30 +503,43 @@ void MainWidget::checkDbReplicationData()
       "from `"+am_config->pingTablename(master_id)+"`";
     q=new QSqlQuery(sql);
     if(q->next()) {
-      am_dst_db_replicating_light->
-	setStatus(q->value(0).toUInt()!=am_check_db_prev_ping);
+      if(q->value(0).toUInt()!=am_check_db_prev_ping) {
+	SetLightStatus(am_dst_db_replicating_light,tr("DB replication RESUMED"),
+		       true);
+      }
+      else {
+	SetLightStatus(am_dst_db_replicating_light,tr("DB replication STOPPED"),
+		       false);
+      }
       am_check_db_prev_ping=q->value(0).toUInt();
     }
     else {
       am_check_db_prev_ping=0;
-      am_dst_db_replicating_light->setStatus(false);
+      SetLightStatus(am_dst_db_replicating_light,tr("DB replication STOPPED"),
+		     false);
     }
     delete q;
   }
   else {
     am_check_db_prev_ping=0;
-    am_dst_db_replicating_light->setStatus(false);
+    SetLightStatus(am_dst_db_replicating_light,tr("DB replication STOPPED"),
+		   false);
   }
 
   //
   // Audio State Check
   //
   if(am_audio_active) {
-    am_dst_audio_state_edit->setText(AMState::stateString(AMState::StateSlave));
+    SetClusterState(am_dst_audio_state_edit,
+		    tr("Audio replication state changed to SLAVE"),
+		    AMState::StateSlave);
   }
   else {
-    am_dst_audio_state_edit->setText(AMState::stateString(AMState::StateIdle));
-    am_dst_audio_replicating_light->setStatus(false);
+    SetClusterState(am_dst_audio_state_edit,
+		    tr("Audio replication state changed to IDLE"),
+		    AMState::StateIdle);
+    SetLightStatus(am_dst_audio_replicating_light,
+		   tr("Audio replication STOPPED"),false);
   }
   am_audio_slave_button->setDisabled(am_audio_active);
   am_audio_idle_button->setEnabled(am_audio_active);
@@ -548,7 +567,8 @@ void MainWidget::startAudioProcessData()
   am_audio_process->waitForFinished(30000);
   switch(am_audio_process->exitCode()) {
   case 0:
-    am_dst_audio_replicating_light->setStatus(true);
+    SetLightStatus(am_dst_audio_replicating_light,
+		   tr("Audio replication RESUMED"),true);
     break;
 
   case 23:  // Check file not found, deferring sync
@@ -556,7 +576,8 @@ void MainWidget::startAudioProcessData()
   case 35:  // Connection timeout, deferring sync
     delete am_audio_process;
     am_audio_process=NULL;
-    am_dst_audio_replicating_light->setStatus(false);
+    SetLightStatus(am_dst_audio_replicating_light,
+		   tr("Audio replication STOPPED"),true);
     am_audio_timer->start(AM_RSYNC_PAUSE_INTERVAL);
     return;
 
@@ -817,10 +838,37 @@ void MainWidget::SendAlert(const QString &msg) const
   if(am_config->globalAlertAddress().isEmpty()) {
     return;
   }
-  if(!AMSendMail(&err_msg,tr("Rivendell Server Alert"),msg,
+  AMProfile *p=new AMProfile();
+  p->setSource("/etc/amanrmt.conf");
+  QString site_name=p->stringValue("Global","SiteName",tr("Satellite Site"));
+  delete p;
+
+  if(!AMSendMail(&err_msg,tr("Rivendell Server Alert")+" ["+site_name+"]",msg,
 		 am_config->globalFromAddress(),
 		 am_config->globalAlertAddress())) {
     syslog(LOG_WARNING,"mail send failed [%s]",err_msg.toUtf8().constData());
+  }
+}
+
+
+void MainWidget::SetLightStatus(AMStatusLight *light,const QString &alert_msg,
+				bool status)
+{
+  if(status!=light->status()) {
+    light->setStatus(status);
+    SendAlert(alert_msg);
+  }
+}
+
+
+void MainWidget::SetClusterState(QLineEdit *edit,const QString &alert_msg,
+				 AMState::ClusterState state)
+{
+  QString str=AMState::stateString(state);
+
+  if(edit->text()!=str) {
+    edit->setText(str);
+    SendAlert(alert_msg);
   }
 }
 

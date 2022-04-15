@@ -3,6 +3,9 @@
 ; This is the sample configuration file for the Aman Remote utility.
 ;
 
+[Global]
+SiteName=Satellite Site
+
 [MySQL]
 ; The connection parameters for the MySQL server.
 Hostname=localhost

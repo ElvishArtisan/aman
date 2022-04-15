@@ -75,6 +75,10 @@ class MainWidget : public QWidget
   void CloseDb();
   QString MakeTempDir();
   void SendAlert(const QString &msg) const;
+  void SetLightStatus(AMStatusLight *light,const QString &alert_msg,
+		      bool status);
+  void SetClusterState(QLineEdit *edit,const QString &alert_msg,
+		       AMState::ClusterState state);
   QLabel *am_source_label;
   QLabel *am_src_system_label[2];
   QLabel *am_src_hostname_label[2];
