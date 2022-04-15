@@ -715,7 +715,8 @@ void MainObject::SendAlert(const QString &msg)
   if(main_config->globalAlertAddress().isEmpty()) {
     return;
   }
-  if(!AMSendMail(&err_msg,tr("Rivendell Server Alert"),msg,
+  if(!AMSendMail(&err_msg,tr("Rivendell Server Alert")+" ["+
+		 main_config->sitename(Am::This)+"]",msg,
 		 main_config->globalFromAddress(),
 		 main_config->globalAlertAddress())) {
     syslog(LOG_WARNING,"mail send failed [%s]",err_msg.toUtf8().constData());

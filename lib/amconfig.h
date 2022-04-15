@@ -49,6 +49,8 @@ class AMConfig
   QString globalMysqlServiceName() const;
   QString hostname(Am::Instance inst) const;
   QString hostname(int n) const;
+  QString sitename(Am::Instance inst) const;
+  QString sitename(int n) const;
   QString mysqlUsername(Am::Instance inst) const;
   QString mysqlUsername(int n) const;
   QString mysqlPassword(Am::Instance inst) const;
@@ -88,6 +90,8 @@ class AMConfig
   QString conf_global_mysql_service_name;
   QString conf_hostname[Am::LastInstance];
   QStringList conf_hostnames;
+  QString conf_sitename[Am::LastInstance];
+  QStringList conf_sitenames;
   QString conf_mysql_username[Am::LastInstance];
   QStringList conf_mysql_usernames;
   QString conf_mysql_password[Am::LastInstance];

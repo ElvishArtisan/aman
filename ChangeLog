@@ -366,3 +366,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	amanrmt.conf(5).
 	* Added e-mail alerts when replication status or state changes in
 	amanrmt(8).
+2022-03-15 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'Sitename=' directive to the '[SystemA]' and '[SystemB]'
+	sections of aman.conf(5).

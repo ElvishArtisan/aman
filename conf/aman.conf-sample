@@ -85,6 +85,12 @@ NiceLevel=10
 Hostname=system-a
 
 ;
+; A short, "human-friendly" name or phrase to identify the server; appears
+; in e-mailed status messages.
+;
+Sitename=System A
+
+;
 ; The name of the MySQL user configured for replication.
 ;
 MysqlUsername=repl
@@ -132,6 +138,12 @@ SecureShellIdentity=/var/aman/keys/id_ed25519
 ; The hostname of SystemB.  Do not add the domain here!
 ;
 Hostname=system-b
+
+;
+; A short, "human-friendly" name or phrase to identify the server; appears
+; in e-mailed status messages.
+;
+Sitename=System B
 
 ;
 ; The name of the MySQL user configured for replication.

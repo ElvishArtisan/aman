@@ -114,6 +114,18 @@ QString AMConfig::hostname(int n) const
 }
 
 
+QString AMConfig::sitename(Am::Instance inst) const
+{
+  return conf_sitename[inst];
+}
+
+
+QString AMConfig::sitename(int n) const
+{
+  return conf_sitenames.at(n);
+}
+
+
 QString AMConfig::mysqlUsername(Am::Instance inst) const
 {
   return conf_mysql_username[inst];
@@ -282,6 +294,7 @@ void AMConfig::clear()
   conf_global_mysql_service_name="mysqld";
   for(int i=0;i<2;i++) {
     conf_hostname[i]="";
+    conf_sitename[i]="";
     conf_mysql_username[i]="";
     conf_mysql_password[i]="";
     conf_archive_directory[i]="";
@@ -292,6 +305,8 @@ void AMConfig::clear()
       conf_address[i][j]=QHostAddress();
     }
   }
+  conf_hostnames.clear();
+  conf_sitenames.clear();
   conf_instance_table[0]=Am::This;
   conf_instance_table[1]=Am::That;
 }
@@ -352,6 +367,11 @@ void AMConfig::LoadHost(AMProfile *p,const QString &section)
   }
   conf_hostname[host]=p->stringValue(section,"Hostname");
   conf_hostnames.push_back(p->stringValue(section,"Hostname"));
+
+  conf_sitename[host]=p->stringValue(section,"Sitename",
+  				     p->stringValue(section,"Hostname"));
+  conf_sitenames.push_back(p->stringValue(section,"Sitename",
+					  p->stringValue(section,"Hostname")));
   conf_mysql_username[host]=p->stringValue(section,"MysqlUsername","repl");
   conf_mysql_usernames.
     push_back(p->stringValue(section,"MysqlUsername","repl"));
