@@ -425,9 +425,11 @@ void MainWidget::snapshotGeneratedData(const QString &name)
   }
   if(!RestoreMysqlSnapshot(name,&binlog,&pos,GetMasterServerId(),&err_msg)) {
     QMessageBox::warning(this,tr("Server Manager - Error"),
-			 tr("Error restoring snapshot")+": "+err_msg);
+			 tr("Error restoring snapshot")+": "+name+"\n"+
+			 "["+err_msg+"]");
     return;
   }
+  unlink((QString(AM_SNAPSHOT_DIR)+"/"+name).toUtf8());
   am_db_slave_button->setDisabled(true);
   am_db_idle_button->setEnabled(true);
 }
