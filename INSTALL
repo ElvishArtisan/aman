@@ -191,7 +191,7 @@ NOTE: If you are provisioning more than one remote server, you will need
 to edit '/etc/my.cnf.d/aman.cnf' to ensure that each has a unique 'server-id'
 value.
 
-Create a 'repl' user in MySQL with rights to connect from 'localhost'
+Create a 'amanrmt' user in MySQL with rights to connect from 'localhost'
 and with the following privileges on the 'Rivendell' database:
 
      Select
@@ -201,7 +201,6 @@ and with the following privileges on the 'Rivendell' database:
      Delete
      Reload
      Super
-     Create
      Drop
      Replication Slave
      Replication Client
