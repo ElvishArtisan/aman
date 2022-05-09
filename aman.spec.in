@@ -163,11 +163,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc NEWS 
 %doc README 
 %doc conf/amanrmt.conf-sample
+%doc conf/aman.cnf-remote-rhel7-sample
 
 %changelog
 * Mon May  9 2022 Fred Gleason <fredg@paravelsystems.com>
 -- Removed docs/mysql_states.gxd.
 -- Added '/usr/bin/aman_add_remote_replication_user.pl'.
+-- Added '/usr/share/doc/aman/aman.cnf-remote-rhel7-sample
 * Thu Apr  7 2022 Fred Gleason <fredg@paravelsystems.com>
 -- Added amanrmt(1).
 * Mon Nov  1 2021 Fred Gleason <fredg@paravelsystems.com>

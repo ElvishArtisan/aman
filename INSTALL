@@ -126,7 +126,7 @@ Create the check file by doing the following commands from a root shell:
 7) Start the amand(8) Daemon.
 Start the amand(8) daemon by doing:
 
-      service amand start
+      systemctl restart aman
 
 from a root shell.  You should now be able to run the aman(8) applet
 from the 'System Tools' menu to configure and monitor replication.
@@ -138,7 +138,22 @@ configure one or more 'remote' servers that will act as slaves by use
 of the amanrmt(8) applet. To configure such a remote server, do the
 following on the remote system:
 
-1) Generate an ssh(1) key.
+1) Review the aman.conf(5) file.
+On both of the existing primary Aman servers, open the '/etc/aman.conf' and
+verify that the 'MysqlReplicationTimeout' value in the '[Global]' section
+is set to 10. For example
+
+*** snip snip ***
+[Global]
+MysqlReplicationTimeout=10
+*** snip snip ***
+
+If it is *not* set to 10, change it and then restart the Aman service on
+that host by doing:
+
+     systemctl aman restart
+
+2) Generate an ssh(1) key.
 From a root shell, do:
 
      ssh-keygen -t rsa -f /var/aman/keys/id_rsa_amanrmt
@@ -150,7 +165,7 @@ of the file '/var/aman/keys/id_rsa_amanrmt.pub' to the
 WARNING: Be sure not to overwrite the existing contents of the
          '/root/.ssh/authorized_keys' files!
 
-2) Populate the host key.
+3) Populate the host key.
 From a root shell, test that you can access both primary systems by doing:
 
      ssh -i /var/aman/keys/id_rsa_amanrmt <rmt-server-ip>
@@ -164,10 +179,10 @@ You may be prompted to confirm the remote system's identity with a message like:
 Enter 'yes' and confirm that you are logged into the remote system, then
 enter 'exit'.
 
-3) Copy /etc/aman.conf file from primary servers.
+4) Copy /etc/aman.conf file from primary servers.
 This should be the exact same configuration file as is used on both servers.
 
-4) Configure MySQL.
+5) Configure MySQL.
 For an RHEL-7 system, copy the 'aman.cnf-remote-rhel7-sample' file to
 '/etc/my.cnf.d/aman.cnf'. After copying the config files restart the MySQL
 service.
@@ -194,7 +209,6 @@ and with the following privileges on the 'Rivendell' database:
 Edit the '/etc/amanrmt.conf' file and insert the access parameters
 for the 'repl' user.
 
-5) On the two primary servers, adjust the access rights for the 'repl'
+6) On the two primary servers, adjust the access rights for the 'repl'
 MySQL user to allow connection from the remote server. The
 'aman_add_remote_replication_user.pl' can be used for this purpose.
-

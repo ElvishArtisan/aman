@@ -31,6 +31,7 @@ EXTRA_DIST = aman.conf-sample\
              amanrmt.conf-sample\
              aman.cnf-SystemA-rhel7-sample\
              aman.cnf-SystemB-rhel7-sample\
+             aman.cnf-remote-rhel7-sample\
              aman-mysql-limits.conf\
              rsyncd.conf-sample
 
