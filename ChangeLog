@@ -385,3 +385,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	package.
 2022-05-09 Fred Gleason <fredg@paravelsystems.com>
 	* Added a %post script to the 'aman-remote' RPM package.
+2022-05-09 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'qt5-qtbase-mysql', 'rsync' and 'bzip2' dependencies to
+	the 'aman-remote' RPM package.
