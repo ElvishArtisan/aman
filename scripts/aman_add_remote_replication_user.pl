@@ -109,10 +109,6 @@ my $remote_address=GetLine("IP Address of remote server","");
 my $repl_username=GetLine("Replication User","repl");
 my $repl_password=GetLine("Replication Password","letmein");
 
-print "User: ".$mysql_username."\n";
-print "Password: ".$mysql_password."\n";
-print "IP: ".$remote_address."\n";
-
 #
 # Open Database
 #
