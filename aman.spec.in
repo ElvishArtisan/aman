@@ -103,6 +103,28 @@ fi
 exit 0
 
 
+%post remote
+ldconfig
+if test "@DISTRO@" = "suse" ; then
+  PACKAGE_DOC_DIR=%_docdir/%{name}
+fi
+if test "@DISTRO@" = "redhat" ; then
+  PACKAGE_DOC_DIR=%_docdir/%{name}-@VERSION@
+fi
+if test ! -e /etc/amanrmt.conf ; then
+  cp $PACKAGE_DOC_DIR/amanrmt.conf-sample /etc/amanrmt.conf
+fi
+if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
+  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+fi
+
+
+%postun remote
+if [ -x %{_bindir}/gtk-update-icon-cache ] ; then
+  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+fi
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 

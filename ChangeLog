@@ -383,3 +383,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-05-09 Fred Gleason <fredg@paravelsystems.com>
 	* Added 'aman.cnf-remote-rhel7-sample' to the 'aman-remote' RPM
 	package.
+2022-05-09 Fred Gleason <fredg@paravelsystems.com>
+	* Added a %post script to the 'aman-remote' RPM package.
