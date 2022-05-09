@@ -357,7 +357,9 @@ void MainWidget::statusChangedData(AMStatus *a,AMStatus *b)
   am_src_db_replicating_light[0]->setStatus(b->dbReplicationTime()>0);
   am_src_db_replicating_light[1]->setStatus(a->dbReplicationTime()>0);
   am_src_audio_replicating_light[0]->setEnabled(a->audioState()==AMState::StateSlave);
+  am_src_audio_replicating_light[0]->setStatus(a->audioState()==AMState::StateSlave);
   am_src_audio_replicating_light[1]->setEnabled(b->audioState()==AMState::StateSlave);
+  am_src_audio_replicating_light[1]->setStatus(b->audioState()==AMState::StateSlave);
   switch(a->audioState()) {
   case AMState::StateSlave:
     am_src_audio_state_edit[0]->setText(AMState::stateString(AMState::StateSlave));

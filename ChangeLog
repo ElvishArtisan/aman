@@ -391,3 +391,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-05-09 Fred Gleason <fredg@paravelsystems.com>
 	* Removed debugging print statements from
 	'scripts/aman_add_remote_replication_user.pl'.
+2022-05-09 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in amanrmt(1) that caused the 'Audio Replicating'
+	lights in the 'Source Servers' section to fail to show green.
