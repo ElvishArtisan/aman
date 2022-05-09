@@ -101,7 +101,7 @@ if test $ar_gcc_distro = suse ; then
   AC_SUBST(DIST_VER,"")
   AC_SUBST(DEBUG_RPM,"no")
 else
-  AC_SUBST(QT_MYSQL_PKG,"qt5-qtbase-mysql")
+  AC_SUBST(QT5_MYSQL_PKG,"qt5-qtbase-mysql")
   DISTRO_MAJOR_VER=`echo $ar_distro_version | awk 'split($1,fields,".") {print fields[[1]]}'`
   if test $DISTRO_MAJOR_VER -eq 6 ; then
     AC_SUBST(MYSQL_PKG,"mysql-server")
