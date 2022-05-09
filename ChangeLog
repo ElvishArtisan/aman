@@ -374,3 +374,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-05-09 Fred Gleason <fredg@paravelsystems.com>
 	* Removed 'docs/mysql_states.gxd' from the RPM package.
 	* Fixed a regression that broke the 'make rpm' target.
+2022-05-09 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a regression in the 'aman_add_replication_users.pl' scriipt
+	that caused a SQL error to be thrown.

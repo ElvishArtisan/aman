@@ -139,7 +139,6 @@ foreach(@addresses) {
 	"`Delete_priv`='Y',".
 	"`Reload_priv`='Y',".
 	"`Super_priv`='Y',".
-	"`Create_priv`='Y',".
 	"`Drop_priv`='Y',".
 	"`Repl_slave_priv`='Y',".
 	"`Repl_client_priv`='Y'";
