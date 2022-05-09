@@ -114,6 +114,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/aman-root
 %{_bindir}/aman_add_rivendell_user.pl
 %{_bindir}/aman_add_replication_users.pl
+%{_bindir}/aman_add_remote_replication_user.pl
 %{_sbindir}/amanctl
 %{_sbindir}/amand
 /usr/lib/systemd/system/aman.service
@@ -139,7 +140,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc conf/aman.cnf-SystemB-rhel7-sample
 %doc conf/rsyncd.conf-sample
 %doc docs/command_protocol.txt
-%doc docs/mysql_states.gxd
 
 %files remote
 %defattr(-,root,root)
@@ -165,6 +165,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc conf/amanrmt.conf-sample
 
 %changelog
+* Mon May  9 2022 Fred Gleason <fredg@paravelsystems.com>
+-- Removed docs/mysql_states.gxd.
+-- Added '/usr/bin/aman_add_remote_replication_user.pl'.
 * Thu Apr  7 2022 Fred Gleason <fredg@paravelsystems.com>
 -- Added amanrmt(1).
 * Mon Nov  1 2021 Fred Gleason <fredg@paravelsystems.com>
