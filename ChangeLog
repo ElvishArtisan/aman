@@ -401,3 +401,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	data to be written to syslog().
 2022-05-10 Fred Gleason <fredg@paravelsystems.com>
 	* Added 'compile' to the MAINTAINERCLEANFILES rule in 'Makefile.am'.
+2022-05-10 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a regression in 'amand/audiostore.cpp' that broke the
+	build.
