@@ -399,3 +399,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2022-05-10 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed a bug in 'amand/audiostore.cpp' that allowed unsanitized
 	data to be written to syslog().
+2022-05-10 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'compile' to the MAINTAINERCLEANFILES rule in 'Makefile.am'.
