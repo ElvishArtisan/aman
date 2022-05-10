@@ -396,3 +396,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	lights in the 'Source Servers' section to fail to show green.
 2022-05-09 Fred Gleason <fredg@paravelsystems.com>
 	* Updated in 'INSTALL' file.
+2022-05-10 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a bug in 'amand/audiostore.cpp' that allowed unsanitized
+	data to be written to syslog().
