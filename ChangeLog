@@ -409,3 +409,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2023-02-28 Fred Gleason <fredg@paravelsystems.com>
 	* Modified amanrmt(1) so as to retry rsync connections after receiving
 	an error in socket I/O error.
+2023-02-28 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.10.1.
