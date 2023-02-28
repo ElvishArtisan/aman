@@ -631,6 +631,7 @@ void MainWidget::audioProcessFinishedData(int exit_code,
 
   switch(am_audio_process->exitCode()) {
   case 0:   // Normal Exit
+  case 10:  // Error in socket I/O
   case 20:  // Stopped due to signal
   case 23:  // Partial transfer due to error
   case 24:  // Partial transfer due to vanished source files
