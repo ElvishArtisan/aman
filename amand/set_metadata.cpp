@@ -25,7 +25,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include "profile.h"
+#include "amprofile.h"
 #include "amand.h"
 
 bool MainObject::SetMysqlMetadata(const QString &binlog_name,int binlog_pos)

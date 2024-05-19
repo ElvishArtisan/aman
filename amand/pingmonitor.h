@@ -31,7 +31,7 @@
 #include <amstate.h>
 
 #include "am.h"
-#include "profile.h"
+#include "amprofile.h"
 
 class PingMonitor : public QObject
 {

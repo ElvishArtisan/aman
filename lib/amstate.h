@@ -22,7 +22,7 @@
 #define AMSTATE_H
 
 #include "am.h"
-#include "profile.h"
+#include "amprofile.h"
 
 class AMState
 {

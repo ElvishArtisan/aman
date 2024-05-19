@@ -411,3 +411,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	an error in socket I/O error.
 2023-02-28 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.10.1.
+2024-05-19 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed bugs that caused the build to break on Mint 21.
