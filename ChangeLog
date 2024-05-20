@@ -419,3 +419,6 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Added a 'make deb' target.
 2024-05-20 Fred Gleason <fredg@paravelsystems.com>
 	* Added default configuration files to the DEB packages.
+2024-05-20 Fred Gleason <fredg@paravelsystems.com>
+	* Added 'README' and 'INSTALL' to the documentation directory in
+	the DEB packages.

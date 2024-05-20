@@ -26,8 +26,14 @@ binary:
 	mkdir -p debian/aman/usr/share
 	mkdir -p debian/aman-remote/usr/share
 	cp -r debian/tmp/usr/share/icons debian/aman/usr/share/
-	cp -r debian/tmp/usr/share/icons debian/aman/usr/share/
+	cp -r debian/tmp/usr/share/icons debian/aman-remote/usr/share/
 	rm -r debian/tmp/usr/share/icons
+	mkdir -p debian/aman/usr/share/doc/aman
+	mkdir -p debian/aman-remote/usr/share/doc/aman-remote
+	cp ../README debian/aman/usr/share/doc/aman/
+	cp ../README debian/aman-remote/usr/share/doc/aman-remote/
+	cp ../INSTALL debian/aman/usr/share/doc/aman/
+	cp ../INSTALL debian/aman-remote/usr/share/doc/aman-remote/
 
 #
 # aman
