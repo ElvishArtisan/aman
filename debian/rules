@@ -53,6 +53,12 @@ binary:
 	mkdir -p debian/aman/usr/share/man/man8
 	mv debian/tmp/usr/share/man/man8/amanctl.8 debian/aman/usr/share/man/man8/
 
+	mkdir -p debian/aman/usr/share/aman
+	cp conf/aman.conf-sample debian/aman/usr/share/aman/
+	cp conf/aman.cnf-SystemA-rhel7-sample debian/aman/usr/share/aman/
+	cp conf/aman.cnf-SystemA-rhel7-sample debian/aman/usr/share/aman/
+	cp conf/rsyncd.conf-sample debian/aman/usr/share/aman/
+
 #
 # aman-remote
 #
@@ -68,6 +74,11 @@ binary:
 
 	mkdir -p debian/aman-remote/usr/share/applications
 	mv debian/tmp/usr/share/applications/aman-amanrmt.desktop debian/aman-remote/usr/share/applications
+
+	mkdir -p debian/aman/usr/share/aman-remote
+	cp conf/amanrmt.conf-sample debian/aman/usr/share/aman-remote/
+	cp conf/aman.cnf-remote-rhel7-sample debian/aman/usr/share/aman-remote/
+	cp conf/rsyncd.conf-sample debian/aman/usr/share/aman-remote/
 
 	dh_strip_nondeterminism
 	dh_compress

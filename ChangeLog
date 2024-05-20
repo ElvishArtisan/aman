@@ -417,3 +417,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Fixed a typo in the metadata for the RPM package.
 2024-05-20 Fred Gleason <fredg@paravelsystems.com>
 	* Added a 'make deb' target.
+2024-05-20 Fred Gleason <fredg@paravelsystems.com>
+	* Added default configuration files to the DEB packages.

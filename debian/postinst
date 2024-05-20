@@ -5,7 +5,7 @@ case "$1" in
     configure)
       ldconfig
       if test ! -e /etc/aman.conf ; then
-	cp /usr/share/doc/aman/aman.conf-sample /etc/aman.conf
+	cp /usr/share/aman/aman.conf-sample /etc/aman.conf
       fi
       /bin/systemctl daemon-reload
       /bin/systemctl enable aman
