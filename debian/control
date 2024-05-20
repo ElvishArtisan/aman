@@ -1,0 +1,22 @@
+Source: aman
+Section: audio
+Priority: optional
+Maintainer: Fred Gleason <fredg@paravelsystems.com>
+Build-Depends: debhelper-compat (= 12), autotools-dev
+Standards-Version: 4.4.1
+
+Package: aman
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, mariadb-client, libqt5sql5-mysql, qttranslations5-l10n, rsync, bzip2
+Description: Rivendell Server Manager System
+ Aman is a package for managing a redundant pair of servers for the
+ Rivendell Radio Automation System.  It includes facilities for monitoring
+ the status of each server and managing data replication between them for
+ both the database and audio stores.
+
+Package: aman-remote
+Architecture: any
+Depends: ${misc:Depends}
+Description: Allow an additional system to replicate from an Aman cluster
+ This package allows a third system to replicate data (database and audio) from
+ an Aman server cluster.

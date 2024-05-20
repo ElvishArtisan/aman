@@ -165,21 +165,40 @@ else
   AC_SUBST(VENDOR,suse)
 fi 
 
+#
+# Generated File Warnings
+#
+AC_SUBST_FILE(GENERATED_C_FILE_WARNING)
+GENERATED_C_FILE_WARNING=$srcdir/helpers/c_file_warning
+
+AC_SUBST_FILE(GENERATED_SCRIPT_FILE_WARNING)
+GENERATED_SCRIPT_FILE_WARNING=$srcdir/helpers/script_file_warning
+
+AC_SUBST_FILE(GENERATED_XML_FILE_WARNING)
+GENERATED_XML_FILE_WARNING=$srcdir/helpers/xml_file_warning
+
 AC_CONFIG_FILES([aman.spec \
     aman/Makefile \
     amanctl/Makefile \
     amand/Makefile \
     amanrmt/Makefile \
     conf/Makefile \
+    debian/source/Makefile \
+    debian/Makefile \
     docs/Makefile \
+    helpers/Makefile \
     icons/Makefile \
     lib/Makefile \
     scripts/Makefile \
     systemd/Makefile \
     tests/Makefile \
     xdg/Makefile \
-    Makefile ])
+    Makefile \
+    build_debs.sh\
+])
 AC_OUTPUT()
+
+chmod 755 build_debs.sh
 
 AC_MSG_NOTICE()
 AC_MSG_NOTICE(Now enter 'make' to build the software.)

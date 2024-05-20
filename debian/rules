@@ -1,0 +1,86 @@
+#!/usr/bin/make -f
+
+build:	
+	dh_update_autotools_config
+	dh_autoreconf
+	 ./configure --prefix=/usr --libdir=/usr/lib
+	make $(DEBUILD_MAKE_ARGS)
+
+binary:	
+	dh_testroot
+	dh_prep
+	dh_auto_install
+	dh_installchangelogs ChangeLog
+
+#
+# Common
+#
+	rm -f debian/tmp/usr/lib/libaman.a
+	rm -f debian/tmp/usr/lib/libaman.la
+	mkdir -p debian/aman/usr/lib
+	mkdir -p debian/aman-remote/usr/lib
+	cp -r debian/tmp/usr/lib/* debian/aman/usr/lib/
+	mv debian/tmp/usr/lib/* debian/aman-remote/usr/lib/
+	mkdir -p debian/aman/etc/security/limits.d
+	mv debian/tmp/etc/security/limits.d/aman-mysql-limits.conf debian/aman/etc/security/limits.d/
+	mkdir -p debian/aman/usr/share
+	mkdir -p debian/aman-remote/usr/share
+	cp -r debian/tmp/usr/share/icons debian/aman/usr/share/
+	cp -r debian/tmp/usr/share/icons debian/aman/usr/share/
+	rm -r debian/tmp/usr/share/icons
+
+#
+# aman
+#
+	mkdir -p debian/aman/etc/pam.d
+	mv debian/tmp/etc/pam.d/aman-root debian/aman/etc/pam.d
+	mkdir -p debian/aman/etc/security/console.apps
+	mv debian/tmp/etc/security/console.apps/aman-root debian/aman/etc/security/console.apps
+
+	mkdir -p debian/aman/usr/bin
+	mv debian/tmp/usr/bin/aman debian/aman/usr/bin/
+	mv debian/tmp/usr/bin/aman_add_replication_users.pl debian/aman/usr/bin/
+	mv debian/tmp/usr/bin/aman_add_rivendell_user.pl debian/aman/usr/bin/
+	mv debian/tmp/usr/bin/aman-root debian/aman/usr/bin/
+
+	mkdir -p debian/aman/usr/sbin
+	mv debian/tmp/usr/sbin/amanctl debian/aman/usr/sbin/
+	mv debian/tmp/usr/sbin/amand debian/aman/usr/sbin/
+
+	mkdir -p debian/aman/usr/share/applications
+	mv debian/tmp/usr/share/applications/aman-aman.desktop debian/aman/usr/share/applications
+
+	mkdir -p debian/aman/usr/share/man/man8
+	mv debian/tmp/usr/share/man/man8/amanctl.8 debian/aman/usr/share/man/man8/
+
+#
+# aman-remote
+#
+	mkdir -p debian/aman-remote/etc/pam.d
+	mv debian/tmp/etc/pam.d/amanrmt-root debian/aman-remote/etc/pam.d
+	mkdir -p debian/aman-remote/etc/security/console.apps
+	mv debian/tmp/etc/security/console.apps/amanrmt-root debian/aman-remote/etc/security/console.apps
+
+	mkdir -p debian/aman-remote/usr/bin
+	mv debian/tmp/usr/bin/amanrmt debian/aman-remote/usr/bin/
+	mv debian/tmp/usr/bin/aman_add_remote_replication_user.pl debian/aman-remote/usr/bin/
+	mv debian/tmp/usr/bin/amanrmt-root debian/aman-remote/usr/bin/
+
+	mkdir -p debian/aman-remote/usr/share/applications
+	mv debian/tmp/usr/share/applications/aman-amanrmt.desktop debian/aman-remote/usr/share/applications
+
+	dh_strip_nondeterminism
+	dh_compress
+	dh_fixperms
+	dh_missing
+	dh_dwz
+	dh_strip
+	dh_makeshlibs
+	dh_shlibdeps
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+%:	
+	dh $@

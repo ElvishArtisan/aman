@@ -37,7 +37,7 @@ the status of each server and managing data replication between them for
 both the database and audio stores.
 
 %package remote
-Summary: Allow an additional systemto replicate from an Aman cluster
+Summary: Allow an additional system to replicate from an Aman cluster
 Group: Productivity/Multimedia/Other
 Requires: @QT5_MYSQL_PKG@ rsync bzip2
 Conflicts: aman

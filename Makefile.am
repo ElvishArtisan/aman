@@ -1,10 +1,10 @@
-## automake.am
+## Makefile.am
 ##
-## Top level automake.am for Aman
+## Top level Makefile.am for Aman
 ##
 ## Use automake to process this into a Makefile.in
 ##
-##   (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
+##   (C) Copyright 2012-2024 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -24,7 +24,9 @@ if DOCBOOK_AM
   DOCBOOK_AM_OPT = docs
 endif
 
-SUBDIRS = lib\
+SUBDIRS = helpers\
+          debian\
+          lib\
           aman\
           amanctl\
           amand\
@@ -41,6 +43,9 @@ ACLOCAL_AMFLAGS = -I m4
 maintainer-clean-local:	
 	rm -rf m4
 
+deb:	dist
+	./build_debs.sh
+
 rpm:	dist
 	cp aman-$(VERSION).tar.gz $(HOME)/rpmbuild/SOURCES/
 	$(RPMBUILD) -ba --target $(ARCH)-$(VENDOR)-linux aman.spec
@@ -51,15 +56,21 @@ rpm:	dist
 
 EXTRA_DIST = aman.spec.in\
              autogen.sh\
+             build_debs.sh.in\
              get_distro.sh\
              get_target.sh\
              PACKAGE_VERSION
 
 CLEANFILES = *~\
+             *.buildinfo\
+             *.changes\
+             *.ddeb\
              *.deb\
+             *.dsc\
              *.mo\
              *.rpm\
              *.tar.gz\
+             *.tar.xz\
              *.tgz\
              *.zip
 
@@ -71,6 +82,7 @@ DISTCLEANFILES = aman.spec\
 MAINTAINERCLEANFILES = *~\
                        *.tar.gz\
                        aclocal.m4\
+                       build_debs.sh\
                        compile\
                        config.guess\
                        config.status\
