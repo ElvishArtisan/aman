@@ -413,3 +413,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Incremented the package version to 0.10.1.
 2024-05-19 Fred Gleason <fredg@paravelsystems.com>
 	* Fixed bugs that caused the build to break on Mint 21.
+2024-05-20 Fred Gleason <fredg@paravelsystems.com>
+	* Fixed a typo in the metadata for the RPM package.
