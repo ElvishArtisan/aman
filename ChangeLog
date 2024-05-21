@@ -425,3 +425,8 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 2024-05-21 Fred Gleason <fredg@paravelsystems.com>
 	* Refactored 'scripts/aman_add_replication_users.pl scripts' to use
 	the 'GRANT' SQL statement.
+2024-05-21 Fred Gleason <fredg@paravelsystems.com>
+	* Added sample MySQL configurations for Ubuntu in
+	'conf/50-aman.cnf-SystemA-ubuntu-sample',
+	'conf/50-aman.cnf-SystemB-ubuntu-sample' and
+	'conf/50-aman.cnf-remote-ubuntu-sample'.

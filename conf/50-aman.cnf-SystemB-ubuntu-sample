@@ -1,0 +1,4 @@
+[mysqld]
+server-id = 2
+log-bin = mysql-binB
+binlog-do-db=Rivendell
