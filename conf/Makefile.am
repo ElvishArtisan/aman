@@ -2,7 +2,7 @@
 ##
 ## conf/ automake.am for Aman
 ##
-## (C) Copyright 2012-2022 Fred Gleason <fredg@paravelsystems.com>
+## (C) Copyright 2012-2024 Fred Gleason <fredg@paravelsystems.com>
 ##
 ##   This program is free software; you can redistribute it and/or modify
 ##   it under the terms of the GNU General Public License version 2 as
@@ -27,7 +27,10 @@ install-exec-local:
 uninstall-local:	
 	rm -f $(DESTDIR)/etc/security/limits.d/aman-mysql-limits.conf
 
-EXTRA_DIST = aman.conf-sample\
+EXTRA_DIST = 50-aman.cnf-remote-ubuntu-sample\
+             50-aman.cnf-SystemA-ubuntu-sample\
+             50-aman.cnf-SystemB-ubuntu-sample\
+             aman.conf-sample\
              amanrmt.conf-sample\
              aman.cnf-SystemA-rhel7-sample\
              aman.cnf-SystemB-rhel7-sample\
