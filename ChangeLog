@@ -434,3 +434,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Added dependencies for 'openssh-client' and 'openssh-server'
 	to the DEB packages.
 	* Fixed a typo in 'INSTALL'.
+2024-05-21 Fred Gleason <fredg@paravelsystems.com>
+	* Incremented the package version to 0.10.1int0.
