@@ -34,6 +34,8 @@ binary:
 	cp ../README debian/aman-remote/usr/share/doc/aman-remote/
 	cp ../INSTALL debian/aman/usr/share/doc/aman/
 	cp ../INSTALL debian/aman-remote/usr/share/doc/aman-remote/
+	mkdir -p debian/aman/var/aman/keys
+	mkdir -p debian/aman/var/aman/snapshots
 
 #
 # aman
@@ -61,8 +63,9 @@ binary:
 
 	mkdir -p debian/aman/usr/share/aman
 	cp conf/aman.conf-sample debian/aman/usr/share/aman/
-	cp conf/aman.cnf-SystemA-rhel7-sample debian/aman/usr/share/aman/
-	cp conf/aman.cnf-SystemA-rhel7-sample debian/aman/usr/share/aman/
+	cp conf/amanrmt.conf-sample debian/aman/usr/share/aman/
+	cp conf/50-aman.cnf-SystemA-ubuntu-sample debian/aman/usr/share/aman/
+	cp conf/50-aman.cnf-SystemB-ubuntu-sample debian/aman/usr/share/aman/
 	cp conf/rsyncd.conf-sample debian/aman/usr/share/aman/
 
 #
@@ -83,7 +86,7 @@ binary:
 
 	mkdir -p debian/aman/usr/share/aman-remote
 	cp conf/amanrmt.conf-sample debian/aman/usr/share/aman-remote/
-	cp conf/aman.cnf-remote-rhel7-sample debian/aman/usr/share/aman-remote/
+	cp conf/50-aman.cnf-remote-ubuntu-sample debian/aman/usr/share/aman-remote/
 	cp conf/rsyncd.conf-sample debian/aman/usr/share/aman-remote/
 
 	dh_strip_nondeterminism

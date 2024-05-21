@@ -430,3 +430,7 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	'conf/50-aman.cnf-SystemA-ubuntu-sample',
 	'conf/50-aman.cnf-SystemB-ubuntu-sample' and
 	'conf/50-aman.cnf-remote-ubuntu-sample'.
+2024-05-21 Fred Gleason <fredg@paravelsystems.com>
+	* Added dependencies for 'openssh-client' and 'openssh-server'
+	to the DEB packages.
+	* Fixed a typo in 'INSTALL'.
