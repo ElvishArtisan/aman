@@ -24,6 +24,7 @@ use DBI;
 use Term::ReadKey;
 
 my @addresses;
+my $dbname="";
 
 sub ReadAmanConfig
 {
@@ -44,6 +45,11 @@ sub ReadAmanConfig
 	else {
 	    @fields=split "=",$line;
 	    if(scalar @fields != 0) {
+		if(lc($section) eq "global"){
+		    if(lc($fields[0]) eq "mysqldatabase") {
+			$dbname=$fields[1];
+		    }
+		}
 		if(lc($section) eq "systema"){
 		    if(lc($fields[0]) eq "publicaddress") {
 			$addresses[0]=$fields[1];
@@ -122,26 +128,25 @@ my $dbh=DBI->connect("dbi:mysql:mysql:localhost",
 #
 # Remove Stale User Entries
 #
-my $sql="delete from `user` where `User`='".$repl_username."'";
+$sql="flush privileges";
 ExecuteSql($dbh,$sql);
+$sql="select User,Host from user where User='".$repl_username."'";
+my $q=$dbh->prepare($sql);
+$q->execute();
+while(($row=$q->fetchrow_arrayref)) {
+    $sql="drop user '".@$row[0]."'\@'".@$row[1]."'";
+    ExecuteSql($dbh,$sql);
+}
+$q->finish();
+
 
 #
 # Add Users
 #
 foreach(@addresses) {
-    $sql="insert into `user` set `Host`='".$_."',".
-	"`User`='".$repl_username."',".
-	"`Password`=password('".$repl_password."'),".
-	"`Select_priv`='Y',".
-	"`Insert_priv`='Y',".
-	"`Update_priv`='Y',".
-	"`Create_priv`='Y',".
-	"`Delete_priv`='Y',".
-	"`Reload_priv`='Y',".
-	"`Super_priv`='Y',".
-	"`Drop_priv`='Y',".
-	"`Repl_slave_priv`='Y',".
-	"`Repl_client_priv`='Y'";
+    $sql="GRANT SELECT,INSERT,UPDATE,CREATE,DELETE,RELOAD,SUPER,DROP,".
+	"REPLICATION SLAVE,REPLICATION CLIENT ON *.* to ".
+	"'".$repl_username."'\@'".$_."' IDENTIFIED BY '".$repl_password."'";
     ExecuteSql($dbh,$sql);
 }
 
