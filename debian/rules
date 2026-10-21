@@ -1,12 +1,10 @@
 #!/usr/bin/make -f
 
-build:	
+binary:	
 	dh_update_autotools_config
 	dh_autoreconf
-	 ./configure --prefix=/usr --libdir=/usr/lib
+	./configure --prefix=/usr --libdir=/usr/lib
 	make $(DEBUILD_MAKE_ARGS)
-
-binary:	
 	dh_testroot
 	dh_prep
 	dh_auto_install
