@@ -436,7 +436,7 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Fixed a typo in 'INSTALL'.
 2024-05-21 Fred Gleason <fredg@paravelsystems.com>
 	* Incremented the package version to 0.10.1int0.
-2025-10-21 Fred Gleason <fredg@paravelsystems.com>
+2026-10-21 Fred Gleason <fredg@paravelsystems.com>
 	* Changed the source package format for DEB packages from
 	'3.0 (quilt)' to '3.0 (native)'.
 	* Refactored 'debian/rules' to do all work in the 'binary' target.
