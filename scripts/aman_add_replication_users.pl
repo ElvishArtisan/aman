@@ -145,8 +145,9 @@ $q->finish();
 #
 foreach(@addresses) {
     $sql="GRANT SELECT,INSERT,UPDATE,CREATE,DELETE,RELOAD,SUPER,DROP,".
-	"REPLICATION SLAVE,REPLICATION CLIENT ON *.* to ".
-	"'".$repl_username."'\@'".$_."' IDENTIFIED BY '".$repl_password."'";
+	"REPLICATION SLAVE,REPLICATION CLIENT,REPLICATION SLAVE ADMIN ".
+	"ON *.* to "."'".$repl_username."'\@'".$_."' ".
+	"IDENTIFIED BY '".$repl_password."'";
     ExecuteSql($dbh,$sql);
 }
 

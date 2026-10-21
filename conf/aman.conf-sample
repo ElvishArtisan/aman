@@ -101,7 +101,8 @@ MysqlUsername=repl
 MysqlPassword=letmein
 
 ;
-; The directory that contains the binary and relay logs.
+; The directory that contains the binary and relay logs. If you're
+; using MariaDB, you may have to change this to 'mariadb'.
 ;
 MysqlDataDirectory=/var/lib/mysql
 

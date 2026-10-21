@@ -73,6 +73,11 @@ For an RHEL-7 system, copy the 'aman.cnf-SystemA-rhel7-sample' or
 'aman.cnf-SystemB-rhel7-sample' file to '/etc/my.cnf.d/aman.cnf'. After
 copying the config files restart the MySQL service.
 
+For an Ubuntu system, copy the '50-aman.cnf-SystemA-ubuntu-sample' or
+'50-aman.cnf-SystemB-ubuntu-sample' file to
+'/etc/mysql/mariadb.conf.d/aman.cnf'. After copying the config files restart
+the MySQL service.
+
 Create a 'repl' user in MySQL with rights to connect from both the
 private and public IP addresses of each server and with the following
 privileges on the 'Rivendell' database:

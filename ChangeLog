@@ -444,3 +444,10 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Added the 'aman' Systemd service to the 'aman' DEB package.
 2026-10-21 Fred Gleason <fredg@paravelsystems.com>
 	* Removed the 'BUILD ENVIRONMENT' section from 'INSTALL'.
+2026-10-21 Fred Gleason <fredg@paravelsystems.com>
+	* Added a 'libclass-dbi-mysql-perl' dependency to the 'aman' DEB
+	package.
+	* Added some MariaDB-specific instructions to 'INSTALL' and
+	'conf/aman.conf-sample'.
+	* Added 'REPLICATION SLAVE ADMIN' to the privileges granted to
+	replication users in 'scripts/aman_add_replication_users.pl'.
