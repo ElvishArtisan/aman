@@ -38,6 +38,8 @@ binary:
 #
 # aman
 #
+	mkdir -p debian/aman/lib/systemd/system
+	mv debian/tmp/lib/systemd/system/aman.service debian/aman/lib/systemd/system/
 	mkdir -p debian/aman/etc/pam.d
 	mv debian/tmp/etc/pam.d/aman-root debian/aman/etc/pam.d
 	mkdir -p debian/aman/etc/security/console.apps

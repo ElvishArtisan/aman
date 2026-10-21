@@ -19,12 +19,12 @@
 ##
 
 install-exec-local:	
-	mkdir -p $(DESTDIR)/usr/lib/systemd/system
-	cp aman.service $(DESTDIR)/usr/lib/systemd/system/aman.service
+	mkdir -p $(DESTDIR)/lib/systemd/system
+	cp aman.service $(DESTDIR)/lib/systemd/system/aman.service
 	./daemon-reload.sh
 
 uninstall-local:	
-	rm -f $(DESTDIR)/usr/lib/systemd/system/aman.service
+	rm -f $(DESTDIR)/lib/systemd/system/aman.service
 	./daemon-reload.sh
 
 EXTRA_DIST = daemon-reload.sh\

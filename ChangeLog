@@ -440,3 +440,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Changed the source package format for DEB packages from
 	'3.0 (quilt)' to '3.0 (native)'.
 	* Refactored 'debian/rules' to do all work in the 'binary' target.
+2026-10-21 Fred Gleason <fredg@paravelsystems.com>
+	* Added the 'aman' Systemd service to the 'aman' DEB package.
