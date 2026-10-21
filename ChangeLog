@@ -442,3 +442,5 @@ H	* Fixed a typo in 'conf/aman.conf-sample'.
 	* Refactored 'debian/rules' to do all work in the 'binary' target.
 2026-10-21 Fred Gleason <fredg@paravelsystems.com>
 	* Added the 'aman' Systemd service to the 'aman' DEB package.
+2026-10-21 Fred Gleason <fredg@paravelsystems.com>
+	* Removed the 'BUILD ENVIRONMENT' section from 'INSTALL'.
